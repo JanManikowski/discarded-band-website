@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { BasketContext } from '../contexts/BasketContext';
 import axios from 'axios';
-import backgroundImage from '../assets/background_square.png';
+import backgroundImage from '../assets/background-high.png';
 
 const Basket = () => {
   const { basketItems, calculateTotal } = useContext(BasketContext);
