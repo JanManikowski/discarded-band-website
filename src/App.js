@@ -1,5 +1,6 @@
+// App.js
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom'; // Change BrowserRouter to HashRouter
 import NavBar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
