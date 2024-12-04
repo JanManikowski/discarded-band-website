@@ -14,7 +14,9 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.0.2",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "homepage": "https://janmanikowski.github.io/discarded-band-website"
+
   },
   "scripts": {
     "start": "react-scripts start",
@@ -45,4 +47,5 @@
   "devDependencies": {
     "gh-pages": "^6.2.0"
   }
+  
 }
