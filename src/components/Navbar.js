@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../assets/discarded_logo_yellow.png';
+import logo from '../assets/discarded-yellow-low.png';
 import { BasketContext } from '../contexts/BasketContext';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
@@ -12,6 +12,8 @@ const NavBar = () => {
     transition: 'background-color 0.5s ease',
     borderBottom: '2px solid transparent',
   });
+
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,51 +40,125 @@ const NavBar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  return (
-    <nav
-      className="navbar navbar-expand-lg navbar-dark fixed-top"
-      style={{
-        ...navbarStyle,
-        height: '80px',
-        display: 'flex',
-        alignItems: 'center',
-      }}
-    >
-      <div className="container-fluid d-flex justify-content-between align-items-center">
-        {/* Logo */}
-        <Link className="navbar-brand d-flex align-items-center" to="/" style={{ paddingTop: '10px' }}>
-          <img
-            src={logo}
-            alt="Logo"
-            style={{
-              height: '100px',
-              marginRight: '10px',
-            }}
-          />
-        </Link>
+  const handleMenuClick = () => {
+    setMenuOpen(!menuOpen);
+  };
 
-        {/* Navigation Links */}
-        <div className="d-flex justify-content-center flex-grow-1">
-          <div className="navbar-nav">
-            <Link to="/products" className="nav-link text-light mx-3">Products</Link>
-            <Link to="/faq" className="nav-link text-light mx-3">FAQ</Link>
-            <Link to="/about-us" className="nav-link text-light mx-3">About Us</Link>
-            <Link to="/subscribe" className="nav-link text-light mx-3">Subscribe</Link>
-            <Link to="/contact" className="nav-link text-light mx-3">Contact</Link>
+  const handleLinkClick = () => {
+    setMenuOpen(false); // Close the menu when a link is clicked
+  };
+
+  return (
+    <>
+      {/* Overlay for the background */}
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          zIndex: 998,
+          visibility: menuOpen ? 'visible' : 'hidden',
+          opacity: menuOpen ? 1 : 0,
+          transition: 'opacity 0.3s ease, visibility 0.3s ease',
+        }}
+        onClick={handleLinkClick} // Close the menu when overlay is clicked
+      ></div>
+
+      <nav
+        className="navbar navbar-expand-lg navbar-dark fixed-top"
+        style={{
+          ...navbarStyle,
+          height: '80px',
+          display: 'flex',
+          alignItems: 'center',
+          zIndex: 999,
+        }}
+      >
+        <div className="container-fluid">
+          {/* Logo */}
+          <Link className="navbar-brand d-flex align-items-center" to="/">
+            <img
+              src={logo}
+              alt="Logo"
+              className="img-fluid"
+              style={{
+                height: 'auto',
+                maxHeight: '60px', // Ensures the logo doesn't grow too large
+                width: 'auto',
+                maxWidth: '100%',
+              }}
+            />
+          </Link>
+
+          {/* Toggler for mobile */}
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded={menuOpen}
+            aria-label="Toggle navigation"
+            onClick={handleMenuClick}
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+
+          {/* Links */}
+          <div className={`collapse navbar-collapse ${menuOpen ? 'show' : ''}`} id="navbarNav">
+            <ul className="navbar-nav mx-auto text-center">
+              <li className="nav-item">
+                <Link to="/products" className="nav-link text-light mx-2" onClick={handleLinkClick}>
+                  Products
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/faq" className="nav-link text-light mx-2" onClick={handleLinkClick}>
+                  FAQ
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="./pages/about-us" className="nav-link text-light mx-2" onClick={handleLinkClick}>
+                  About Us
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="./pages/subscribe" className="nav-link text-light mx-2" onClick={handleLinkClick}>
+                  Subscribe
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="./pages/contact" className="nav-link text-light mx-2" onClick={handleLinkClick}>
+                  Contact
+                </Link>
+              </li>
+              {/* Shopping Cart in Mobile */}
+              <li className="nav-item d-lg-none"> {/* Hidden on large screens */}
+                <Link to="/basket" className="nav-link text-light d-flex align-items-center justify-content-center" onClick={handleLinkClick}>
+                  <i className="bi bi-cart-fill" style={{ fontSize: '1.5rem' }}></i>
+                  <span className="mx-2">
+                    {basketCount} / ${calculateTotal().toFixed(2)}
+                  </span>
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Shopping Cart on the Right (Visible on Larger Screens) */}
+          <div className="d-none d-lg-flex align-items-center"> {/* Hidden on small screens */}
+            <Link to="/basket" className="nav-link text-light d-flex align-items-center">
+              <i className="bi bi-cart-fill" style={{ fontSize: '1.5rem' }}></i>
+              <span className="mx-2">
+                {basketCount} / ${calculateTotal().toFixed(2)}
+              </span>
+            </Link>
           </div>
         </div>
-
-        {/* Cart and Total */}
-        <div className="d-flex align-items-center" style={{ marginRight: '10px' }}>
-          <Link to="/basket" className="nav-link text-light d-flex align-items-center">
-            <i className="bi bi-cart-fill" style={{ fontSize: '1.5rem' }}></i>
-            <span className="mx-2">
-              {basketCount} / ${calculateTotal().toFixed(2)}
-            </span>
-          </Link>
-        </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 };
 

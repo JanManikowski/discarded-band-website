@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import logo from '../assets/discarded_logo_yellow.png';
+import logo from '../assets/discarded-yellow-low.png';
 import backgroundLow from '../assets/background-low.png'; // Import the low-quality image
 import backgroundHigh from '../assets/background-high.png'; // Import the high-quality image
 import 'bootstrap/dist/css/bootstrap.min.css';
