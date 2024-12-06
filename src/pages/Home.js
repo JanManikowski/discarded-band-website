@@ -1,3 +1,4 @@
+// Home.js
 import React, { useEffect, useState, useContext } from "react";
 import logo from "../assets/discarded-yellow-low.png";
 import backgroundLow from "../assets/background-low.png";
@@ -76,7 +77,7 @@ const Home = () => {
       <div id="featured-section" className="container-fluid featured-section">
         <h2 className="featured-title">Featured</h2>
         <p className="featured-subtitle">Orders Shipped Weekly</p>
-        <div className="row">
+        <div className="product-grid" style={{ display: 'flex', justifyContent: 'center' }}>
           {products.length > 0 ? (
             products.map(({ node: product }) => (
               <ProductCard
