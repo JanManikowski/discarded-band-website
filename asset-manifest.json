@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/discarded-band-website/static/css/main.96722375.css",
-    "main.js": "/discarded-band-website/static/js/main.77f3f97c.js",
+    "main.css": "/discarded-band-website/static/css/main.0d034c5a.css",
+    "main.js": "/discarded-band-website/static/js/main.e723ae3e.js",
     "static/js/453.c9509060.chunk.js": "/discarded-band-website/static/js/453.c9509060.chunk.js",
     "static/media/background-high.png": "/discarded-band-website/static/media/background-high.0ead797c3dc9855c3338.png",
     "static/media/background-low.png": "/discarded-band-website/static/media/background-low.18a4802b88a364764543.png",
     "static/media/discarded-yellow-low.png": "/discarded-band-website/static/media/discarded-yellow-low.e6b6e3cb26cfb1ae94e9.png",
     "index.html": "/discarded-band-website/index.html",
-    "main.96722375.css.map": "/discarded-band-website/static/css/main.96722375.css.map",
-    "main.77f3f97c.js.map": "/discarded-band-website/static/js/main.77f3f97c.js.map",
+    "main.0d034c5a.css.map": "/discarded-band-website/static/css/main.0d034c5a.css.map",
+    "main.e723ae3e.js.map": "/discarded-band-website/static/js/main.e723ae3e.js.map",
     "453.c9509060.chunk.js.map": "/discarded-band-website/static/js/453.c9509060.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.96722375.css",
-    "static/js/main.77f3f97c.js"
+    "static/css/main.0d034c5a.css",
+    "static/js/main.e723ae3e.js"
   ]
 }
