@@ -121,17 +121,17 @@ const NavBar = () => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="./pages/about-us" className="nav-link text-light mx-2" onClick={handleLinkClick}>
+                <Link to="/about-us" className="nav-link text-light mx-2" onClick={handleLinkClick}>
                   About Us
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="./pages/subscribe" className="nav-link text-light mx-2" onClick={handleLinkClick}>
+                <Link to="/subscribe" className="nav-link text-light mx-2" onClick={handleLinkClick}>
                   Subscribe
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="./pages/contact" className="nav-link text-light mx-2" onClick={handleLinkClick}>
+                <Link to="./contact" className="nav-link text-light mx-2" onClick={handleLinkClick}>
                   Contact
                 </Link>
               </li>

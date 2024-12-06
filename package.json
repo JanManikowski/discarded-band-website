@@ -4,18 +4,22 @@
   "private": true,
   "homepage": "https://janmanikowski.github.io/discarded-band-website",
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "@fontsource/metal-mania": "^5.1.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.8",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "emailjs-com": "^3.2.0",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.6",
     "react-dom": "^18.3.1",
     "react-lazy-load-image-component": "^1.6.2",
     "react-router-dom": "^7.0.2",
     "react-scripts": "5.0.1",
+    "toast": "^0.5.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

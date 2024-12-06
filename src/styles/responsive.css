@@ -1,0 +1,76 @@
+/* For smaller screens */
+@media (max-width: 768px) {
+    .logo {
+      width: 80%;
+    }
+  
+    .toast-notification {
+      top: 60px;
+      font-size: 14px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .logo {
+      width: 90%;
+    }
+  
+    .toast-notification {
+      font-size: 12px;
+    }
+  }
+
+  
+  /* Responsive About Us Styles */
+@media (max-width: 768px) {
+    .about-us-title {
+      font-size: 36px;
+    }
+  
+    .about-us-text {
+      font-size: 16px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .about-us-title {
+      font-size: 28px;
+    }
+  
+    .about-us-text {
+      font-size: 14px;
+    }
+  }
+
+  /* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .contact-page h1 {
+      font-size: 2rem;
+    }
+  
+    .contact-form {
+      max-width: 90%;
+    }
+  
+    .btn {
+      width: 100%; /* Full width button for mobile */
+    }
+  }
+  
+
+  @media (max-width: 768px) {
+    .contact-page h1 {
+      font-size: 2.5rem;
+      text-align: center;
+    }
+  
+    .contact-form {
+      max-width: 90%;
+      padding: 15px;
+    }
+  
+    .contact-form button {
+      width: 100%; /* Full width button for mobile */
+    }
+  }
+  

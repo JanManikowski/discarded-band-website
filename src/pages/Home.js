@@ -1,69 +1,33 @@
 import React, { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
-import 'react-lazy-load-image-component/src/effects/blur.css';
 import logo from '../assets/discarded-yellow-low.png';
-import backgroundLow from '../assets/background-low.png'; // Import the low-quality image
-import backgroundHigh from '../assets/background-high.png'; // Import the high-quality image
+import backgroundLow from '../assets/background-low.png';
+import backgroundHigh from '../assets/background-high.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/global.css';
+import '../styles/responsive.css';
 import { BasketContext } from '../contexts/BasketContext';
+import fetchProducts from '../utils/fetchProducts';
 
 const Home = () => {
     const [products, setProducts] = useState([]);
     const [selectedVariants, setSelectedVariants] = useState({});
     const { addToBasket } = useContext(BasketContext);
-    const [backgroundImage, setBackgroundImage] = useState(backgroundLow); // Use imported low-quality image
+    const [backgroundImage, setBackgroundImage] = useState(backgroundLow);
+    const [toastVisible, setToastVisible] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
 
     useEffect(() => {
-        const fetchProducts = async () => {
+        const loadProducts = async () => {
             try {
-                const response = await axios.post(
-                    'https://discardedband.myshopify.com/api/2024-10/graphql.json',
-                    {
-                        query: `{
-                            products(first: 10) {
-                                edges {
-                                    node {
-                                        id
-                                        title
-                                        description
-                                        variants(first: 5) {
-                                            edges {
-                                                node {
-                                                    id
-                                                    title
-                                                    price {
-                                                        amount
-                                                        currencyCode
-                                                    }
-                                                    image {
-                                                        src
-                                                        altText
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }`,
-                    },
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Shopify-Storefront-Access-Token': '330032ec2b5424556cccb0f1e3547ca7',
-                        },
-                    }
-                );
-                setProducts(response.data.data.products.edges);
+                const productData = await fetchProducts();
+                setProducts(productData);
             } catch (error) {
-                console.error('Error fetching products:', error);
+                console.error('Failed to load products:', error);
             }
         };
 
-        fetchProducts();
+        loadProducts();
 
-        // Preload and switch to high-quality image
         const highImage = new Image();
         highImage.src = backgroundHigh;
         highImage.onload = () => setBackgroundImage(backgroundHigh);
@@ -76,33 +40,28 @@ const Home = () => {
         }));
     };
 
+    const handleAddToBasket = (product, variant) => {
+        addToBasket(product, variant);
+        setToastMessage(`${product.title} added to the basket!`);
+        setToastVisible(true);
+        setTimeout(() => setToastVisible(false), 3000);
+    };
+
     return (
         <>
+            {/* Toast Notification */}
+            <div className={`toast-notification ${toastVisible ? 'visible' : ''}`}>
+                {toastMessage}
+            </div>
+
             <div
-                className="text-center d-flex flex-column justify-content-start align-items-center"
-                style={{
-                    position: 'relative',
-                    minHeight: '100vh',
-                    color: 'white',
-                    textShadow: '2px 2px 5px rgba(0, 0, 0, 0.8)',
-                    paddingTop: '100px',
-                    userSelect: 'none',
-                    backgroundImage: `url(${backgroundImage})`, // Set the dynamic background image
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                }}
+                className="home-header"
+                style={{ backgroundImage: `url(${backgroundImage})` }}
             >
-                {/* Logo */}
                 <img
                     src={logo}
                     alt="Discarded Logo"
-                    style={{
-                        width: '100%',
-                        maxWidth: '600px',
-                        height: 'auto',
-                        marginBottom: '20px',
-                        userSelect: 'none',
-                    }}
+                    className="logo"
                 />
                 <button
                     className="btn btn-outline-light mt-4"
@@ -117,27 +76,24 @@ const Home = () => {
                 </button>
             </div>
 
-            <div id="featured-section" className="container-fluid p-5" style={{ backgroundColor: '#000000' }}>
-                <h2 className="text-center text-uppercase mb-4" style={{ color: 'red' }}>
-                    Featured
-                </h2>
-                <p className="text-center text-uppercase text-muted">Orders Shipped Weekly</p>
+            <div id="featured-section" className="container-fluid featured-section">
+                <h2 className="featured-title">Featured</h2>
+                <p className="featured-subtitle">Orders Shipped Weekly</p>
                 <div className="row">
                     {products.length > 0 ? (
                         products.map(({ node: product }) => (
-                            <div key={product.id} className="col-12 col-md-6 col-lg-4 text-center mb-4">
-                                <h5 style={{ color: 'white' }}>{product.title}</h5>
-                                <p style={{ color: 'white' }}>{product.description}</p>
+                            <div key={product.id} className="col-12 col-md-6 col-lg-4 text-center product-card">
+                                <h5 className="product-title">{product.title}</h5>
+                                <p className="product-description">{product.description}</p>
                                 {product.variants.edges.length > 0 && (
                                     <div>
                                         <img
                                             src={product.variants.edges[0].node.image.src}
                                             alt={product.variants.edges[0].node.image.altText || product.title}
-                                            className="img-fluid mb-3"
-                                            style={{ maxWidth: '100%', height: 'auto' }}
+                                            className="product-image"
                                         />
                                         <select
-                                            className="form-select mb-3"
+                                            className="form-select variant-select"
                                             onChange={(e) =>
                                                 handleVariantChange(
                                                     product.id,
@@ -154,9 +110,12 @@ const Home = () => {
                                             ))}
                                         </select>
                                         <button
-                                            className="btn btn-primary"
+                                            className="btn btn-primary add-to-basket-btn"
                                             onClick={() =>
-                                                addToBasket(product, selectedVariants[product.id] || product.variants.edges[0].node)
+                                                handleAddToBasket(
+                                                    product,
+                                                    selectedVariants[product.id] || product.variants.edges[0].node
+                                                )
                                             }
                                         >
                                             Add to Basket
@@ -166,7 +125,7 @@ const Home = () => {
                             </div>
                         ))
                     ) : (
-                        <p className="text-center text-white">Loading products...</p>
+                        <p className="loading-text">Loading products...</p>
                     )}
                 </div>
             </div>
