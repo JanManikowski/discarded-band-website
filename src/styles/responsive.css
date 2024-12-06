@@ -1,76 +1,70 @@
-/* For smaller screens */
+/* Common Responsive Styles */
 @media (max-width: 768px) {
     .logo {
-      width: 80%;
+        width: 80%;
     }
-  
+
+    /* Toast Notification Adjustments */
     .toast-notification {
-      top: 60px;
-      font-size: 14px;
+        top: 60px;
+        font-size: 14px;
     }
-  }
-  
-  @media (max-width: 480px) {
+
+    /* Featured Section */
+    .featured-section {
+        padding: 3rem 1rem;
+    }
+
+    /* Product Card Adjustments */
+    .product-card .card {
+        width: 300px; /* Slightly smaller width for tablets */
+    }
+
+    .product-card .card-img-top {
+        max-height: 250px; /* Adjust image size */
+    }
+
+    .product-card .card-title {
+        font-size: 1.2rem; /* Adjust title size */
+    }
+
+    .product-card .card-text {
+        font-size: 1rem; /* Adjust price text size */
+    }
+
+    .btn-primary {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
     .logo {
-      width: 90%;
+        width: 90%;
     }
-  
+
+    /* Toast Notification Adjustments */
     .toast-notification {
-      font-size: 12px;
+        font-size: 12px;
     }
-  }
 
-  
-  /* Responsive About Us Styles */
-@media (max-width: 768px) {
-    .about-us-title {
-      font-size: 36px;
+    /* Product Card Adjustments */
+    .product-card .card {
+        width: 90%; /* Full width for mobile screens */
     }
-  
-    .about-us-text {
-      font-size: 16px;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .about-us-title {
-      font-size: 28px;
-    }
-  
-    .about-us-text {
-      font-size: 14px;
-    }
-  }
 
-  /* Mobile Responsiveness */
-@media (max-width: 768px) {
-    .contact-page h1 {
-      font-size: 2rem;
+    .product-card .card-img-top {
+        max-height: 200px; /* Further reduce image size */
     }
-  
-    .contact-form {
-      max-width: 90%;
-    }
-  
-    .btn {
-      width: 100%; /* Full width button for mobile */
-    }
-  }
-  
 
-  @media (max-width: 768px) {
-    .contact-page h1 {
-      font-size: 2.5rem;
-      text-align: center;
+    .product-card .card-title {
+        font-size: 1rem;
     }
-  
-    .contact-form {
-      max-width: 90%;
-      padding: 15px;
+
+    .product-card .card-text {
+        font-size: 0.9rem;
     }
-  
-    .contact-form button {
-      width: 100%; /* Full width button for mobile */
+
+    .btn-primary {
+        font-size: 0.9rem;
     }
-  }
-  
+}

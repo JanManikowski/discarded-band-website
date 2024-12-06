@@ -1,7 +1,5 @@
 import React, { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
-import "../styles/global.css";
-import "../styles/responsive.css";
 import background from "../assets/background-low.png";
 
 const Contact = () => {
@@ -60,8 +58,8 @@ const Contact = () => {
         onSubmit={sendEmail}
         className="p-4 rounded-3 shadow-lg w-100"
         style={{
-          backgroundColor: "rgba(0, 0, 0, 0.9)", // 90% black background
-          opacity: "0.8", // 80% opacity for the entire form
+          backgroundColor: "rgba(0, 0, 0, 0.9)",
+          opacity: "0.8",
           maxWidth: "500px",
         }}
       >
@@ -75,9 +73,9 @@ const Contact = () => {
             id="user_name"
             className="form-control"
             style={{
-              backgroundColor: "rgba(0, 0, 0, 0.9)", // 90% black background for inputs
+              backgroundColor: "rgba(0, 0, 0, 0.9)",
               color: "white",
-              opacity: "0.8", // 80% opacity for inputs
+              opacity: "0.8",
               border: "1px solid #444",
               borderRadius: "5px",
             }}
@@ -94,9 +92,9 @@ const Contact = () => {
             id="user_email"
             className="form-control"
             style={{
-              backgroundColor: "rgba(0, 0, 0, 0.9)", // 90% black background for inputs
+              backgroundColor: "rgba(0, 0, 0, 0.9)",
               color: "white",
-              opacity: "0.8", // 80% opacity for inputs
+              opacity: "0.8",
               border: "1px solid #444",
               borderRadius: "5px",
             }}
@@ -113,9 +111,9 @@ const Contact = () => {
             rows="5"
             className="form-control"
             style={{
-              backgroundColor: "rgba(0, 0, 0, 0.9)", // 90% black background for textarea
+              backgroundColor: "rgba(0, 0, 0, 0.9)",
               color: "white",
-              opacity: "0.8", // 80% opacity for textarea
+              opacity: "0.8",
               border: "1px solid #444",
               borderRadius: "5px",
             }}
@@ -124,10 +122,11 @@ const Contact = () => {
         </div>
         <button
           type="submit"
-          className="btn btn-warning fw-bold w-100"
+          className="btn btn-warning fw-bold"
           style={{
             color: "black",
             fontWeight: "bold",
+            width: "100%",
           }}
         >
           Send Message

@@ -1,29 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import fetchProducts from "../utils/fetchProducts";
+import ProductCard from "../components/ProductCard";
 
-const ProductCard = ({ product }) => {
+const Products = () => {
+  const [products, setProducts] = useState([]);
+  const [selectedVariants, setSelectedVariants] = useState({});
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const productData = await fetchProducts();
+        setProducts(productData);
+      } catch (error) {
+        console.error("Failed to load products:", error);
+      }
+    };
+
+    loadProducts();
+  }, []);
+
+  const handleVariantChange = (productId, variant) => {
+    setSelectedVariants((prev) => ({
+      ...prev,
+      [productId]: variant,
+    }));
+  };
+
+  const handleAddToBasket = (product, variant) => {
+    console.log(`${product.title} added to the basket!`);
+  };
+
   return (
-    <div className="col-md-4 text-center mb-4">
-      <h5 style={{ color: 'white' }}>{product.title}</h5>
-      <p style={{ color: 'white' }}>{product.description}</p>
-      {product.variants.edges.length > 0 && (
-        <div>
-          <img
-            src={product.variants.edges[0].node.image.src}
-            alt={product.variants.edges[0].node.image.altText || product.title}
-            width="200"
-            className="img-fluid mb-3"
-          />
-          <select className="form-select mb-3">
-            {product.variants.edges.map(({ node: variant }) => (
-              <option key={variant.id} value={variant.id}>
-                {variant.title} - {variant.price.amount} {variant.price.currencyCode}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
+    <div className="container">
+      <h1 className="text-center my-4">Products</h1>
+      <div className="row">
+        {products.length > 0 ? (
+          products.map(({ node: product }) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              handleVariantChange={handleVariantChange}
+              handleAddToBasket={handleAddToBasket}
+              selectedVariant={selectedVariants[product.id]}
+            />
+          ))
+        ) : (
+          <p className="loading-text text-center">Loading products...</p>
+        )}
+      </div>
     </div>
   );
 };
 
-export default ProductCard;
+export default Products;

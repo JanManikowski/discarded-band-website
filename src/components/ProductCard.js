@@ -1,31 +1,36 @@
-import React, { useContext } from 'react';
-import { BasketContext } from '../contexts/BasketContext';
+import React from "react";
+import { Link } from "react-router-dom";
 
-const ProductCard = ({ product }) => {
-  const { addToBasket } = useContext(BasketContext);
-
-  return (
-    <div className="col-md-4 text-center mb-4">
-      <h5 style={{ color: 'white' }}>{product.title}</h5>
-      <p style={{ color: 'white' }}>{product.description}</p>
-      {product.variants.edges.length > 0 && (
-        <div>
-          <img
-            src={product.variants.edges[0].node.image.src}
-            alt={product.variants.edges[0].node.image.altText || product.title}
-            width="200"
-            className="img-fluid mb-3"
-          />
-          <button
-            className="btn btn-primary"
-            onClick={() => addToBasket(product)}
-          >
-            Add to Basket
-          </button>
+const ProductCard = ({ product, handleAddToBasket }) => {
+    return (
+        <div className="col-12 col-md-6 col-lg-4 d-flex justify-content-center product-card">
+            <Link to={`/product/${encodeURIComponent(product.id)}`} className="text-decoration-none">
+                <div className="card shadow-sm bg-dark text-white h-100">
+                    <img
+                        src={product.variants.edges[0].node.image.src}
+                        alt={product.title}
+                        className="card-img-top product-image"
+                    />
+                    <div className="card-body d-flex flex-column align-items-center">
+                        <h5 className="card-title">{product.title}</h5>
+                        <p className="card-text text-warning">
+                            {product.variants.edges[0].node.price.amount}{" "}
+                            {product.variants.edges[0].node.price.currencyCode}
+                        </p>
+                        <button
+                            className="btn btn-primary mt-3"
+                            onClick={(e) => {
+                                e.preventDefault(); // Prevent link navigation
+                                handleAddToBasket(product, product.variants.edges[0].node);
+                            }}
+                        >
+                            Add to Basket
+                        </button>
+                    </div>
+                </div>
+            </Link>
         </div>
-      )}
-    </div>
-  );
+    );
 };
 
 export default ProductCard;
