@@ -44,6 +44,11 @@ const fetchProductById = async (id) => {
                 },
             }
         );
+
+        // Log the full response for debugging
+        console.log('Shopify API Response:', response.data);
+
+        // Return the product data
         return response.data.data.product;
     } catch (error) {
         console.error('Error fetching product by ID:', error);

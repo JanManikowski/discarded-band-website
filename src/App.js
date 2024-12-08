@@ -10,7 +10,8 @@ import FAQ from "./pages/FAQ";
 import SupportUs from "./pages/SupportUs";
 import Products from "./pages/Products";
 import Basket from "./pages/Basket";
-import ProductPage from "./components/ProductPage"; // Import ProductPage
+import ProductPage from "./components/ProductPage";
+import Releases from "./pages/Releases";
 import { BasketProvider, BasketContext } from "./contexts/BasketContext";
 
 const App = () => {
@@ -29,6 +30,7 @@ const App = () => {
           <Route path="/products" element={<Products />} />
           <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/basket" element={<Basket />} />
+          <Route path="/releases" element={<Releases />} />
         </Routes>
         <Footer />
       </Router>

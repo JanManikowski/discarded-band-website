@@ -13,6 +13,7 @@ const Products = () => {
     const loadProducts = async () => {
       try {
         const productData = await fetchProducts();
+        console.log(productData);
         setProducts(productData);
       } catch (error) {
         console.error("Failed to load products:", error);
@@ -37,9 +38,7 @@ const Products = () => {
     <div
       className="products-page"
       style={{
-        backgroundImage: `url(${backgroundLow})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundColor: "#0A060D",
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",

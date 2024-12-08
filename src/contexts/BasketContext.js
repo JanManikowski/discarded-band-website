@@ -40,10 +40,18 @@ export const BasketProvider = ({ children }) => {
     );
   };
 
+  const removeItem = (productId, variantId) => {
+    setBasketItems((prevItems) =>
+      prevItems.filter(
+        (item) => item.id !== productId || item.variant.id !== variantId
+      )
+    );
+  };
+
   const basketCount = basketItems.reduce((count, item) => count + item.quantity, 0);
 
   return (
-    <BasketContext.Provider value={{ basketItems, addToBasket, updateQuantity, basketCount, calculateTotal }}>
+    <BasketContext.Provider value={{ basketItems, addToBasket, updateQuantity, basketCount, calculateTotal, removeItem }}>
       {children}
     </BasketContext.Provider>
   );

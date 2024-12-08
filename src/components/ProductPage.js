@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState, useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import fetchProductById from "../utils/fetchProductById";
-import { useContext } from "react";
 import { BasketContext } from "../contexts/BasketContext";
-import backgroundLow from "../assets/background-low.png"; // Import background
 
 const ProductPage = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedVariant, setSelectedVariant] = useState(null);
@@ -39,64 +38,109 @@ const ProductPage = () => {
     const handleAddToBasket = () => {
         if (selectedVariant) {
             addToBasket(product, selectedVariant);
-            alert(`${product.title} (${selectedVariant.title}) has been added to your basket.`);
+            navigate("/basket");
         }
     };
 
+    const formatPrice = (amount, currencyCode) => {
+        return new Intl.NumberFormat("nl-NL", {
+            style: "currency",
+            currency: currencyCode,
+            minimumFractionDigits: 2,
+        }).format(amount);
+    };
+
+    // Hardcoded parsing logic
+    const descriptionMapping = {
+        Print: "Band logo",
+        UNISEX: "",
+        Color: "Black",
+        Material: "100% halfgekamd ringgesponnen katoen, 150 g/m²",
+        Size: "Regular Fit",
+        "Available sizes": "XS-4XL",
+    };
+
+    const formattedDescription = Object.entries(descriptionMapping)
+        .filter(([key, value]) => value !== "") // Filter out empty values like UNISEX
+        .map(([key, value], index) => (
+            <li key={index}>
+                <strong>{key}: </strong>
+                {value}
+            </li>
+        ));
+
     if (loading) {
-        return <div className="text-center">Loading product...</div>;
+        return <div className="text-center text-white py-5">Loading product...</div>;
     }
 
     if (!product) {
-        return <div className="text-center">Product not found.</div>;
+        return <div className="text-center text-white py-5">Product not found.</div>;
     }
 
-    const { title, description, images, variants } = product;
+    const { title, images, variants } = product;
     const productImage = images?.edges[0]?.node?.src;
 
     return (
         <div
-            className="container-fluid py-5"
+            className="container-fluid text-white"
             style={{
-                backgroundImage: `url(${backgroundLow})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                color: "white",
-                paddingTop: "8rem", // Increased padding
+                backgroundColor: "#0A060D",
+                minHeight: "100vh",
+                paddingTop: "8rem",
             }}
         >
-            <div className="container text-center pt-5">
-                {/* Product Title */}
-                <h1 className="mb-3" style={{ fontSize: "2.5rem", fontWeight: "bold", textTransform: "uppercase" }}>
-                    {title}
-                </h1>
-
-                {/* Product Price */}
-                <p className="mb-4" style={{ fontSize: "1.5rem", color: "#ff4d4d", textTransform: "uppercase" }}>
-                    {selectedVariant ? `${selectedVariant.price.amount} ${selectedVariant.price.currencyCode}` : ""}
-                </p>
-
-                <div className="row justify-content-center align-items-center">
+            <div className="container">
+                <div className="row align-items-center py-5">
                     {/* Product Image */}
-                    <div className="col-12 col-md-6 mb-4 mb-md-0">
+                    <div className="col-md-6 text-center">
                         <img
                             src={productImage}
                             alt={title}
-                            className="img-fluid rounded shadow"
-                            style={{ maxHeight: "450px" }}
+                            className="img-fluid rounded shadow-lg"
+                            style={{ maxHeight: "500px" }}
                         />
                     </div>
 
                     {/* Product Details */}
-                    <div className="col-12 col-md-6 text-start">
-                        <p style={{ fontSize: "1rem", color: "#e0e0e0", lineHeight: "1.6" }}>
-                            {description}
+                    <div className="col-md-6">
+                        <h1
+                            className="mb-3"
+                            style={{
+                                fontSize: "2.5rem",
+                                fontWeight: "bold",
+                                textTransform: "uppercase",
+                            }}
+                        >
+                            {title}
+                        </h1>
+                        <p
+                            className="text-danger mb-4"
+                            style={{
+                                fontSize: "1.8rem",
+                                fontWeight: "bold",
+                                textTransform: "uppercase",
+                            }}
+                        >
+                            {selectedVariant
+                                ? formatPrice(
+                                      selectedVariant.price.amount,
+                                      selectedVariant.price.currencyCode
+                                  )
+                                : ""}
                         </p>
 
-                        {/* Variant Selector */}
+                        {/* Display formatted description */}
+                        <ul style={{ fontSize: "1rem", color: "#e0e0e0", lineHeight: "1.6" }}>
+                            {formattedDescription}
+                        </ul>
+
                         {variants.edges.length > 0 && (
                             <div className="mb-3">
-                                <label htmlFor="variant-select" className="form-label" style={{ fontWeight: "bold" }}>
+                                <label
+                                    htmlFor="variant-select"
+                                    className="form-label"
+                                    style={{ fontWeight: "bold" }}
+                                >
                                     Select Size:
                                 </label>
                                 <select
@@ -112,23 +156,21 @@ const ProductPage = () => {
                                 >
                                     {variants.edges.map(({ node }) => (
                                         <option key={node.id} value={node.id}>
-                                            {node.title} - {node.price.amount} {node.price.currencyCode}
+                                            {node.title} -{" "}
+                                            {formatPrice(node.price.amount, node.price.currencyCode)}
                                         </option>
                                     ))}
                                 </select>
                             </div>
                         )}
 
-                        {/* Add to Basket Button */}
                         <button
-                            className="btn btn-primary w-100 mt-3"
+                            className="btn btn-danger w-100 mt-3"
                             onClick={handleAddToBasket}
                             disabled={!selectedVariant}
                             style={{
                                 fontSize: "1.2rem",
                                 padding: "10px 20px",
-                                backgroundColor: "#ff4d4d",
-                                border: "none",
                                 borderRadius: "5px",
                                 textTransform: "uppercase",
                             }}

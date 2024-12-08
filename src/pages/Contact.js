@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
-import background from "../assets/background-low.png";
 
 const Contact = () => {
   const form = useRef();
@@ -32,12 +31,12 @@ const Contact = () => {
 
   return (
     <div
-      className="d-flex flex-column align-items-center justify-content-center text-white py-5"
+      className="d-flex flex-column align-items-center justify-content-center"
       style={{
-        backgroundImage: `url(${background})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundColor: "#0A060D", // Unified solid background color
+        color: "white",
         minHeight: "100vh",
+        padding: "120px 20px", // Matches padding with other pages
       }}
     >
       {/* Toast Notification */}
@@ -52,19 +51,28 @@ const Contact = () => {
         </div>
       )}
 
-      <h1 className="text-uppercase fs-4 mb-4">Contact</h1>
+      <h1
+        className="text-uppercase mb-4"
+        style={{
+          fontWeight: "bold",
+          fontSize: "2.5rem",
+          color: "#ff4d4d",
+        }}
+      >
+        Contact Us
+      </h1>
+
       <form
         ref={form}
         onSubmit={sendEmail}
         className="p-4 rounded-3 shadow-lg w-100"
         style={{
           backgroundColor: "rgba(0, 0, 0, 0.9)",
-          opacity: "0.8",
           maxWidth: "500px",
         }}
       >
         <div className="mb-3">
-          <label htmlFor="user_name" className="form-label text-light">
+          <label htmlFor="user_name" className="form-label">
             Name:
           </label>
           <input
@@ -73,17 +81,16 @@ const Contact = () => {
             id="user_name"
             className="form-control"
             style={{
-              backgroundColor: "rgba(0, 0, 0, 0.9)",
+              backgroundColor: "transparent",
               color: "white",
-              opacity: "0.8",
-              border: "1px solid #444",
-              borderRadius: "5px",
+              border: "1px solid white",
+              borderRadius: "0",
             }}
             required
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="user_email" className="form-label text-light">
+          <label htmlFor="user_email" className="form-label">
             Email:
           </label>
           <input
@@ -92,17 +99,16 @@ const Contact = () => {
             id="user_email"
             className="form-control"
             style={{
-              backgroundColor: "rgba(0, 0, 0, 0.9)",
+              backgroundColor: "transparent",
               color: "white",
-              opacity: "0.8",
-              border: "1px solid #444",
-              borderRadius: "5px",
+              border: "1px solid white",
+              borderRadius: "0",
             }}
             required
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="message" className="form-label text-light">
+          <label htmlFor="message" className="form-label">
             Message:
           </label>
           <textarea
@@ -111,22 +117,22 @@ const Contact = () => {
             rows="5"
             className="form-control"
             style={{
-              backgroundColor: "rgba(0, 0, 0, 0.9)",
+              backgroundColor: "transparent",
               color: "white",
-              opacity: "0.8",
-              border: "1px solid #444",
-              borderRadius: "5px",
+              border: "1px solid white",
+              borderRadius: "0",
             }}
             required
           ></textarea>
         </div>
         <button
           type="submit"
-          className="btn btn-warning fw-bold"
+          className="btn w-100"
           style={{
-            color: "black",
+            backgroundColor: "#ff4d4d",
+            color: "white",
             fontWeight: "bold",
-            width: "100%",
+            textTransform: "uppercase",
           }}
         >
           Send Message

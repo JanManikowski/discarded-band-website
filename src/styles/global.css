@@ -37,16 +37,15 @@
 }
 
 .logo {
-    width: 60%;
-    max-width: 600px;
+    width: 45vw;
     height: auto;
 }
 
 /* Featured Section */
 .featured-section {
     display: flex;
-    justify-content: center; /* Centers the content horizontally */
-    align-items: center; /* Centers the content vertically */
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
     text-align: center;
     padding: 5rem 1rem;
@@ -68,59 +67,51 @@
 }
 
 /* Product Section Centering */
-.featured-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center content vertically */
-    text-align: center;
-    padding: 5rem 1rem;
-    background-color: #000000;
-}
-
-/* Product Grid for Multiple Items */
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Flexible grid */
-    gap: 2rem; /* Space between items */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
     width: 100%;
-    max-width: 1200px; /* Limit maximum width for centered alignment */
-    margin: 0 auto; /* Center grid horizontally */
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 /* Product Card */
 .product-card .card {
-    border: none;
-    border-radius: 10px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    overflow: hidden;
-    max-width: 100%; /* Ensure responsiveness */
+    transition: none;
+    background: none !important;
+    border: none !important;
+}
+
+.product-card .card:hover .card-title {
+    color: #b61c1c;
 }
 
 .product-card .card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    transform: none;
 }
 
 .product-card .card-img-top {
     height: auto;
-    max-height: 300px; /* Adjust image size */
+    max-height: 300px;
     object-fit: contain;
     margin: 0 auto;
     padding: 1rem;
 }
 
 .product-card .card-title {
-    font-size: 1.4rem; /* Slightly larger title */
+    transition: color 0.3s ease;
+    font-size: 1.4rem;
     font-weight: bold;
     text-transform: capitalize;
     text-align: center;
 }
 
 .product-card .card-text {
-    font-size: 1.2rem; /* Larger price text */
+    font-size: 1.2rem;
     font-weight: bold;
     text-align: center;
-    color: #ffc107;
+    color: #b61c1c;
 }
 
 /* Buttons */
@@ -134,7 +125,6 @@
     background-color: #0056b3 !important;
     transform: scale(1.02);
 }
-
 
 /* General Text Styles */
 .title {
@@ -159,4 +149,95 @@
 
 .page-content {
     padding-top: 8rem;
+}
+
+/* Navbar Styling */
+.custom-navbar {
+    height: 100px;
+    background-color: rgba(0, 0, 0, 1);
+    border-bottom: 2px solid #ffffff;
+    transition: background-color 0.5s ease, border-color 0.5s ease;
+}
+
+.custom-navbar.transparent {
+    background-color: rgba(0, 0, 0, 0);
+    border-bottom: 2px solid transparent;
+}
+
+.custom-navbar-links .custom-nav-link {
+    font-size: 1.2rem;
+    position: relative;
+    padding-bottom: 5px;
+    margin-right: 1.5rem;
+    transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+/* Hover Effect */
+.custom-navbar-links .custom-nav-link:hover {
+    color: #b61c1c;
+    text-decoration: none;
+}
+
+/* Underline Effect for Transparent Navbar */
+.custom-navbar.transparent .custom-nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0; /* Start with no underline */
+    height: 2px; /* Adjust underline thickness */
+    background-color: #821515b9; /* Underline color */
+    opacity: 0; /* Initially hidden */
+    transition: width 0.3s ease, opacity 0.3s ease; /* Smooth animation */
+}
+
+.custom-navbar.transparent .custom-nav-link:hover::after {
+    width: 100%;
+    opacity: 1;
+}
+
+.custom-navbar-links .custom-nav-link:hover::after,
+.custom-navbar-links .custom-nav-link::after {
+    width: 100%;
+}
+
+/* Spacing */
+.custom-logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 4rem;
+}
+
+.custom-logo {
+    max-height: 100px;
+    width: auto;
+}
+
+.custom-cart-container {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 4rem;
+}
+
+.custom-cart-link i {
+    font-size: 2rem;
+    margin-right: 0.5rem;
+}
+
+.navbar-toggler {
+    margin-left: auto;
+    order: 2;
+}
+/* Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0; /* Removes margin */
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield; /* Removes spinner arrows */
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useLocation } from 'react-router-dom'; // Import `useLocation` for detecting the current route
+import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/discarded-yellow-low.png';
 import { BasketContext } from '../contexts/BasketContext';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -13,35 +13,27 @@ const NavBar = () => {
     });
 
     const [menuOpen, setMenuOpen] = useState(false);
-    const location = useLocation(); // Get the current route
+    const location = useLocation();
 
     useEffect(() => {
-        const isHomePage = location.pathname === '/'; // Check if the current page is the `Home` page
+        const isHomePage = location.pathname === '/';
 
         const updateNavbarStyle = () => {
-            const scrollTop = window.scrollY;
-            if (isHomePage && scrollTop === 0) {
-                // Transparent navbar for Home page when at the top
+            const featuredSection = document.getElementById('featured-section');
+            if (featuredSection) {
+                const sectionTop = featuredSection.getBoundingClientRect().top;
+                const isSectionInView = sectionTop <= window.innerHeight * 0.1;
+
                 setNavbarStyle({
-                    backgroundColor: 'rgba(0, 0, 0, 0)',
-                    borderBottom: '2px solid transparent',
-                    transition: 'background-color 0.5s ease, border-color 0.5s ease',
-                });
-            } else {
-                // Dark navbar for all other cases
-                setNavbarStyle({
-                    backgroundColor: 'rgba(0, 0, 0, 1)',
-                    borderBottom: '2px solid white',
+                    backgroundColor: isSectionInView ? 'rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0)',
+                    borderBottom: isSectionInView ? '2px solid #ffffff' : '2px solid transparent',
                     transition: 'background-color 0.5s ease, border-color 0.5s ease',
                 });
             }
         };
 
-        // Update navbar style immediately on render
-        updateNavbarStyle();
-
-        // Add event listener for scroll
         if (isHomePage) {
+            updateNavbarStyle();
             window.addEventListener('scroll', updateNavbarStyle);
         }
 
@@ -50,19 +42,18 @@ const NavBar = () => {
                 window.removeEventListener('scroll', updateNavbarStyle);
             }
         };
-    }, [location.pathname]); // Re-run effect when the route changes
+    }, [location.pathname]);
 
     const handleMenuClick = () => {
         setMenuOpen(!menuOpen);
     };
 
     const handleLinkClick = () => {
-        setMenuOpen(false); // Close the menu when a link is clicked
+        setMenuOpen(false);
     };
 
     return (
         <>
-            {/* Overlay for the background */}
             <div
                 style={{
                     position: 'fixed',
@@ -76,36 +67,18 @@ const NavBar = () => {
                     opacity: menuOpen ? 1 : 0,
                     transition: 'opacity 0.3s ease, visibility 0.3s ease',
                 }}
-                onClick={handleLinkClick} // Close the menu when overlay is clicked
+                onClick={handleLinkClick}
             ></div>
 
             <nav
-                className="navbar navbar-expand-lg navbar-dark fixed-top"
-                style={{
-                    ...navbarStyle,
-                    height: '80px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    zIndex: 999,
-                }}
+                className="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar transparent"
+                style={navbarStyle}
             >
-                <div className="container-fluid">
-                    {/* Logo */}
-                    <Link className="navbar-brand d-flex align-items-center" to="/">
-                        <img
-                            src={logo}
-                            alt="Logo"
-                            className="img-fluid"
-                            style={{
-                                height: 'auto',
-                                maxHeight: '60px', // Ensures the logo doesn't grow too large
-                                width: 'auto',
-                                maxWidth: '100%',
-                            }}
-                        />
+                <div className="container-fluid d-flex justify-content-between align-items-center">
+                    <Link className="navbar-brand custom-logo-container" to="/">
+                        <img src={logo} alt="Logo" className="img-fluid custom-logo" />
                     </Link>
 
-                    {/* Toggler for mobile */}
                     <button
                         className="navbar-toggler"
                         type="button"
@@ -119,59 +92,68 @@ const NavBar = () => {
                         <span className="navbar-toggler-icon"></span>
                     </button>
 
-                    {/* Links */}
                     <div className={`collapse navbar-collapse ${menuOpen ? 'show' : ''}`} id="navbarNav">
-                        <ul className="navbar-nav mx-auto text-center">
+                        <ul className="navbar-nav mx-auto text-center custom-navbar-links">
                             <li className="nav-item">
-                                <Link to="/products" className="nav-link text-light mx-2" onClick={handleLinkClick}>
+                                <Link
+                                    to="/products"
+                                    className="nav-link text-white custom-nav-link"
+                                    onClick={handleLinkClick}
+                                >
                                     Products
                                 </Link>
                             </li>
-                            {/* <li className="nav-item">
-                                <Link to="/faq" className="nav-link text-light mx-2" onClick={handleLinkClick}>
-                                    FAQ
-                                </Link>
-                            </li> */}
                             <li className="nav-item">
-                                <Link to="/about-us" className="nav-link text-light mx-2" onClick={handleLinkClick}>
+                                <Link
+                                    to="/about-us"
+                                    className="nav-link text-white custom-nav-link"
+                                    onClick={handleLinkClick}
+                                >
                                     About Us
                                 </Link>
                             </li>
-                            {/* <li className="nav-item">
-                                <Link to="/subscribe" className="nav-link text-light mx-2" onClick={handleLinkClick}>
-                                    Subscribe
-                                </Link>
-                            </li> */}
                             <li className="nav-item">
-                                <Link to="/contact" className="nav-link text-light mx-2" onClick={handleLinkClick}>
+    <Link
+        to="/releases"
+        className="nav-link text-white custom-nav-link"
+        onClick={handleLinkClick}
+    >
+        Releases
+    </Link>
+</li>
+                            <li className="nav-item">
+                                <Link
+                                    to="/contact"
+                                    className="nav-link text-white custom-nav-link"
+                                    onClick={handleLinkClick}
+                                >
                                     Contact
                                 </Link>
                             </li>
-                            {/* Shopping Cart in Mobile */}
-                            <li className="nav-item d-lg-none"> {/* Hidden on large screens */}
+                            {/* Cart Item for Mobile */}
+                            <li className="nav-item d-lg-none custom-cart-container">
                                 <Link
                                     to="/basket"
-                                    className="nav-link text-light d-flex align-items-center justify-content-center"
-                                    onClick={handleLinkClick}
+                                    className="nav-link text-white d-flex flex-column align-items-center justify-content-center"
                                 >
-                                    <i className="bi bi-cart-fill" style={{ fontSize: '1.5rem' }}></i>
-                                    <span className="mx-2">
-                                        {basketCount} / ${calculateTotal().toFixed(2)}
+                                    <i className="bi bi-cart-fill" style={{ fontSize: '2rem' }}></i>
+                                    <span className="mt-1">
+                                        {basketCount} / €{calculateTotal().toFixed(2)}
                                     </span>
                                 </Link>
                             </li>
                         </ul>
                     </div>
 
-                    {/* Shopping Cart on the Right (Visible on Larger Screens) */}
-                    <div className="d-none d-lg-flex align-items-center"> {/* Hidden on small screens */}
-                        <Link to="/basket" className="nav-link text-light d-flex align-items-center">
-                            <i className="bi bi-cart-fill" style={{ fontSize: '1.5rem' }}></i>
+                    <div className="d-none d-lg-flex align-items-center custom-cart-container">
+                        <Link to="/basket" className="nav-link text-white d-flex align-items-center">
+                            <i className="bi bi-cart-fill" style={{ fontSize: '2rem' }}></i>
                             <span className="mx-2">
-                                {basketCount} / ${calculateTotal().toFixed(2)}
+                                {basketCount} / €{calculateTotal().toFixed(2)}
                             </span>
                         </Link>
                     </div>
+                    
                 </div>
             </nav>
         </>

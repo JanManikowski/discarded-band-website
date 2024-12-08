@@ -1,4 +1,3 @@
-// Home.js
 import React, { useEffect, useState, useContext } from "react";
 import logo from "../assets/discarded-yellow-low.png";
 import backgroundLow from "../assets/background-low.png";
@@ -17,6 +16,10 @@ const Home = () => {
   const [backgroundImage, setBackgroundImage] = useState(backgroundLow);
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [logoStyle, setLogoStyle] = useState({
+    opacity: 1,
+    transform: "scale(1)",
+  });
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -33,6 +36,22 @@ const Home = () => {
     const highImage = new Image();
     highImage.src = backgroundHigh;
     highImage.onload = () => setBackgroundImage(backgroundHigh);
+
+    const handleScroll = () => {
+      const headerHeight = document.querySelector(".home-header")?.offsetHeight || 1;
+      const scrollTop = window.scrollY;
+      const scrollFraction = Math.min(scrollTop / (headerHeight / 2), 1);
+
+      setLogoStyle({
+        opacity: 1 - scrollFraction,
+        transform: `scale(${1 - scrollFraction * 0.5})`,
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const handleVariantChange = (productId, variant) => {
@@ -60,7 +79,15 @@ const Home = () => {
         className="home-header"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
-        <img src={logo} alt="Discarded Logo" className="logo" />
+        <img
+          src={logo}
+          alt="Discarded Logo"
+          className="logo"
+          style={{
+            ...logoStyle,
+            transition: "opacity 0.3s ease, transform 0.3s ease",
+          }}
+        />
         <button
           className="btn btn-outline-light mt-4"
           onClick={() => {
@@ -70,14 +97,26 @@ const Home = () => {
             }
           }}
         >
-          Shop Now
+          See Merch
         </button>
       </div>
 
-      <div id="featured-section" className="container-fluid featured-section">
-        <h2 className="featured-title">Featured</h2>
-        <p className="featured-subtitle">Orders Shipped Weekly</p>
-        <div className="product-grid" style={{ display: 'flex', justifyContent: 'center' }}>
+      <div
+        id="featured-section"
+        className="container-fluid featured-section"
+        style={{
+          backgroundColor: "#0A060D", // Set the background color
+          padding: "20px", // Optional: Add padding for better spacing
+        }}
+      >
+        <h2 className="featured-title pt-5"
+        style={{
+          backgroundColor: "#0A060D",
+        }}>Featured</h2>
+        <div
+          className="product-grid"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
           {products.length > 0 ? (
             products.map(({ node: product }) => (
               <ProductCard
@@ -89,7 +128,7 @@ const Home = () => {
               />
             ))
           ) : (
-            <p className="loading-text">Loading products...</p>
+            <p className="loading-text text-white">Loading products...</p>
           )}
         </div>
       </div>

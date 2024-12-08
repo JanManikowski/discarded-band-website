@@ -14,8 +14,18 @@
     .featured-section {
         padding: 3rem 1rem;
     }
+    .product-grid {
+        display: flex;
+        flex-direction: column; /* Stack items vertically */
+        align-items: center; /* Center align the cards */
+        gap: 20px; /* Add spacing between cards */
+    }
 
     /* Product Card Adjustments */
+    .product-card {
+        max-width: 90%; /* Ensure the card width does not exceed screen */
+    }
+
     .product-card .card {
         width: 300px; /* Slightly smaller width for tablets */
     }
@@ -34,6 +44,36 @@
 
     .btn-primary {
         font-size: 1rem;
+    }
+    .custom-navbar {
+        height: 90px; /* Slightly smaller navbar on mobile */
+    }
+
+    .custom-logo {
+        max-height: 60px; /* Adjust logo size for smaller screens */
+        width: auto;
+    }
+
+    .custom-logo-container {
+        display: flex;
+        justify-content: flex-start; /* Align to the left */
+        align-items: center;
+        margin-left: 1rem; /* Reduce the left margin */
+    }
+
+    .custom-navbar-links .custom-nav-link {
+        font-size: 1rem; /* Adjust link size for mobile */
+        margin-right: 1rem;
+    }
+
+    .custom-cart-container {
+        justify-content: center !important;
+        text-align: center !important;
+        margin: 0 auto;
+    }
+    .custom-cart-container span {
+        display: inline-block;
+        text-align: center;
     }
 }
 
@@ -66,5 +106,21 @@
 
     .btn-primary {
         font-size: 0.9rem;
+    }
+
+    .custom-navbar {
+        height: 90px; /* Slightly smaller navbar on mobile */
+    }
+
+    .custom-logo {
+        max-height: 60px; /* Adjust logo size for smaller screens */
+    }
+
+    .custom-navbar-links .custom-nav-link {
+        font-size: 1rem; /* Adjust link size for mobile */
+    }
+
+    .custom-cart-container i {
+        font-size: 1.8rem; /* Slightly smaller cart icon */
     }
 }
