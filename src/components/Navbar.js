@@ -7,8 +7,8 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 const NavBar = () => {
     const { basketCount, calculateTotal } = useContext(BasketContext);
     const [navbarStyle, setNavbarStyle] = useState({
-        backgroundColor: 'rgba(0, 0, 0, 0)',
-        borderBottom: '2px solid transparent',
+        backgroundColor: 'rgba(0, 0, 0, 1)',
+        borderBottom: '2px solid #ffffff',
         transition: 'background-color 0.5s ease, border-color 0.5s ease',
     });
 
@@ -18,30 +18,36 @@ const NavBar = () => {
     useEffect(() => {
         const isHomePage = location.pathname === '/';
 
-        const updateNavbarStyle = () => {
-            const featuredSection = document.getElementById('featured-section');
-            if (featuredSection) {
-                const sectionTop = featuredSection.getBoundingClientRect().top;
-                const isSectionInView = sectionTop <= window.innerHeight * 0.1;
+        if (!isHomePage) {
+            // Default navbar style for non-home pages
+            setNavbarStyle({
+                backgroundColor: 'rgba(0, 0, 0, 1)',
+                borderBottom: '2px solid #ffffff',
+                transition: 'background-color 0.5s ease, border-color 0.5s ease',
+            });
+        } else {
+            // Dynamic navbar style for the home page
+            const updateNavbarStyle = () => {
+                const featuredSection = document.getElementById('featured-section');
+                if (featuredSection) {
+                    const sectionTop = featuredSection.getBoundingClientRect().top;
+                    const isSectionInView = sectionTop <= window.innerHeight * 0.1;
 
-                setNavbarStyle({
-                    backgroundColor: isSectionInView ? 'rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0)',
-                    borderBottom: isSectionInView ? '2px solid #ffffff' : '2px solid transparent',
-                    transition: 'background-color 0.5s ease, border-color 0.5s ease',
-                });
-            }
-        };
+                    setNavbarStyle({
+                        backgroundColor: isSectionInView ? 'rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0)',
+                        borderBottom: isSectionInView ? '2px solid #ffffff' : '2px solid transparent',
+                        transition: 'background-color 0.5s ease, border-color 0.5s ease',
+                    });
+                }
+            };
 
-        if (isHomePage) {
             updateNavbarStyle();
             window.addEventListener('scroll', updateNavbarStyle);
-        }
 
-        return () => {
-            if (isHomePage) {
+            return () => {
                 window.removeEventListener('scroll', updateNavbarStyle);
-            }
-        };
+            };
+        }
     }, [location.pathname]);
 
     const handleMenuClick = () => {
@@ -71,7 +77,7 @@ const NavBar = () => {
             ></div>
 
             <nav
-                className="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar transparent"
+                className="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar"
                 style={navbarStyle}
             >
                 <div className="container-fluid d-flex justify-content-between align-items-center">
@@ -113,14 +119,14 @@ const NavBar = () => {
                                 </Link>
                             </li>
                             <li className="nav-item">
-    <Link
-        to="/releases"
-        className="nav-link text-white custom-nav-link"
-        onClick={handleLinkClick}
-    >
-        Releases
-    </Link>
-</li>
+                                <Link
+                                    to="/releases"
+                                    className="nav-link text-white custom-nav-link"
+                                    onClick={handleLinkClick}
+                                >
+                                    Releases
+                                </Link>
+                            </li>
                             <li className="nav-item">
                                 <Link
                                     to="/contact"
@@ -153,7 +159,6 @@ const NavBar = () => {
                             </span>
                         </Link>
                     </div>
-                    
                 </div>
             </nav>
         </>
