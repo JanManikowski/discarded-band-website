@@ -86,6 +86,53 @@
     h1 {
         font-size: 1.8rem; /* Smaller font size for title */
     }
+
+    basket-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .basket-item img {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 1rem;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    .basket-item-details {
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .basket-item-details h5 {
+        font-size: 1rem;
+        text-transform: uppercase;
+    }
+
+    .basket-item-details p {
+        font-size: 0.9rem;
+        color: #cccccc;
+    }
+
+    .basket-quantity input {
+        width: 50px;
+        height: 40px;
+        font-size: 0.9rem;
+    }
+
+    .basket-price {
+        font-size: 1rem;
+    }
+
+    .basket-remove-btn {
+        font-size: 1.5rem;
+    }
+
+    .checkout-btn {
+        padding: 10px 15px;
+        font-size: 1rem;
+    }
 }
 
 @media (max-width: 480px) {
