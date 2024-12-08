@@ -25,7 +25,7 @@ const Releases = () => {
                         fontSize: '2.5rem',
                         fontWeight: 'bold',
                         textTransform: 'uppercase',
-                        color: '#ff4d4d',
+                        color: '#b61c1c',
                     }}
                 >
                     Latest Release

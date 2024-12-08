@@ -46,7 +46,7 @@ const Products = () => {
         justifyContent: "center",
       }}
     >
-      <h1 className="text-center my-4" style={{ color: "white" }}>Products</h1>
+      <h1 className="text-center my-4" style={{ color: "#b61c1c" }}>Products</h1>
       <div className="product-grid" style={{ display: 'flex', justifyContent: 'center' }}>
         {products.length > 0 ? (
           products.map(({ node: product }) => (

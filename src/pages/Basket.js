@@ -43,10 +43,10 @@ const Basket = () => {
                     margin: "0 auto",
                 }}
             >
-                <h1 className="text-center mb-4" style={{ fontWeight: "bold", color: "#ff4d4d" }}>
+                <h1 className="text-center mb-4" style={{ fontWeight: "bold", color: "#b61c1c" }}>
                     SUBTOTAL
                 </h1>
-                <h2 className="text-center mb-4" style={{ fontWeight: "bold", color: "#ff4d4d" }}>
+                <h2 className="text-center mb-4" style={{ fontWeight: "bold", color: "#b61c1c" }}>
                     €{calculateTotal().toFixed(2)}
                 </h2>
                 {basketItems.length > 0 ? (

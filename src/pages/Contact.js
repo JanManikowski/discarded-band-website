@@ -56,7 +56,7 @@ const Contact = () => {
         style={{
           fontWeight: "bold",
           fontSize: "2.5rem",
-          color: "#ff4d4d",
+          color: "#b61c1c",
         }}
       >
         Contact Us

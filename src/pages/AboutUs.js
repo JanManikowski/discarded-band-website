@@ -19,7 +19,7 @@ const AboutUs = () => {
           style={{
             fontWeight: "bold",
             fontSize: "2.8rem",
-            color: "#ff4d4d",
+            color: "#b61c1c",
           }}
         >
           About Us
