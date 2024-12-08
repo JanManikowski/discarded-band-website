@@ -75,6 +75,17 @@
         display: inline-block;
         text-align: center;
     }
+    .spotify-embed-wrapper iframe {
+        height: 300px; /* Reduce height for smaller screens */
+    }
+
+    .spotify-embed-wrapper {
+        padding: 5px; /* Reduce padding for better fit */
+    }
+
+    h1 {
+        font-size: 1.8rem; /* Smaller font size for title */
+    }
 }
 
 @media (max-width: 480px) {
