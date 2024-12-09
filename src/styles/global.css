@@ -237,4 +237,5 @@ html, body {
     padding: 0;
     width: 100%; /* Prevent overflow */
     overflow-x: hidden; /* Disable horizontal scrolling */
+    background-color: #0A060D;
 }
