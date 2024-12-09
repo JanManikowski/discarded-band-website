@@ -26,6 +26,9 @@ const ReleasesCard = ({ albumId, title, style }) => {
                 alignItems: 'center',
                 padding: '20px', // Add padding for spacing
                 boxSizing: 'border-box', // Prevent padding overflow
+                borderBottom: '1px solid white', // Added 1px white border bottom
+                borderTop: '1px solid white', // Added 1px white border bottom
+            
             }}
         >
             <div

@@ -15,10 +15,10 @@ const Releases = () => {
 
     return (
         <div
-            className="container-fluid text-white d-flex flex-column justify-content-center align-items-center"
+            className="container-fluid text-white d-flex flex-column justify-content-center align-items-center "
             style={{
                 backgroundColor: '#0A060D',
-                backgroundImage: `radial-gradient(circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(182, 28, 28, 0.5), transparent)`,
+                backgroundImage: `radial-gradient(circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(182, 28, 28, 0.2), transparent)`,
                 minHeight: '100vh',
                 paddingTop: '120px',
                 paddingBottom: '50px',
