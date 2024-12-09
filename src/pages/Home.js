@@ -9,6 +9,7 @@ import { BasketContext } from "../contexts/BasketContext";
 import fetchProducts from "../utils/fetchProducts";
 import ProductCard from "../components/ProductCard";
 import ReleasesCard from "../components/ReleasesCard"; // Import the ReleasesCard
+import { commonTitleStyle } from "../styles/constants";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -139,14 +140,7 @@ const Home = () => {
           padding: "20px",
         }}
       >
-        <h2
-          className="featured-title pt-5"
-          style={{
-            backgroundColor: "#0A060D",
-          }}
-        >
-          Featured
-        </h2>
+        <h1 style={commonTitleStyle}>FEATURED</h1>
         <div
           className="product-grid"
           style={{ display: "flex", justifyContent: "center" }}

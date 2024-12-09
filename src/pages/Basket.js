@@ -165,7 +165,6 @@ const Basket = () => {
                                 fontWeight: "bold",
                                 color: "#ff4d4d",
                                 padding: "15px 20px",
-                                borderRadius: "8px",
                                 textTransform: "uppercase",
                             }}
                         >

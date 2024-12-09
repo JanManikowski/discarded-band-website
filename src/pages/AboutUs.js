@@ -1,6 +1,7 @@
 import React from "react";
 import "../styles/global.css";
 import "../styles/responsive.css";
+import { commonTitleStyle } from "../styles/constants";
 
 const AboutUs = () => {
   return (
@@ -13,17 +14,7 @@ const AboutUs = () => {
       }}
     >
       <div className="container text-center" style={{ maxWidth: "800px" }}>
-        {/* Title */}
-        <h1
-          className="mb-4 text-uppercase"
-          style={{
-            fontWeight: "bold",
-            fontSize: "2.8rem",
-            color: "#b61c1c",
-          }}
-        >
-          About Us
-        </h1>
+      <h1 style={commonTitleStyle}>ABOUT US</h1>
 
         {/* Band Description */}
         <p

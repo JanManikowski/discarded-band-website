@@ -103,6 +103,15 @@ const NavBar = () => {
 
                     <div className={`collapse navbar-collapse ${menuOpen ? 'show' : ''}`} id="navbarNav">
                         <ul className="navbar-nav mx-auto text-center custom-navbar-links">
+                        <li className="nav-item">
+                                <Link
+                                    to="/releases"
+                                    className="nav-link text-white custom-nav-link"
+                                    onClick={handleLinkClick}
+                                >
+                                    Releases
+                                </Link>
+                            </li>
                             <li className="nav-item">
                                 <Link
                                     to="/products"
@@ -121,15 +130,7 @@ const NavBar = () => {
                                     About Us
                                 </Link>
                             </li>
-                            <li className="nav-item">
-                                <Link
-                                    to="/releases"
-                                    className="nav-link text-white custom-nav-link"
-                                    onClick={handleLinkClick}
-                                >
-                                    Releases
-                                </Link>
-                            </li>
+                            
                             <li className="nav-item">
                                 <Link
                                     to="/contact"
@@ -140,15 +141,12 @@ const NavBar = () => {
                                 </Link>
                             </li>
                             <li className="nav-item d-lg-none custom-cart-container">
-                                <Link
-                                    to="/basket"
-                                    className="nav-link text-white d-flex flex-column align-items-center justify-content-center"
-                                >
-                                    <i className="bi bi-cart-fill" style={{ fontSize: '2rem' }}></i>
-                                    <span className="mt-1">
-                                        {basketCount} / €{calculateTotal().toFixed(2)}
-                                    </span>
-                                </Link>
+                            <Link to="/basket" className="nav-link text-white d-flex align-items-center">
+        <i className="bi bi-cart-fill" style={{ fontSize: '2rem', marginRight: '0.5rem' }}></i>
+        <span className="cart-details">
+            {basketCount} / €{calculateTotal().toFixed(2)}
+        </span>
+    </Link>
                             </li>
                         </ul>
                     </div>

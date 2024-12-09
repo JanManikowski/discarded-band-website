@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
+import { commonTitleStyle } from "../styles/constants";
 
 const Contact = () => {
   const form = useRef();
@@ -33,10 +34,10 @@ const Contact = () => {
     <div
       className="d-flex flex-column align-items-center justify-content-center"
       style={{
-        backgroundColor: "#0A060D", // Unified solid background color
+        backgroundColor: "#0A060D",
         color: "white",
         minHeight: "100vh",
-        padding: "120px 20px", // Matches padding with other pages
+        padding: "120px 20px",
       }}
     >
       {/* Toast Notification */}
@@ -51,16 +52,7 @@ const Contact = () => {
         </div>
       )}
 
-      <h1
-        className="text-uppercase mb-4"
-        style={{
-          fontWeight: "bold",
-          fontSize: "2.5rem",
-          color: "#b61c1c",
-        }}
-      >
-        Contact Us
-      </h1>
+      <h1 style={commonTitleStyle}>CONTACT US</h1>
 
       <form
         ref={form}
@@ -71,9 +63,10 @@ const Contact = () => {
           maxWidth: "500px",
         }}
       >
+        {/* Name Field */}
         <div className="mb-3">
           <label htmlFor="user_name" className="form-label">
-            Name:
+            Name
           </label>
           <input
             type="text"
@@ -89,9 +82,11 @@ const Contact = () => {
             required
           />
         </div>
+
+        {/* Email Field */}
         <div className="mb-3">
           <label htmlFor="user_email" className="form-label">
-            Email:
+            Email
           </label>
           <input
             type="email"
@@ -107,9 +102,43 @@ const Contact = () => {
             required
           />
         </div>
+
+        {/* Subject Dropdown */}
+        <div className="mb-3">
+          <label htmlFor="subject" className="form-label">
+            Subject
+          </label>
+          <select
+  name="subject"
+  id="subject"
+  className="form-select"
+  style={{
+    backgroundColor: "black", // A dark background color for the select dropdown
+    color: "white", // Ensures the text inside is white
+    border: "1px solid white",
+    borderRadius: "0",
+    padding: "10px",
+    fontSize: "1rem",
+    appearance: "none", // Removes native dropdown arrow for consistency in styling
+    cursor: "pointer", // Ensures a pointer cursor for a clickable dropdown
+  }}
+  required
+>
+  <option value="" disabled selected>
+    Select a subject
+  </option>
+  <option value="booking">Booking</option>
+  <option value="merch">Merch</option>
+  <option value="general">General</option>
+</select>
+
+
+        </div>
+
+        {/* Message Field */}
         <div className="mb-3">
           <label htmlFor="message" className="form-label">
-            Message:
+            Message
           </label>
           <textarea
             name="message"
@@ -125,13 +154,17 @@ const Contact = () => {
             required
           ></textarea>
         </div>
+
+        {/* Submit Button */}
         <button
           type="submit"
           className="btn w-100"
           style={{
-            backgroundColor: "#ff4d4d",
-            color: "white",
+            backgroundColor: "transparent",
+            border: "1px solid white",
             fontWeight: "bold",
+            color: "#ff4d4d",
+            padding: "15px 20px",
             textTransform: "uppercase",
           }}
         >

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import fetchProducts from "../utils/fetchProducts";
 import ProductCard from "../components/ProductCard";
-import backgroundLow from "../assets/background-low.png";
+import { commonTitleStyle } from "../styles/constants";
 import "../styles/global.css";
 import "../styles/responsive.css";
 
@@ -46,7 +46,7 @@ const Products = () => {
         justifyContent: "center",
       }}
     >
-      <h1 className="text-center my-4" style={{ color: "#b61c1c" }}>Products</h1>
+      <h1 style={commonTitleStyle}>PRODUCTS</h1>
       <div className="product-grid" style={{ display: 'flex', justifyContent: 'center' }}>
         {products.length > 0 ? (
           products.map(({ node: product }) => (

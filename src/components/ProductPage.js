@@ -152,6 +152,7 @@ const ProductPage = () => {
                                         backgroundColor: "#212529",
                                         color: "white",
                                         border: "1px solid #ced4da",
+                                        borderRadius: 0,
                                     }}
                                 >
                                     {variants.edges.map(({ node }) => (
@@ -165,13 +166,15 @@ const ProductPage = () => {
                         )}
 
                         <button
-                            className="btn btn-danger w-100 mt-3"
+                            className="w-100 mt-3"
                             onClick={handleAddToBasket}
                             disabled={!selectedVariant}
                             style={{
-                                fontSize: "1.2rem",
-                                padding: "10px 20px",
-                                borderRadius: "5px",
+                                backgroundColor: "transparent",
+                                border: "1px solid white",
+                                fontWeight: "bold",
+                                color: "#ff4d4d",
+                                padding: "15px 20px",
                                 textTransform: "uppercase",
                             }}
                         >

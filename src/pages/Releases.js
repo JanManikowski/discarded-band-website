@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { commonTitleStyle } from '../styles/constants';
 
 const Releases = () => {
     const albumId = '5lWIRgkSy5WWOMrZ7xxygH'; // Replace with your album/track/playlist ID
@@ -31,17 +32,7 @@ const Releases = () => {
                     maxWidth: '900px',
                 }}
             >
-                <h1
-                    className="mb-4"
-                    style={{
-                        fontSize: '2.5rem',
-                        fontWeight: 'bold',
-                        textTransform: 'uppercase',
-                        color: '#b61c1c',
-                    }}
-                >
-                    Latest Release
-                </h1>
+                <h1 style={commonTitleStyle}>LATEST RELEASES</h1>
                 <div
                     className="spotify-embed-wrapper"
                     style={{

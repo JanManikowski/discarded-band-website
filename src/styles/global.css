@@ -74,6 +74,7 @@
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0;
 }
 
 /* Product Card */
@@ -81,6 +82,7 @@
     transition: none;
     background: none !important;
     border: none !important;
+    padding: 0;
 }
 
 .product-card .card:hover .card-title {
