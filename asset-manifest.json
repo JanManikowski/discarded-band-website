@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/discarded-band-website/static/css/main.c0f2955f.css",
-    "main.js": "/discarded-band-website/static/js/main.9d710bb9.js",
-    "static/js/453.c9509060.chunk.js": "/discarded-band-website/static/js/453.c9509060.chunk.js",
-    "static/media/background-high.png": "/discarded-band-website/static/media/background-high.0ead797c3dc9855c3338.png",
-    "static/media/background-low.png": "/discarded-band-website/static/media/background-low.18a4802b88a364764543.png",
-    "static/media/discarded-yellow-low.png": "/discarded-band-website/static/media/discarded-yellow-low.e6b6e3cb26cfb1ae94e9.png",
-    "index.html": "/discarded-band-website/index.html",
-    "main.c0f2955f.css.map": "/discarded-band-website/static/css/main.c0f2955f.css.map",
-    "main.9d710bb9.js.map": "/discarded-band-website/static/js/main.9d710bb9.js.map",
-    "453.c9509060.chunk.js.map": "/discarded-band-website/static/js/453.c9509060.chunk.js.map"
+    "main.css": "/static/css/main.c0f2955f.css",
+    "main.js": "/static/js/main.2b50c3a2.js",
+    "static/js/453.c9509060.chunk.js": "/static/js/453.c9509060.chunk.js",
+    "static/media/background-high.png": "/static/media/background-high.0ead797c3dc9855c3338.png",
+    "static/media/background-low.png": "/static/media/background-low.18a4802b88a364764543.png",
+    "static/media/discarded-yellow-low.png": "/static/media/discarded-yellow-low.e6b6e3cb26cfb1ae94e9.png",
+    "index.html": "/index.html",
+    "main.c0f2955f.css.map": "/static/css/main.c0f2955f.css.map",
+    "main.2b50c3a2.js.map": "/static/js/main.2b50c3a2.js.map",
+    "453.c9509060.chunk.js.map": "/static/js/453.c9509060.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c0f2955f.css",
-    "static/js/main.9d710bb9.js"
+    "static/js/main.2b50c3a2.js"
   ]
 }
