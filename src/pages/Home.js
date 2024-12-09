@@ -138,6 +138,8 @@ const Home = () => {
         style={{
           backgroundColor: "#0A060D",
           padding: "20px",
+          width: "100%", // Stretch the card to the full width of its container
+      minHeight: "100vh", // Full viewport height
         }}
       >
         <h1 style={commonTitleStyle}>FEATURED</h1>
