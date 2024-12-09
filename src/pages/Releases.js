@@ -40,17 +40,21 @@ const Releases = () => {
                         borderRadius: '10px',
                         padding: '10px',
                         boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        justifyContent: 'center',
                     }}
                 >
                     <iframe
                         src={`https://open.spotify.com/embed/album/${albumId}`}
-                        width="100%"
-                        height="380"
                         frameBorder="0"
                         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                         title="Spotify Player"
                         style={{
                             borderRadius: '10px',
+                            maxWidth: '100%', // Ensure full responsiveness
+                            width: '100%', // Match container width
+                            height: '400px', // Set height for a horizontal view
+                            margin: '0 auto', // Center the iframe
                         }}
                     ></iframe>
                 </div>

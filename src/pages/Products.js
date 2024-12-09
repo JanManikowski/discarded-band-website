@@ -23,17 +23,6 @@ const Products = () => {
     loadProducts();
   }, []);
 
-  const handleVariantChange = (productId, variant) => {
-    setSelectedVariants((prev) => ({
-      ...prev,
-      [productId]: variant,
-    }));
-  };
-
-  const handleAddToBasket = (product, variant) => {
-    console.log(`${product.title} added to the basket!`);
-  };
-
   return (
     <div
       className="products-page"
@@ -53,8 +42,6 @@ const Products = () => {
             <ProductCard
               key={product.id}
               product={product}
-              handleVariantChange={handleVariantChange}
-              handleAddToBasket={handleAddToBasket}
               selectedVariant={selectedVariants[product.id]}
             />
           ))

@@ -22,11 +22,11 @@ const Contact = () => {
         "Z4YIXFPmS1hcbXGWG"
       );
 
-      showToast("Message sent successfully!", true);
+      showToast("Your message was sent successfully!", true);
       form.current.reset();
     } catch (error) {
       console.error("EmailJS Error:", error);
-      showToast("Message sent, but confirmation email failed.", false);
+      showToast("Failed to send the message. Please try again.", false);
     }
   };
 
@@ -52,7 +52,7 @@ const Contact = () => {
         </div>
       )}
 
-      <h1 style={commonTitleStyle}>CONTACT US</h1>
+      <h1 style={commonTitleStyle}>Contact Us</h1>
 
       <form
         ref={form}
@@ -109,30 +109,28 @@ const Contact = () => {
             Subject
           </label>
           <select
-  name="subject"
-  id="subject"
-  className="form-select"
-  style={{
-    backgroundColor: "black", // A dark background color for the select dropdown
-    color: "white", // Ensures the text inside is white
-    border: "1px solid white",
-    borderRadius: "0",
-    padding: "10px",
-    fontSize: "1rem",
-    appearance: "none", // Removes native dropdown arrow for consistency in styling
-    cursor: "pointer", // Ensures a pointer cursor for a clickable dropdown
-  }}
-  required
->
-  <option value="" disabled selected>
-    Select a subject
-  </option>
-  <option value="booking">Booking</option>
-  <option value="merch">Merch</option>
-  <option value="general">General</option>
-</select>
-
-
+            name="subject"
+            id="subject"
+            className="form-select"
+            style={{
+              backgroundColor: "black",
+              color: "white",
+              border: "1px solid white",
+              borderRadius: "0",
+              padding: "10px",
+              fontSize: "1rem",
+              appearance: "none",
+              cursor: "pointer",
+            }}
+            required
+          >
+            <option value="" disabled selected>
+              Select a Subject
+            </option>
+            <option value="Booking Inquiry">Booking Inquiry</option>
+            <option value="Merchandise">Merchandise</option>
+            <option value="General Question">General Question</option>
+          </select>
         </div>
 
         {/* Message Field */}
@@ -158,7 +156,7 @@ const Contact = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="btn w-100"
+          className="w-100"
           style={{
             backgroundColor: "transparent",
             border: "1px solid white",
