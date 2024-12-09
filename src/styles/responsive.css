@@ -133,6 +133,16 @@
         padding: 10px 15px;
         font-size: 1rem;
     }
+    .spotify-embed-wrapper iframe {
+        height: 300px; /* Reduce the height */
+        width: 100%; /* Full width for mobile */
+    }
+
+    .release-card-content {
+        width: 95vw; /* Slightly increase the container width for smaller screens */
+        padding: 10px; /* Reduce padding */
+    }
+    
 }
 
 @media (max-width: 480px) {

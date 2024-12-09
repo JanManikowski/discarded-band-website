@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Releases = () => {
-    const albumId = '5lWIRgkSy5WWOMrZ7xxygH'; // Replace with your album/track/playlist ID
+const ReleasesCard = ({ albumId, title, style }) => {
     const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
 
     // Update cursor position
@@ -15,32 +14,37 @@ const Releases = () => {
 
     return (
         <div
-            className="container-fluid text-white d-flex flex-column justify-content-center align-items-center"
+            className="release-card text-white d-flex flex-column justify-content-center align-items-center"
             style={{
                 backgroundColor: '#0A060D',
-                backgroundImage: `radial-gradient(circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(182, 28, 28, 0.5), transparent)`,
-                minHeight: '100vh',
-                paddingTop: '120px',
-                paddingBottom: '50px',
-                transition: 'background 0.1s',
+                backgroundImage: `radial-gradient(circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(182, 28, 28, 0.2), transparent)`,
+                width: '100%',
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.6)',
+                ...style, // Allow overriding styles via props
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '20px', // Add padding for spacing
+                boxSizing: 'border-box', // Prevent padding overflow
             }}
         >
             <div
-                className="container text-center"
+                className="release-card-content text-center"
                 style={{
-                    maxWidth: '900px',
+                    maxWidth: '1200px', // Limit the width to ensure responsiveness
+                    width: '90vw', // Use 90% of the viewport width for flexibility
                 }}
             >
                 <h1
-                    className="mb-4"
+                    className="mb-3"
                     style={{
-                        fontSize: '2.5rem',
+                        fontSize: '2rem',
                         fontWeight: 'bold',
                         textTransform: 'uppercase',
                         color: '#b61c1c',
                     }}
                 >
-                    Latest Release
+                    {title || 'Latest Release'}
                 </h1>
                 <div
                     className="spotify-embed-wrapper"
@@ -49,17 +53,21 @@ const Releases = () => {
                         borderRadius: '10px',
                         padding: '10px',
                         boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        justifyContent: 'center',
                     }}
                 >
                     <iframe
                         src={`https://open.spotify.com/embed/album/${albumId}`}
-                        width="100%"
-                        height="380"
                         frameBorder="0"
                         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                         title="Spotify Player"
                         style={{
                             borderRadius: '10px',
+                            maxWidth: '100%', // Ensure full responsiveness
+                            width: '100%', // Match container width
+                            height: '400px', // Set height for a horizontal view
+                            margin: '0 auto', // Center the iframe
                         }}
                     ></iframe>
                 </div>
@@ -68,4 +76,4 @@ const Releases = () => {
     );
 };
 
-export default Releases;
+export default ReleasesCard;

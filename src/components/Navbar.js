@@ -16,38 +16,37 @@ const NavBar = () => {
     const location = useLocation();
 
     useEffect(() => {
-        const isHomePage = location.pathname === '/';
-
-        if (!isHomePage) {
-            // Default navbar style for non-home pages
-            setNavbarStyle({
-                backgroundColor: 'rgba(0, 0, 0, 1)',
-                borderBottom: '2px solid #ffffff',
-                transition: 'background-color 0.5s ease, border-color 0.5s ease',
-            });
-        } else {
-            // Dynamic navbar style for the home page
-            const updateNavbarStyle = () => {
-                const featuredSection = document.getElementById('featured-section');
-                if (featuredSection) {
-                    const sectionTop = featuredSection.getBoundingClientRect().top;
-                    const isSectionInView = sectionTop <= window.innerHeight * 0.1;
-
+        const updateNavbarStyle = () => {
+            const isHomePage = location.pathname === '/';
+            
+            if (!isHomePage) {
+                // Default navbar style for non-home pages
+                setNavbarStyle({
+                    backgroundColor: 'rgba(0, 0, 0, 1)',
+                    borderBottom: '2px solid #ffffff',
+                    transition: 'background-color 0.5s ease, border-color 0.5s ease',
+                });
+            } else {
+                // Dynamic navbar style for the home page
+                const header = document.querySelector('.home-header');
+                if (header) {
+                    const headerBottom = header.getBoundingClientRect().bottom;
+    
                     setNavbarStyle({
-                        backgroundColor: isSectionInView ? 'rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0)',
-                        borderBottom: isSectionInView ? '2px solid #ffffff' : '2px solid transparent',
+                        backgroundColor: headerBottom <= 0 ? 'rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0)',
+                        borderBottom: headerBottom <= 0 ? '2px solid #ffffff' : '2px solid transparent',
                         transition: 'background-color 0.5s ease, border-color 0.5s ease',
                     });
                 }
-            };
-
-            updateNavbarStyle();
-            window.addEventListener('scroll', updateNavbarStyle);
-
-            return () => {
-                window.removeEventListener('scroll', updateNavbarStyle);
-            };
-        }
+            }
+        };
+    
+        updateNavbarStyle(); // Initial check
+        window.addEventListener('scroll', updateNavbarStyle);
+    
+        return () => {
+            window.removeEventListener('scroll', updateNavbarStyle);
+        };
     }, [location.pathname]);
 
     const handleMenuClick = () => {

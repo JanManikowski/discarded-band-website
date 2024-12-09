@@ -8,6 +8,7 @@ import "../styles/responsive.css";
 import { BasketContext } from "../contexts/BasketContext";
 import fetchProducts from "../utils/fetchProducts";
 import ProductCard from "../components/ProductCard";
+import ReleasesCard from "../components/ReleasesCard"; // Import the ReleasesCard
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -101,18 +102,51 @@ const Home = () => {
         </button>
       </div>
 
+      {/* Releases Card Section */}
+      <div
+  id="releases-section"
+  className="container-fluid d-flex justify-content-center align-items-center"
+  style={{
+    minHeight: "100vh",
+    width: "100vw", // Ensure it spans the entire viewport width
+    backgroundColor: "#0A060D",
+    margin: "0", // Remove unwanted margins
+    padding: "0", // Remove unwanted paddings
+    overflow: "hidden", // Prevent scrollbars if there's slight overflow
+    position: "relative",
+    zIndex: 1,
+  }}
+>
+  <ReleasesCard
+    albumId="5lWIRgkSy5WWOMrZ7xxygH"
+    title="Latest Release"
+    style={{
+      width: "100%", // Stretch the card to the full width of its container
+      minHeight: "100vh", // Full viewport height
+      margin: "0",
+      padding: "0",
+    }}
+  />
+</div>
+
+
+      {/* Featured Products Section */}
       <div
         id="featured-section"
         className="container-fluid featured-section"
         style={{
-          backgroundColor: "#0A060D", // Set the background color
-          padding: "20px", // Optional: Add padding for better spacing
+          backgroundColor: "#0A060D",
+          padding: "20px",
         }}
       >
-        <h2 className="featured-title pt-5"
-        style={{
-          backgroundColor: "#0A060D",
-        }}>Featured</h2>
+        <h2
+          className="featured-title pt-5"
+          style={{
+            backgroundColor: "#0A060D",
+          }}
+        >
+          Featured
+        </h2>
         <div
           className="product-grid"
           style={{ display: "flex", justifyContent: "center" }}
