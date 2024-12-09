@@ -66,18 +66,24 @@
         margin-right: 1rem;
         margin-bottom: 2rem;
     }
+    .custom-nav-link {
+        display: inline-block;
+        text-align: center;
+        padding: 30px 15px; /* Adjust if necessary */
+        margin: 0; /* Reset any conflicting margins */
+        vertical-align: middle; /* Ensure consistent alignment */
+    }
     /* Center the menu vertically on the screen */
-.custom-navbar-links {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 80vh; /* Full viewport height */
-    margin: 0; /* Remove any existing margin */
-    padding: 0; /* Remove any padding */
-    text-align: center; /* Center text */
-}
-
+    .custom-navbar-links {
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Ensure items are vertically centered */
+        align-items: center; /* Ensure items are horizontally centered */
+        height: 80vh; /* Center menu vertically within viewport */
+        margin: 0 auto; /* Ensure proper horizontal alignment */
+        padding: 0; /* Remove padding */
+        text-align: center; /* Center the text */
+    }
 
     .custom-cart-container {
         justify-content: center !important;
@@ -264,8 +270,10 @@
     }
 
     .custom-navbar-links .custom-nav-link {
-        font-size: 1rem; /* Adjust link size for mobile */
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Light and subtle */
+        font-size: 1rem; /* Keep mobile font size */
+        margin: 0; /* Remove external margins */
+        margin-bottom: 1.5rem; /* Uniform spacing between links */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Maintain underlines */
     }
 
     .custom-cart-container i {
