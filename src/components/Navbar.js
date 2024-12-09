@@ -73,6 +73,7 @@ const NavBar = () => {
                     zIndex: 998,
                     visibility: menuOpen ? 'visible' : 'hidden',
                     opacity: menuOpen ? 1 : 0,
+                    backdropFilter: menuOpen ? 'blur(4px)' : 'none',
                     transition: 'opacity 0.3s ease, visibility 0.3s ease',
                 }}
                 onClick={handleLinkClick}

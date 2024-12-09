@@ -13,11 +13,13 @@ import Basket from "./pages/Basket";
 import ProductPage from "./components/ProductPage";
 import Releases from "./pages/Releases";
 import { BasketProvider, BasketContext } from "./contexts/BasketContext";
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
   return (
     <BasketProvider>
       <Router>
+        <ScrollToTop/>
         <BasketContext.Consumer>
           {({ basketCount }) => <NavBar basketCount={basketCount} />}
         </BasketContext.Consumer>
