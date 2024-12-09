@@ -5,10 +5,21 @@ import { commonTitleStyle } from "../styles/constants";
 const Contact = () => {
   const form = useRef();
   const [toast, setToast] = useState({ message: "", visible: false, success: false });
+  const [isOtherSubject, setIsOtherSubject] = useState(false);
+  const [customSubject, setCustomSubject] = useState("");
 
   const showToast = (message, success) => {
     setToast({ message, visible: true, success });
     setTimeout(() => setToast({ message: "", visible: false, success: false }), 3000);
+  };
+
+  const handleSubjectChange = (e) => {
+    if (e.target.value === "Other") {
+      setIsOtherSubject(true);
+    } else {
+      setIsOtherSubject(false);
+      setCustomSubject(""); // Clear custom subject if switching back
+    }
   };
 
   const sendEmail = async (e) => {
@@ -24,6 +35,8 @@ const Contact = () => {
 
       showToast("Your message was sent successfully!", true);
       form.current.reset();
+      setIsOtherSubject(false); // Reset the subject field state
+      setCustomSubject("");
     } catch (error) {
       console.error("EmailJS Error:", error);
       showToast("Failed to send the message. Please try again.", false);
@@ -112,6 +125,7 @@ const Contact = () => {
             name="subject"
             id="subject"
             className="form-select"
+            onChange={handleSubjectChange}
             style={{
               backgroundColor: "black",
               color: "white",
@@ -130,8 +144,33 @@ const Contact = () => {
             <option value="Booking Inquiry">Booking Inquiry</option>
             <option value="Merchandise">Merchandise</option>
             <option value="General Question">General Question</option>
+            <option value="Other">Other</option>
           </select>
         </div>
+
+        {/* Custom Subject Field */}
+        {isOtherSubject && (
+          <div className="mb-3">
+            <label htmlFor="custom_subject" className="form-label">
+              Custom Subject
+            </label>
+            <input
+              type="text"
+              name="custom_subject"
+              id="custom_subject"
+              className="form-control"
+              value={customSubject}
+              onChange={(e) => setCustomSubject(e.target.value)}
+              style={{
+                backgroundColor: "transparent",
+                color: "white",
+                border: "1px solid white",
+                borderRadius: "0",
+              }}
+              required
+            />
+          </div>
+        )}
 
         {/* Message Field */}
         <div className="mb-3">
@@ -156,7 +195,7 @@ const Contact = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-100"
+          className="btn w-100"
           style={{
             backgroundColor: "transparent",
             border: "1px solid white",
