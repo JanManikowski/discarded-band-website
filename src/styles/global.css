@@ -230,3 +230,9 @@ input[type="number"] {
   -moz-appearance: textfield; /* Removes spinner arrows */
 }
 
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%; /* Prevent overflow */
+    overflow-x: hidden; /* Disable horizontal scrolling */
+}

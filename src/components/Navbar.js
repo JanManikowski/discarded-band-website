@@ -20,18 +20,16 @@ const NavBar = () => {
             const isHomePage = location.pathname === '/';
             
             if (!isHomePage) {
-                // Default navbar style for non-home pages
                 setNavbarStyle({
                     backgroundColor: 'rgba(0, 0, 0, 1)',
                     borderBottom: '2px solid #ffffff',
                     transition: 'background-color 0.5s ease, border-color 0.5s ease',
                 });
             } else {
-                // Dynamic navbar style for the home page
                 const header = document.querySelector('.home-header');
                 if (header) {
                     const headerBottom = header.getBoundingClientRect().bottom;
-    
+
                     setNavbarStyle({
                         backgroundColor: headerBottom <= 0 ? 'rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0)',
                         borderBottom: headerBottom <= 0 ? '2px solid #ffffff' : '2px solid transparent',
@@ -40,13 +38,18 @@ const NavBar = () => {
                 }
             }
         };
-    
-        updateNavbarStyle(); // Initial check
+
+        updateNavbarStyle();
         window.addEventListener('scroll', updateNavbarStyle);
-    
+
         return () => {
             window.removeEventListener('scroll', updateNavbarStyle);
         };
+    }, [location.pathname]);
+
+    useEffect(() => {
+        // Close the menu on route changes
+        setMenuOpen(false);
     }, [location.pathname]);
 
     const handleMenuClick = () => {
@@ -54,7 +57,7 @@ const NavBar = () => {
     };
 
     const handleLinkClick = () => {
-        setMenuOpen(false);
+        setMenuOpen(false); // Close the menu explicitly
     };
 
     return (
@@ -79,7 +82,7 @@ const NavBar = () => {
                 className="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar"
                 style={navbarStyle}
             >
-                <div className="container-fluid d-flex justify-content-between align-items-center">
+                <div className="container-fluid d-flex align-items-center">
                     <Link className="navbar-brand custom-logo-container" to="/">
                         <img src={logo} alt="Logo" className="img-fluid custom-logo" />
                     </Link>
@@ -93,6 +96,7 @@ const NavBar = () => {
                         aria-expanded={menuOpen}
                         aria-label="Toggle navigation"
                         onClick={handleMenuClick}
+                        style={{ marginLeft: 'auto' }}
                     >
                         <span className="navbar-toggler-icon"></span>
                     </button>
@@ -135,7 +139,6 @@ const NavBar = () => {
                                     Contact
                                 </Link>
                             </li>
-                            {/* Cart Item for Mobile */}
                             <li className="nav-item d-lg-none custom-cart-container">
                                 <Link
                                     to="/basket"

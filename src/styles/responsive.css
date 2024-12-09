@@ -142,6 +142,47 @@
         width: 95vw; /* Slightly increase the container width for smaller screens */
         padding: 10px; /* Reduce padding */
     }
+    #releases-section, .home-header {
+        width: 100%; /* Instead of 100vw */
+        overflow: hidden; /* Prevent unwanted scrollbars */
+    }
+    .custom-navbar {
+        height: 90px; /* Adjust if needed */
+    }
+    .custom-logo-container {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center; /* Ensures vertical alignment */
+        margin-left: 1rem;
+    }
+    
+    .custom-logo {
+        max-height: 60px; /* Ensure the logo doesn't exceed the navbar height */
+        width: auto;
+    }
+    .navbar-toggler {
+        position: absolute;
+        top: 15px; /* Adjust as needed to align vertically */
+        right: 15px; /* Adjust as needed to align horizontally */
+        z-index: 1050; /* Keep it above other elements */
+        align-self: flex-end; /* Ensure it's aligned to the top-right */
+        margin: 0; /* Remove any default margins */
+    }
+
+    .container-fluid {
+        display: flex;
+        align-items: center; /* Center logo vertically */
+        justify-content: space-between; /* Spread logo and toggle button */
+    }
+
+    .navbar-collapse {
+        align-items: flex-start; /* Ensure the collapse content doesn't affect the toggler's position */
+    }
+    .container-fluid {
+        display: flex;
+        justify-content: space-between; /* Spread items horizontally */
+    }
+    
     
 }
 
