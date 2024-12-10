@@ -2,7 +2,7 @@
   "name": "discarded-band-website",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://janmanikowski.github.io/discarded-band-website",
+  "homepage": "https://discardedband.com",
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@fontsource/metal-mania": "^5.1.0",
