@@ -240,3 +240,8 @@ html, body {
     background-color: #0A060D;
 }
 
+.discounted-price {
+    color: red;
+    font-weight: bold;
+}
+

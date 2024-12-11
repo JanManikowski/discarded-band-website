@@ -19,6 +19,10 @@ const fetchProductById = async (id) => {
                                         amount
                                         currencyCode
                                     }
+                                    compareAtPrice {
+                                        amount
+                                        currencyCode
+                                    }
                                     image {
                                         src
                                         altText
@@ -35,7 +39,7 @@ const fetchProductById = async (id) => {
                             }
                         }
                     }
-                }`
+                }`                
             },
             {
                 headers: {

@@ -21,6 +21,10 @@ const fetchProducts = async () => {
                                                 amount
                                                 currencyCode
                                             }
+                                            compareAtPrice {
+                                                amount
+                                                currencyCode
+                                            }
                                             image {
                                                 src
                                                 altText
@@ -32,6 +36,7 @@ const fetchProducts = async () => {
                         }
                     }
                 }`
+                
             },
             {
                 headers: {

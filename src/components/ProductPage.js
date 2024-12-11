@@ -50,7 +50,40 @@ const ProductPage = () => {
         }).format(amount);
     };
 
-    // Hardcoded parsing logic
+    const renderPrice = (variant) => {
+        if (
+            variant.compareAtPrice &&
+            parseFloat(variant.compareAtPrice.amount) > parseFloat(variant.price.amount)
+        ) {
+            return (
+                <>
+                    <span
+                        style={{
+                            textDecoration: "line-through",
+                            marginRight: "10px",
+                            opacity: 0.8,
+                            fontSize: "1rem",
+                        }}
+                    >
+                        {formatPrice(
+                            variant.compareAtPrice.amount,
+                            variant.compareAtPrice.currencyCode
+                        )}
+                    </span>
+                    <span style={{ color: "red", fontWeight: "bold", fontSize: "1.8rem" }}>
+                        {formatPrice(variant.price.amount, variant.price.currencyCode)}
+                    </span>
+                </>
+            );
+        } else {
+            return (
+                <span style={{ color: "red", fontWeight: "bold", fontSize: "1.8rem" }}>
+                    {formatPrice(variant.price.amount, variant.price.currencyCode)}
+                </span>
+            );
+        }
+    };
+
     const descriptionMapping = {
         Print: "Band logo",
         UNISEX: "",
@@ -113,21 +146,7 @@ const ProductPage = () => {
                         >
                             {title}
                         </h1>
-                        <p
-                            className="text-danger mb-4"
-                            style={{
-                                fontSize: "1.8rem",
-                                fontWeight: "bold",
-                                textTransform: "uppercase",
-                            }}
-                        >
-                            {selectedVariant
-                                ? formatPrice(
-                                      selectedVariant.price.amount,
-                                      selectedVariant.price.currencyCode
-                                  )
-                                : ""}
-                        </p>
+                        <p className="mb-4">{selectedVariant && renderPrice(selectedVariant)}</p>
 
                         {/* Display formatted description */}
                         <ul style={{ fontSize: "1rem", color: "#e0e0e0", lineHeight: "1.6" }}>

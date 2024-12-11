@@ -195,7 +195,7 @@ const Contact = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="btn w-100"
+          className=" w-100"
           style={{
             backgroundColor: "transparent",
             border: "1px solid white",
