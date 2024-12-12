@@ -76,6 +76,17 @@ const ReleasesCard = ({ albumId, title, style }) => {
                     ></iframe>
                 </div>
             </div>
+            <button
+          className="btn btn-outline-light mt-5"
+          onClick={() => {
+            const featuredSection = document.getElementById("featured-section");
+            if (featuredSection) {
+              featuredSection.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          }}
+        >
+          See Merch
+        </button>
         </div>
     );
 };
