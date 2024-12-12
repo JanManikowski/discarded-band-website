@@ -14,6 +14,7 @@ const ReleasesCard = ({ albumId, title, style }) => {
 
     return (
         <div
+            id="latest"
             className="release-card text-white d-flex flex-column justify-content-center align-items-center"
             style={{
                 backgroundColor: '#0A060D',

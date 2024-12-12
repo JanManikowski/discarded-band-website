@@ -93,13 +93,13 @@ const Home = () => {
         <button
           className="btn btn-outline-light mt-4"
           onClick={() => {
-            const featuredSection = document.getElementById("featured-section");
+            const featuredSection = document.getElementById("latest");
             if (featuredSection) {
               featuredSection.scrollIntoView({ behavior: "smooth", block: "start" });
             }
           }}
         >
-          See Merch
+          See Latest Release
         </button>
       </div>
 

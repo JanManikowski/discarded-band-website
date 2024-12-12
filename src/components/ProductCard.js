@@ -40,6 +40,7 @@ const ProductCard = ({ product, handleAddToBasket }) => {
                                             marginRight: '10px',
                                             opacity: 0.8,
                                             fontSize: '0.9rem',
+                                            color:"#b61c1c"
                                         }}
                                     >
                                         {formatPrice(
@@ -47,7 +48,7 @@ const ProductCard = ({ product, handleAddToBasket }) => {
                                             product.variants.edges[0].node.compareAtPrice.currencyCode
                                         )}
                                     </span>
-                                    <span className="discounted-price" style={{ color: "red", fontWeight: "bold" }}>
+                                    <span className="discounted-price" style={{ color: "#b61c1c", fontWeight: "bold" }}>
                                         {formatPrice(
                                             product.variants.edges[0].node.price.amount,
                                             product.variants.edges[0].node.price.currencyCode
@@ -58,7 +59,7 @@ const ProductCard = ({ product, handleAddToBasket }) => {
                                 <span
                                     className="main-price"
                                     style={{
-                                        color: "red", // Bright red for the main price
+                                        color: "#b61c1c", // Bright red for the main price
                                         fontWeight: "bold",
                                     }}
                                 >

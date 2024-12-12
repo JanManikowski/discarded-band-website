@@ -63,6 +63,7 @@ const ProductPage = () => {
                             marginRight: "10px",
                             opacity: 0.8,
                             fontSize: "1rem",
+                            color:"#b61c1c"
                         }}
                     >
                         {formatPrice(
@@ -70,14 +71,14 @@ const ProductPage = () => {
                             variant.compareAtPrice.currencyCode
                         )}
                     </span>
-                    <span style={{ color: "red", fontWeight: "bold", fontSize: "1.8rem" }}>
+                    <span style={{ color: "#b61c1c", fontWeight: "bold", fontSize: "1.8rem" }}>
                         {formatPrice(variant.price.amount, variant.price.currencyCode)}
                     </span>
                 </>
             );
         } else {
             return (
-                <span style={{ color: "red", fontWeight: "bold", fontSize: "1.8rem" }}>
+                <span style={{ color: "#b61c1c", fontWeight: "bold", fontSize: "1.8rem" }}>
                     {formatPrice(variant.price.amount, variant.price.currencyCode)}
                 </span>
             );
@@ -86,7 +87,7 @@ const ProductPage = () => {
 
     const descriptionMapping = {
         Print: "Band logo",
-        UNISEX: "",
+        UNISEX: "UNISEX",
         Color: "Black",
         Material: "100% halfgekamd ringgesponnen katoen, 150 g/m²",
         Size: "Regular Fit",
