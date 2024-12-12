@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FaSpotify, FaInstagram } from 'react-icons/fa';
 
 const Footer = () => {
@@ -21,11 +22,11 @@ const Footer = () => {
         textAlign: 'center',
       }}>
         <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
-          <a href="/" className="text-white">Home</a>
+          <Link to="/" className="text-white">Home</Link>
           <span>|</span>
-          <a href="/about-us" className="text-white">About Us</a>
+          <Link to="/about-us" className="text-white">About Us</Link>
           <span>|</span>
-          <a href="/contact" className="text-white">Contact</a>
+          <Link to="/contact" className="text-white">Contact</Link>
         </div>
         <div style={{ display: 'flex', gap: '20px', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
           <a
