@@ -222,7 +222,27 @@
         visibility: visible;
         opacity: 1;
     }
+    .about-us-page {
+        display: block; /* Ensure block layout */
+      }
     
+      .text-section {
+        width: 100%; /* Full-width for smaller screens */
+        margin: 0 auto; /* Center-align the section */
+        padding: 10px; /* Adjust padding for better fit */
+      }
+    
+      .about-text, .band-text {
+        font-size: 1rem; /* Adjust text size for readability */
+        line-height: 1.6; /* Better line spacing */
+        text-align: left; /* Align text to the left */
+        max-width: 100%; /* Ensure text does not exceed screen width */
+      }
+    
+      .band-photos {
+        flex-direction: column; /* Stack images vertically */
+        align-items: center; /* Center-align the images */
+      }
     
     
 }

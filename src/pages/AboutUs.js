@@ -12,17 +12,21 @@ const AboutUs = () => {
       style={{ backgroundColor: "#0A060D" }}
     >
       {/* ABOUT US Section */}
-      <div
-        className="text-section container text-center py-5"
-      >
+      <div className="text-section container text-center py-5">
         <h1 style={commonTitleStyle}>ABOUT US</h1>
         <div
           className="about-text mx-auto"
           style={{ maxWidth: "800px", fontSize: "1.2rem", lineHeight: "1.8", color: "#e0e0e0" }}
         >
-          <p>Within the short time our species has walked this planet, through cooperation, we have built civilizations with the power to shatter mountains and conquer the sky.</p>
-          <p>Wise humans, we named ourselves. But our empire is crumbling, and wisdom seems scarcer every single day.</p>
-          <p>Despair, disillusionment, and dystopian atmospheres abound. How to lend meaning to a single human life has become increasingly meaningless as the experience of overwhelm through ever-increasing complexity is commonplace. This is our backdrop, this is our stage.</p>
+          <p>
+            Within the short time our species has walked this planet, through cooperation, we have built civilizations with the power to shatter mountains and conquer the sky.
+          </p>
+          <p>
+            Wise humans, we named ourselves. But our empire is crumbling, and wisdom seems scarcer every single day.
+          </p>
+          <p>
+            Despair, disillusionment, and dystopian atmospheres abound. How to lend meaning to a single human life has become increasingly meaningless as the experience of overwhelm through ever-increasing complexity is commonplace. This is our backdrop, this is our stage.
+          </p>
           <p className="font-weight-bold text-light">
             Humanity feels <span style={{ color: "#b61c1c", fontWeight: "bold" }}>DISCARDED</span>.
           </p>
@@ -31,12 +35,27 @@ const AboutUs = () => {
 
       {/* THE BAND Section */}
       <div className="text-section container text-center">
-        <h1 style={{color: '#b61c1c', fontWeight: "bold", fontSize: "2.5rem",}}>THE BAND</h1>
+        <h1
+          style={{
+            color: "#b61c1c",
+            fontWeight: "bold",
+            fontSize: "2.5rem",
+          }}
+        >
+          THE BAND
+        </h1>
         <div
           className="band-text mx-auto"
-          style={{ maxWidth: "800px", fontSize: "1.2rem", lineHeight: "1.8", color: "#e0e0e0" }}
+          style={{
+            maxWidth: "800px",
+            fontSize: "1.2rem",
+            lineHeight: "1.8",
+            color: "#e0e0e0",
+          }}
         >
-          <p>Not intending to be constrained by any genre, our main inspiration comes from genres like thall, deathcore, and blackened deathcore. As our first single releases, we’re hard at work writing and preparing for our debut EP. The more time we spend together, the more we refine our sound and shape the direction we want this band to take.</p>
+          <p>
+            Not intending to be constrained by any genre, our main inspiration comes from genres like thall, deathcore, and blackened deathcore. As our first single releases, we’re hard at work writing and preparing for our debut EP. The more time we spend together, the more we refine our sound and shape the direction we want this band to take.
+          </p>
           <p>This project holds deep meaning for each of us, and we’re determined to create something unforgettable.</p>
         </div>
 
@@ -46,7 +65,6 @@ const AboutUs = () => {
               src={BandPhoto1}
               alt="Band photo 1"
               className="img-fluid rounded"
-              style={{ width: "100%" }}
             />
           </div>
           <div className="col-12 col-md-5">
@@ -54,7 +72,6 @@ const AboutUs = () => {
               src={BandPhoto2}
               alt="Band photo 2"
               className="img-fluid rounded"
-              style={{ width: "100%" }}
             />
           </div>
         </div>

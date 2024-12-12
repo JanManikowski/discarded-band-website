@@ -14,6 +14,7 @@ import ProductPage from "./components/ProductPage";
 import Releases from "./pages/Releases";
 import { BasketProvider, BasketContext } from "./contexts/BasketContext";
 import ScrollToTop from "./components/ScrollToTop";
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 const App = () => {
   return (
