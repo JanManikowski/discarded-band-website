@@ -6,14 +6,15 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 const NavBar = () => {
     const { basketCount, calculateTotal } = useContext(BasketContext);
+    const location = useLocation();
+    const isHomePage = location.pathname === '/';
     const [navbarStyle, setNavbarStyle] = useState({
-        backgroundColor: 'rgba(0, 0, 0, 1)',
-        borderBottom: '2px solid #ffffff',
-        transition: 'background-color 0.5s ease, border-color 0.5s ease',
+    backgroundColor: isHomePage ? 'rgba(0, 0, 0, 0)' : 'rgba(0, 0, 0, 1)',
+    borderBottom: isHomePage ? '2px solid transparent' : '2px solid #ffffff',
+    transition: 'background-color 0.5s ease, border-color 0.5s ease',
     });
 
     const [menuOpen, setMenuOpen] = useState(false);
-    const location = useLocation();
 
     useEffect(() => {
         const updateNavbarStyle = () => {
@@ -27,25 +28,25 @@ const NavBar = () => {
                 });
             } else {
                 const header = document.querySelector('.home-header');
-                if (header) {
-                    const headerBottom = header.getBoundingClientRect().bottom;
-
-                    setNavbarStyle({
-                        backgroundColor: headerBottom <= 0 ? 'rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0)',
-                        borderBottom: headerBottom <= 0 ? '2px solid #ffffff' : '2px solid transparent',
-                        transition: 'background-color 0.5s ease, border-color 0.5s ease',
-                    });
-                }
+                const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
+    
+                setNavbarStyle({
+                    backgroundColor: headerBottom <= 0 ? 'rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0)',
+                    borderBottom: headerBottom <= 0 ? '2px solid #ffffff' : '2px solid transparent',
+                    transition: 'background-color 0.5s ease, border-color 0.5s ease',
+                });
             }
         };
-
+    
+        // Update on scroll and location change
         updateNavbarStyle();
         window.addEventListener('scroll', updateNavbarStyle);
-
+    
         return () => {
             window.removeEventListener('scroll', updateNavbarStyle);
         };
     }, [location.pathname]);
+    
 
     useEffect(() => {
         // Close the menu on route changes
