@@ -54,7 +54,7 @@ const AboutUs = () => {
           }}
         >
           <p>
-            Not intending to be constrained by any genre, our main inspiration comes from genres like thall, deathcore, and blackened deathcore. As our first single releases, we’re hard at work writing and preparing for our debut EP. The more time we spend together, the more we refine our sound and shape the direction we want this band to take.
+            Not intending to be constrained by any genre, our main inspiration comes from genres like thall and blackened deathcore. As our first single releases, we’re hard at work writing and preparing for our debut EP. The more time we spend together, the more we refine our sound and shape the direction we want this band to take.
           </p>
           <p>This project holds deep meaning for each of us, and we’re determined to create something unforgettable.</p>
         </div>
