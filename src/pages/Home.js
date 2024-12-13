@@ -119,7 +119,7 @@ const Home = () => {
   }}
 >
   <ReleasesCard
-    albumId="2qkiNoOXU7MqFWGuXACSHK"
+    albumId="0acx688pBFccyiDVk4axg6"
     title="Latest Release"
     style={{
       width: "100%", // Stretch the card to the full width of its container
