@@ -18,14 +18,14 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 // Centralized page titles
 const PAGE_TITLES = {
-  "/": "Home - Discarded",
-  "/contact": "Contact Us - Discarded",
-  "/about-us": "About Us - Discarded",
-  "/faq": "FAQ - Discarded",
-  "/support-us": "Support Us - Discarded",
-  "/products": "Products - Discarded",
-  "/basket": "Your Basket - Discarded",
-  "/releases": "Latest Releases - Discarded",
+  "/": "Home - DISCARDED",
+  "/contact": "Contact Us - DISCARDED",
+  "/about-us": "About Us - DISCARDED",
+  "/faq": "FAQ - DISCARDED",
+  "/support-us": "Support Us - DISCARDED",
+  "/products": "Products - DISCARDED",
+  "/basket": "Your Basket - DISCARDED",
+  "/releases": "Latest Releases - DISCARDED",
 };
 
 const App = () => {
