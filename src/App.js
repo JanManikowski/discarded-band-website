@@ -1,4 +1,3 @@
-// App.js
 import React from "react";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import NavBar from "./components/Navbar";
@@ -14,13 +13,27 @@ import ProductPage from "./components/ProductPage";
 import Releases from "./pages/Releases";
 import { BasketProvider, BasketContext } from "./contexts/BasketContext";
 import ScrollToTop from "./components/ScrollToTop";
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import SetPageTitle from "./components/SetPageTitle"; // Import the new component
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+
+// Centralized page titles
+const PAGE_TITLES = {
+  "/": "Home - Discarded",
+  "/contact": "Contact Us - Discarded",
+  "/about-us": "About Us - Discarded",
+  "/faq": "FAQ - Discarded",
+  "/support-us": "Support Us - Discarded",
+  "/products": "Products - Discarded",
+  "/basket": "Your Basket - Discarded",
+  "/releases": "Latest Releases - Discarded",
+};
 
 const App = () => {
   return (
     <BasketProvider>
       <Router>
-        <ScrollToTop/>
+        <SetPageTitle pageTitles={PAGE_TITLES} /> {/* Add the title setter */}
+        <ScrollToTop />
         <BasketContext.Consumer>
           {({ basketCount }) => <NavBar basketCount={basketCount} />}
         </BasketContext.Consumer>
