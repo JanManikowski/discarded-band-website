@@ -59,6 +59,23 @@ const AboutUs = () => {
           <p>This project holds deep meaning for each of us, and we’re determined to create something unforgettable.</p>
         </div>
 
+        <div
+          className="mx-auto"
+          style={{
+            maxWidth: "800px",
+            fontSize: "1.2rem",
+            lineHeight: "1.8",
+            color: "#e0e0e0",
+            paddingBottom: "1rem"
+          }}
+        >
+          <br></br>
+          <p>Vocals: Andy Meijer</p>
+          <p>Rythm: Nei Nikki & Liam Rolink</p>
+          <p>Lead: Jan Manikowski</p>
+          <p>Bass & Drums: Still looking, contact for audition.</p>
+        </div>
+
         <div className="band-photos row justify-content-center mt-4">
           <div className="col-12 col-md-5 mb-3">
             <img
