@@ -1,5 +1,5 @@
-import React from "react";
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { HashRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import NavBar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -13,8 +13,9 @@ import ProductPage from "./components/ProductPage";
 import Releases from "./pages/Releases";
 import { BasketProvider, BasketContext } from "./contexts/BasketContext";
 import ScrollToTop from "./components/ScrollToTop";
-import SetPageTitle from "./components/SetPageTitle"; // Import the new component
+import SetPageTitle from "./components/SetPageTitle";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { initAnalytics, trackPageView } from "./utils/analytics";
 
 // Centralized page titles
 const PAGE_TITLES = {
@@ -28,10 +29,26 @@ const PAGE_TITLES = {
   "/releases": "Latest Releases - DISCARDED",
 };
 
+// Helper component to track page views
+const AnalyticsTracker = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    trackPageView(location.pathname);
+  }, [location]);
+
+  return null; // This component doesn't render anything
+};
+
 const App = () => {
+  useEffect(() => {
+    initAnalytics();
+  }, []);
+
   return (
     <BasketProvider>
       <Router>
+        <AnalyticsTracker /> {/* Add Analytics tracking here */}
         <SetPageTitle pageTitles={PAGE_TITLES} /> {/* Add the title setter */}
         <ScrollToTop />
         <BasketContext.Consumer>
