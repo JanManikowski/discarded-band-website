@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import fetchProductById from "../utils/fetchProductById";
 import { BasketContext } from "../contexts/BasketContext";
+import { trackEvent } from "../utils/analytics"; // Adjust the path if needed
+
 
 const ProductPage = () => {
     const { id } = useParams();
@@ -35,12 +37,32 @@ const ProductPage = () => {
         setSelectedVariant(variant);
     };
 
-    const handleAddToBasket = () => {
-        if (selectedVariant) {
-            addToBasket(product, selectedVariant);
-            navigate("/basket");
-        }
-    };
+    useEffect(() => {
+        const loadProduct = async () => {
+            try {
+                const productData = await fetchProductById(decodeURIComponent(id));
+                setProduct(productData);
+    
+                // Track product page view
+                trackEvent("view_product", {
+                    category: "Product Interaction",
+                    action: "Viewed Product",
+                    label: productData.title,
+                });
+    
+                if (productData.variants.edges.length > 0) {
+                    setSelectedVariant(productData.variants.edges[0].node);
+                }
+            } catch (error) {
+                console.error("Failed to load product:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadProduct();
+    }, [id]);
+    
+    
 
     const formatPrice = (amount, currencyCode) => {
         // Format the price using Intl.NumberFormat
@@ -117,6 +139,14 @@ const ProductPage = () => {
 
     const { title, images, variants } = product;
     const productImage = images?.edges[0]?.node?.src;
+
+    const handleProductClick = () => {
+        trackEvent("click", {
+            category: "Product Interaction",
+            action: "Clicked on Product",
+            label: product.title + "added to basket", // Track product name
+        });
+    };
 
     return (
         <div

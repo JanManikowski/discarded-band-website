@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { BasketContext } from "../contexts/BasketContext";
 import handleOrder from "../utils/handleOrder";
+import { trackEvent } from "../utils/analytics"; // Adjust the path if needed
 
 const Basket = () => {
     const { basketItems, calculateTotal, updateQuantity, removeItem } = useContext(BasketContext);
@@ -15,6 +16,11 @@ const Basket = () => {
     };
 
     const placeOrder = async () => {
+        trackEvent("view_product", {
+            category: "Product Interaction",
+            action: "Viewed Product",
+            label: productData.title,
+        });
         try {
             const checkoutUrl = await handleOrder(basketItems);
             if (checkoutUrl) {

@@ -1,19 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { trackEvent } from "../utils/analytics"; // Import your analytics tracking function
 
 const ProductCard = ({ product, handleAddToBasket }) => {
     // Format the price
     const formatPrice = (amount, currencyCode) => {
-    // Format the price using Intl.NumberFormat
-    const formattedPrice = new Intl.NumberFormat("nl-NL", {
-        style: "currency",
-        currency: currencyCode,
-        minimumFractionDigits: 2,
-    }).format(amount);
+        const formattedPrice = new Intl.NumberFormat("nl-NL", {
+            style: "currency",
+            currency: currencyCode,
+            minimumFractionDigits: 2,
+        }).format(amount);
 
-    // Remove the space between the symbol and the number
-    return formattedPrice.replace(/\s/g, "");
-};
+        // Remove the space between the symbol and the number
+        return formattedPrice.replace(/\s/g, "");
+    };
 
     // Determine if the price is the main price (not discounted)
     const isMainPrice = !(
@@ -22,10 +22,27 @@ const ProductCard = ({ product, handleAddToBasket }) => {
         parseFloat(product.variants.edges[0].node.price.amount)
     );
 
+    // Function to handle product click
+    const handleProductClick = () => {
+        trackEvent("click", {
+            category: "Product Interaction",
+            action: "Clicked on Product",
+            label: product.title, // Track product name
+        });
+    };
+
     return (
         <div className="col-12 col-md-6 col-lg-4 d-flex justify-content-center product-card">
-            <Link to={`/product/${encodeURIComponent(product.id)}`} className="text-decoration-none">
-                <div className="card shadow-sm border-0 text-white h-100" style={{ backgroundColor: "transparent" }}>
+            {/* Add onClick to track clicks */}
+            <Link
+                to={`/product/${encodeURIComponent(product.id)}`}
+                className="text-decoration-none"
+                onClick={handleProductClick} // Track clicks here
+            >
+                <div
+                    className="card shadow-sm border-0 text-white h-100"
+                    style={{ backgroundColor: "transparent" }}
+                >
                     <img
                         src={product.variants.edges[0].node.image.src}
                         alt={product.title}
@@ -40,11 +57,11 @@ const ProductCard = ({ product, handleAddToBasket }) => {
                                 <>
                                     <span
                                         style={{
-                                            textDecoration: 'line-through',
-                                            marginRight: '10px',
+                                            textDecoration: "line-through",
+                                            marginRight: "10px",
                                             opacity: 0.8,
-                                            fontSize: '0.9rem',
-                                            color:"#b61c1c"
+                                            fontSize: "0.9rem",
+                                            color: "#b61c1c",
                                         }}
                                     >
                                         {formatPrice(
@@ -52,7 +69,10 @@ const ProductCard = ({ product, handleAddToBasket }) => {
                                             product.variants.edges[0].node.compareAtPrice.currencyCode
                                         )}
                                     </span>
-                                    <span className="discounted-price" style={{ color: "#b61c1c", fontWeight: "bold" }}>
+                                    <span
+                                        className="discounted-price"
+                                        style={{ color: "#b61c1c", fontWeight: "bold" }}
+                                    >
                                         {formatPrice(
                                             product.variants.edges[0].node.price.amount,
                                             product.variants.edges[0].node.price.currencyCode
@@ -63,7 +83,7 @@ const ProductCard = ({ product, handleAddToBasket }) => {
                                 <span
                                     className="main-price"
                                     style={{
-                                        color: "#b61c1c", // Bright red for the main price
+                                        color: "#b61c1c",
                                         fontWeight: "bold",
                                     }}
                                 >
