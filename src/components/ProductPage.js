@@ -43,11 +43,15 @@ const ProductPage = () => {
     };
 
     const formatPrice = (amount, currencyCode) => {
-        return new Intl.NumberFormat("nl-NL", {
+        // Format the price using Intl.NumberFormat
+        const formattedPrice = new Intl.NumberFormat("nl-NL", {
             style: "currency",
             currency: currencyCode,
             minimumFractionDigits: 2,
         }).format(amount);
+    
+        // Remove the space between the symbol and the number
+        return formattedPrice.replace(/\s/g, "");
     };
 
     const renderPrice = (variant) => {

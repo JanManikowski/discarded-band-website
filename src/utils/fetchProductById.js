@@ -10,7 +10,7 @@ const fetchProductById = async (id) => {
                         id
                         title
                         description
-                        variants(first: 5) {
+                        variants(first: 100) {
                             edges {
                                 node {
                                     id

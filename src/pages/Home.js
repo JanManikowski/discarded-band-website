@@ -143,6 +143,7 @@ const Home = () => {
         }}
       >
         <h1 style={commonTitleStyle}>FEATURED</h1>
+        <p className="text-white text-center">Only shipping in the Netherlands right now. Working on more countries.</p>
         <div
           className="product-grid"
           style={{ display: "flex", justifyContent: "center" }}

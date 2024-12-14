@@ -36,6 +36,7 @@ const Products = () => {
       }}
     >
       <h1 style={commonTitleStyle}>PRODUCTS</h1>
+      <p className="text-white text-center">Only shipping in the Netherlands right now. Working on more countries.</p>
       <div className="product-grid" style={{ display: 'flex', justifyContent: 'center' }}>
         {products.length > 0 ? (
           products.map(({ node: product }) => (

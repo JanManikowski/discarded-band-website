@@ -4,12 +4,16 @@ import { Link } from "react-router-dom";
 const ProductCard = ({ product, handleAddToBasket }) => {
     // Format the price
     const formatPrice = (amount, currencyCode) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: currencyCode,
-            minimumFractionDigits: 2,
-        }).format(amount);
-    };
+    // Format the price using Intl.NumberFormat
+    const formattedPrice = new Intl.NumberFormat("nl-NL", {
+        style: "currency",
+        currency: currencyCode,
+        minimumFractionDigits: 2,
+    }).format(amount);
+
+    // Remove the space between the symbol and the number
+    return formattedPrice.replace(/\s/g, "");
+};
 
     // Determine if the price is the main price (not discounted)
     const isMainPrice = !(
