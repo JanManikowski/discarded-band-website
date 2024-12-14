@@ -34,11 +34,12 @@ const AnalyticsTracker = () => {
   const location = useLocation();
 
   useEffect(() => {
-    trackPageView(location.pathname);
+      trackPageView(); // This will now include hash in the path
   }, [location]);
 
-  return null; // This component doesn't render anything
+  return null; // No UI output
 };
+
 
 const App = () => {
   useEffect(() => {
