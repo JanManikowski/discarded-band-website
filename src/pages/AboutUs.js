@@ -5,6 +5,7 @@ import { commonTitleStyle } from "../styles/constants";
 import BandPhoto1 from "../assets/band1.jpg";
 import BandPhoto2 from "../assets/band2.jpg";
 
+
 const AboutUs = () => {
   return (
     <div

@@ -48,8 +48,8 @@ const App = () => {
   return (
     <BasketProvider>
       <Router>
-        <AnalyticsTracker /> {/* Add Analytics tracking here */}
-        <SetPageTitle pageTitles={PAGE_TITLES} /> {/* Add the title setter */}
+        <AnalyticsTracker />
+        <SetPageTitle pageTitles={PAGE_TITLES} />
         <ScrollToTop />
         <BasketContext.Consumer>
           {({ basketCount }) => <NavBar basketCount={basketCount} />}

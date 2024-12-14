@@ -10,6 +10,8 @@ import fetchProducts from "../utils/fetchProducts";
 import ProductCard from "../components/ProductCard";
 import ReleasesCard from "../components/ReleasesCard"; // Import the ReleasesCard
 import { commonTitleStyle } from "../styles/constants";
+import { trackEvent } from "../utils/analytics";
+
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -91,16 +93,22 @@ const Home = () => {
           }}
         />
         <button
-          className="btn btn-outline-light mt-4"
-          onClick={() => {
-            const featuredSection = document.getElementById("latest");
-            if (featuredSection) {
-              featuredSection.scrollIntoView({ behavior: "smooth", block: "start" });
-            }
-          }}
-        >
-          See Latest Release
-        </button>
+  className="btn btn-outline-light mt-4"
+  onClick={() => {
+    const featuredSection = document.getElementById("latest");
+    if (featuredSection) {
+      featuredSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    trackEvent("click", {
+      category: "User Interaction",
+      action: "Clicked See Latest Release",
+      label: "Home Page",
+    });
+  }}
+>
+  See Latest Release
+</button>
+
       </div>
 
       {/* Releases Card Section */}
