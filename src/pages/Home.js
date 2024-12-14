@@ -99,6 +99,7 @@ const Home = () => {
     if (featuredSection) {
       featuredSection.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+    console.log("See Latest Release button clicked!");
     trackEvent("click", {
       category: "User Interaction",
       action: "Clicked See Latest Release",
@@ -108,6 +109,7 @@ const Home = () => {
 >
   See Latest Release
 </button>
+
 
       </div>
 
