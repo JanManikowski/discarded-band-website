@@ -16,10 +16,10 @@ const Basket = () => {
     };
 
     const placeOrder = async () => {
-        trackEvent("view_product", {
-            category: "Product Interaction",
-            action: "Viewed Product",
-            label: productData.title,
+        trackEvent("checkout_click", {
+            category: "Checkout Interaction",
+            action: "Clicked on Checkout",
+            label: "Checkout initiated",
         });
         try {
             const checkoutUrl = await handleOrder(basketItems);

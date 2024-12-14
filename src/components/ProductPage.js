@@ -37,31 +37,21 @@ const ProductPage = () => {
         setSelectedVariant(variant);
     };
 
-    useEffect(() => {
-        const loadProduct = async () => {
-            try {
-                const productData = await fetchProductById(decodeURIComponent(id));
-                setProduct(productData);
+    const handleAddToBasket = () => {
+        if (selectedVariant) {
+            // Track the add-to-basket action
+            trackEvent("add_to_basket", {
+                category: "Product Interaction",
+                action: "Added Product to Basket",
+                label: `${product.title} - ${selectedVariant.title}`,
+                value: parseFloat(selectedVariant.price.amount), // Optional: track the price as value
+            });
     
-                // Track product page view
-                trackEvent("view_product", {
-                    category: "Product Interaction",
-                    action: "Viewed Product",
-                    label: productData.title,
-                });
-    
-                if (productData.variants.edges.length > 0) {
-                    setSelectedVariant(productData.variants.edges[0].node);
-                }
-            } catch (error) {
-                console.error("Failed to load product:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadProduct();
-    }, [id]);
-    
+            // Add product to the basket and navigate to basket page
+            addToBasket(product, selectedVariant);
+            navigate("/basket");
+        }
+    };
     
 
     const formatPrice = (amount, currencyCode) => {
