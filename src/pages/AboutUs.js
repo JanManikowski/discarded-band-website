@@ -74,7 +74,8 @@ const AboutUs = () => {
           <p>Vocals: Andy Meijer</p>
           <p>Rhythm: Nei Nikki & Liam Rolink</p>
           <p>Lead: Jan Manikowski</p>
-          <p>Bass & Drums: Still looking, contact for audition.</p>
+          <p>Drums: Bas Gijzen</p>
+          <p>Bass: Still looking, contact for audition.</p>
         </div>
 
         <div className="band-photos row justify-content-center mt-4">
