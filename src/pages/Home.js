@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import logo from "../assets/discarded-yellow-low.png";
+import logo from "../assets/Discarded-Clean-NoCircle-Transparent.png";
 import backgroundLow from "../assets/background-low.png";
 import backgroundHigh from "../assets/background-high.png";
 import "bootstrap/dist/css/bootstrap.min.css";

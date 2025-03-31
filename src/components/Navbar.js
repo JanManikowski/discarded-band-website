@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import logo from '../assets/discarded-yellow-low.png';
+import logo from '../assets/Discarded-Clean-Circle-Transparent.png';
 import { BasketContext } from '../contexts/BasketContext';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
