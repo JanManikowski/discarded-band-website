@@ -76,7 +76,7 @@ const ReleasesCard = ({ albumId, title, style }) => {
                     ></iframe>
                 </div>
             </div>
-            <button
+            {/* <button
           className="btn btn-outline-light mt-5"
           onClick={() => {
             const featuredSection = document.getElementById("featured-section");
@@ -86,7 +86,7 @@ const ReleasesCard = ({ albumId, title, style }) => {
           }}
         >
           See Merch
-        </button>
+        </button> */}
         </div>
     );
 };

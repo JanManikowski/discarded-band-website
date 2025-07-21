@@ -84,7 +84,7 @@ const NavBar = () => {
                 className="navbar navbar-expand-lg navbar-dark fixed-top custom-navbar"
                 style={navbarStyle}
             >
-                <div className="container-fluid d-flex align-items-center">
+                <div className="container-fluid d-flex align-items-center position-relative">
                     <Link className="navbar-brand custom-logo-container" to="/">
                         <img src={logo} alt="Logo" className="img-fluid custom-logo" />
                     </Link>
@@ -104,7 +104,14 @@ const NavBar = () => {
                     </button>
 
                     <div className={`collapse navbar-collapse ${menuOpen ? 'show' : ''}`} id="navbarNav">
-                        <ul className="navbar-nav mx-auto text-center custom-navbar-links">
+                        <ul
+                            className="navbar-nav text-center custom-navbar-links"
+                            style={{
+                                position: 'absolute',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                            }}
+                            >
                         <li className="nav-item">
                                 <Link
                                     to="/releases"
@@ -114,7 +121,7 @@ const NavBar = () => {
                                     Releases
                                 </Link>
                             </li>
-                            <li className="nav-item">
+                            {/* <li className="nav-item">
                                 <Link
                                     to="/products"
                                     className="nav-link text-white custom-nav-link"
@@ -122,7 +129,7 @@ const NavBar = () => {
                                 >
                                     Products
                                 </Link>
-                            </li>
+                            </li> */}
                             <li className="nav-item">
                                 <Link
                                     to="/about-us"
@@ -153,14 +160,14 @@ const NavBar = () => {
                         </ul>
                     </div>
 
-                    <div className="d-none d-lg-flex align-items-center custom-cart-container">
+                    {/* <div className="d-none d-lg-flex align-items-center custom-cart-container">
                         <Link to="/basket" className="nav-link text-white d-flex align-items-center">
                             <i className="bi bi-cart-fill" style={{ fontSize: '2rem' }}></i>
                             <span className="mx-2">
                                 {basketCount} / €{calculateTotal().toFixed(2)}
                             </span>
                         </Link>
-                    </div>
+                    </div> */}
                 </div>
             </nav>
         </>

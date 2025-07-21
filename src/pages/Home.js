@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import logo from "../assets/Discarded-Clean-NoCircle-Transparent.png";
+import logo from "../assets/logo_centered.png";
 import backgroundLow from "../assets/background-low.png";
 import backgroundHigh from "../assets/background-high.png";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -129,7 +129,7 @@ const Home = () => {
   }}
 >
   <ReleasesCard
-    albumId="0acx688pBFccyiDVk4axg6"
+    albumId="0ANUjzcDPHW7odAObHKKJy"
     title="Latest Release"
     style={{
       width: "100%", // Stretch the card to the full width of its container
@@ -142,7 +142,7 @@ const Home = () => {
 
 
       {/* Featured Products Section */}
-      <div
+      {/* <div
         id="featured-section"
         className="container-fluid featured-section"
         style={{
@@ -172,7 +172,7 @@ const Home = () => {
             <p className="loading-text text-white">Loading products...</p>
           )}
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

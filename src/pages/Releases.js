@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { commonTitleStyle } from '../styles/constants';
 
 const Releases = () => {
-    const albumId = '0acx688pBFccyiDVk4axg6'; // Replace with your album/track/playlist ID
+    const albumId = '0ANUjzcDPHW7odAObHKKJy'; // Replace with your album/track/playlist ID
     const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
 
     // Update cursor position
