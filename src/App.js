@@ -34,12 +34,24 @@ const AnalyticsTracker = () => {
   const location = useLocation();
 
   useEffect(() => {
-      trackPageView(); // This will now include hash in the path
+    trackPageView(); // This will now include hash in the path
   }, [location]);
 
   return null; // No UI output
 };
 
+// Redirect component: .nl to .com
+const DomainRedirect = () => {
+  useEffect(() => {
+    const currentHost = window.location.hostname;
+    if (currentHost.endsWith(".nl")) {
+      const newHost = currentHost.replace(".nl", ".com");
+      const newUrl = window.location.href.replace(currentHost, newHost);
+      window.location.href = newUrl;
+    }
+  }, []);
+  return null;
+};
 
 const App = () => {
   useEffect(() => {
@@ -49,6 +61,7 @@ const App = () => {
   return (
     <BasketProvider>
       <Router>
+        <DomainRedirect />
         <AnalyticsTracker />
         <SetPageTitle pageTitles={PAGE_TITLES} />
         <ScrollToTop />
