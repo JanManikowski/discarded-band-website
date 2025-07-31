@@ -1,0 +1,42 @@
+[
+  {
+    "id": "bandcamp-001",
+    "title": "Premium Oversized T-Shirt (includes free CD copy)",
+    "price": "28",
+    "currency": "EUR",
+    "image": "https://f4.bcbits.com/img/0040444805_36.jpg",
+    "link": "https://discardedband.bandcamp.com/merch/premium-oversized-t-shirt-includes-free-cd-copy"
+  },
+  {
+    "id": "bandcamp-002",
+    "title": "Logo Croptop (includes digital album)",
+    "price": "20",
+    "currency": "EUR",
+    "image": "https://f4.bcbits.com/img/0040444735_36.jpg",
+    "link": "https://discardedband.bandcamp.com/merch/logo-croptop-includes-digital-album"
+  },
+  {
+    "id": "bandcamp-003",
+    "title": "Light Gray Logo T-Shirt (includes digital album)",
+    "price": "15",
+    "currency": "EUR",
+    "image": "https://f4.bcbits.com/img/0040444686_36.jpg",
+    "link": "https://discardedband.bandcamp.com/merch/light-gray-logo-t-shirt-includes-digital-album"
+  },
+  {
+    "id": "bandcamp-004",
+    "title": "Logo T-Shirt (includes digital album)",
+    "price": "15",
+    "currency": "EUR",
+    "image": "https://f4.bcbits.com/img/0040444606_36.jpg",
+    "link": "https://discardedband.bandcamp.com/merch/logo-t-shirt-includes-digital-album"
+  },
+  {
+    "id": "bandcamp-005",
+    "title": "'Humility' T-Shirt (includes digital album)",
+    "price": "25",
+    "currency": "EUR",
+    "image": "https://f4.bcbits.com/img/0040444383_36.jpg",
+    "link": "https://discardedband.bandcamp.com/merch/humility-t-shirt-includes-digital-album"
+  }
+]
