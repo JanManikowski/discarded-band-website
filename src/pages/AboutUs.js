@@ -76,6 +76,7 @@ const AboutUs = () => {
           {/* <p>Lead: Jan Manikowski</p> */}
           <p>Drums: Bas Gijzen</p>
           <p>Bass: Still looking, contact for audition.</p>
+          <p style={{fontSize: "0.8rem"}}>Friend: Jan Manikowski</p>
         </div>
 
         <div
@@ -88,11 +89,6 @@ const AboutUs = () => {
             paddingBottom: "1rem"
           }}
         >
-          <br></br>
-          <p>Prayers to our beloved lead guitarist</p>
-          <p style={{
-            color: "#b61c1c",
-          }}>Jan Manikowski</p>
         </div>
 
 
