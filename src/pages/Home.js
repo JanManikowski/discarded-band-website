@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import logo from "../assets/logo_centered.png";
 import backgroundLow from "../assets/background-low.png";
 import backgroundHigh from "../assets/background-high.png";
@@ -9,8 +10,12 @@ import { BasketContext } from "../contexts/BasketContext";
 import fetchProducts from "../utils/fetchProducts";
 import ProductCard from "../components/ProductCard";
 import ReleasesCard from "../components/ReleasesCard"; // Import the ReleasesCard
+import ShowCard from "../components/ShowCard";
 import { commonTitleStyle } from "../styles/constants";
 import { trackEvent } from "../utils/analytics";
+import useSiteContent from "../hooks/useSiteContent";
+import useUpcomingShows from "../hooks/useUpcomingShows";
+import { buildSpotifyEmbedUrl } from "../utils/spotify";
 
 
 const Home = () => {
@@ -24,6 +29,20 @@ const Home = () => {
     opacity: 1,
     transform: "scale(1)",
   });
+
+  // Fallback keeps today's release showing if Firestore is unreachable
+  // or the admin hasn't saved anything yet.
+  const { data: releaseContent } = useSiteContent("releases", {
+    spotifyType: "album",
+    spotifyId: "0ANUjzcDPHW7odAObHKKJy",
+  });
+  const embedUrl = buildSpotifyEmbedUrl({
+    type: releaseContent.spotifyType,
+    id: releaseContent.spotifyId,
+  });
+
+  // Next 3 upcoming shows for the Home page teaser.
+  const { shows: upcomingShows, loading: showsLoading } = useUpcomingShows(3);
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -129,7 +148,7 @@ const Home = () => {
   }}
 >
   <ReleasesCard
-    albumId="0ANUjzcDPHW7odAObHKKJy"
+    embedUrl={embedUrl}
     title="Latest Release"
     style={{
       width: "100%", // Stretch the card to the full width of its container
@@ -139,6 +158,30 @@ const Home = () => {
     }}
   />
 </div>
+
+      {/* Upcoming Shows Teaser Section */}
+      {!showsLoading && upcomingShows.length > 0 && (
+        <div
+          className="container-fluid text-white"
+          style={{ backgroundColor: "#0A060D", padding: "60px 20px" }}
+        >
+          <div className="container text-center" style={{ maxWidth: "800px" }}>
+            <h1 style={commonTitleStyle}>UPCOMING SHOWS</h1>
+            <div className="d-flex flex-column gap-3 text-start mt-4">
+              {upcomingShows.map((show) => (
+                <ShowCard key={show.id} show={show} />
+              ))}
+            </div>
+            <Link
+              to="/shows"
+              className="btn btn-outline-light mt-4"
+              style={{ textTransform: "uppercase" }}
+            >
+              See All Shows
+            </Link>
+          </div>
+        </div>
+      )}
 
 
       {/* Featured Products Section */}

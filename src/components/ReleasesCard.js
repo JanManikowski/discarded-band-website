@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const ReleasesCard = ({ albumId, title, style }) => {
+const ReleasesCard = ({ embedUrl, title, style }) => {
     const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
 
     // Update cursor position
@@ -35,14 +35,14 @@ const ReleasesCard = ({ albumId, title, style }) => {
             <div
                 className="release-card-content text-center"
                 style={{
-                    maxWidth: '1200px', // Limit the width to ensure responsiveness
+                    maxWidth: '1600px', // Limit the width to ensure responsiveness
                     width: '90vw', // Use 90% of the viewport width for flexibility
                 }}
             >
                 <h1
-                    className="mb-3"
+                    className="mb-4"
                     style={{
-                        fontSize: '2rem',
+                        fontSize: '3rem',
                         fontWeight: 'bold',
                         textTransform: 'uppercase',
                         color: '#b61c1c',
@@ -55,14 +55,14 @@ const ReleasesCard = ({ albumId, title, style }) => {
                     style={{
                         backgroundColor: '#1e1e1e',
                         borderRadius: '10px',
-                        padding: '10px',
+                        padding: '14px',
                         boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
                         display: 'flex',
                         justifyContent: 'center',
                     }}
                 >
                     <iframe
-                        src={`https://open.spotify.com/embed/album/${albumId}`}
+                        src={embedUrl}
                         frameBorder="0"
                         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                         title="Spotify Player"
@@ -70,7 +70,7 @@ const ReleasesCard = ({ albumId, title, style }) => {
                             borderRadius: '10px',
                             maxWidth: '100%', // Ensure full responsiveness
                             width: '100%', // Match container width
-                            height: '400px', // Set height for a horizontal view
+                            height: '560px', // Set height for a horizontal view
                             margin: '0 auto', // Center the iframe
                         }}
                     ></iframe>

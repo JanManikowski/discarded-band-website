@@ -2,11 +2,29 @@ import React from "react";
 import "../styles/global.css";
 import "../styles/responsive.css";
 import { commonTitleStyle } from "../styles/constants";
-import BandPhoto1 from "../assets/band1.jpg";
-import BandPhoto2 from "../assets/band2.jpg";
+import useSiteContent from "../hooks/useSiteContent";
 
+const DEFAULT_INTRO = `
+  <p>Within the short time our species has walked this planet, through cooperation, we have built civilizations with the power to shatter mountains and conquer the sky.</p>
+  <p>Wise humans, we named ourselves. But our empire is crumbling, and wisdom seems scarcer every single day.</p>
+  <p>Despair, disillusionment, and dystopian atmospheres abound. How to lend meaning to a single human life has become increasingly meaningless as the experience of overwhelm through ever-increasing complexity is commonplace. This is our backdrop, this is our stage.</p>
+  <p>Humanity feels <span style="color: #b61c1c; font-weight: bold;">DISCARDED</span>.</p>
+`;
+
+const DEFAULT_BAND_BIO = `
+  <p>Not intending to be constrained by any genre, our main inspiration comes from genres like thall and blackened deathcore. As our debut EP releases, we've learned much - now it's time to incorporate those lessons. The more time we spend together, the more we refine our sound and shape the direction we want this band to take.</p>
+  <p>This project holds deep meaning for each of us, and we're determined to create something unforgettable.</p>
+`;
 
 const AboutUs = () => {
+  // Falls back to the original copy if Firestore is unreachable or the
+  // admin hasn't saved anything yet - the page never ends up blank.
+  const { data } = useSiteContent("aboutUs", {
+    introHtml: DEFAULT_INTRO,
+    bandBioHtml: DEFAULT_BAND_BIO,
+    bandPhotos: [],
+  });
+
   return (
     <div
       className="about-us-page container-fluid text-white"
@@ -18,20 +36,8 @@ const AboutUs = () => {
         <div
           className="about-text mx-auto"
           style={{ maxWidth: "800px", fontSize: "1.2rem", lineHeight: "1.8", color: "#e0e0e0" }}
-        >
-          <p>
-            Within the short time our species has walked this planet, through cooperation, we have built civilizations with the power to shatter mountains and conquer the sky.
-          </p>
-          <p>
-            Wise humans, we named ourselves. But our empire is crumbling, and wisdom seems scarcer every single day.
-          </p>
-          <p>
-            Despair, disillusionment, and dystopian atmospheres abound. How to lend meaning to a single human life has become increasingly meaningless as the experience of overwhelm through ever-increasing complexity is commonplace. This is our backdrop, this is our stage.
-          </p>
-          <p className="font-weight-bold text-light">
-            Humanity feels <span style={{ color: "#b61c1c", fontWeight: "bold" }}>DISCARDED</span>.
-          </p>
-        </div>
+          dangerouslySetInnerHTML={{ __html: data.introHtml }}
+        />
       </div>
 
       {/* THE BAND Section */}
@@ -53,12 +59,8 @@ const AboutUs = () => {
             lineHeight: "1.8",
             color: "#e0e0e0",
           }}
-        >
-          <p>
-            Not intending to be constrained by any genre, our main inspiration comes from genres like thall and blackened deathcore. As our debut EP releases, we've learned much - now it's time to incorporate those lessons. The more time we spend together, the more we refine our sound and shape the direction we want this band to take.
-          </p>
-          <p>This project holds deep meaning for each of us, and we’re determined to create something unforgettable.</p>
-        </div>
+          dangerouslySetInnerHTML={{ __html: data.bandBioHtml }}
+        />
 
         <div
           className="mx-auto"
@@ -79,36 +81,19 @@ const AboutUs = () => {
           <p style={{fontSize: "0.8rem"}}>Friend: Jan Manikowski</p>
         </div>
 
-        <div
-          className="mx-auto"
-          style={{
-            maxWidth: "800px",
-            fontSize: "0.6rem",
-            lineHeight: "1.8",
-            color: "#ffffffff",
-            paddingBottom: "1rem"
-          }}
-        >
-        </div>
-
-
-
-        <div className="band-photos row justify-content-center mt-4">
-          <div className="col-12 col-md-5 mb-3">
-            <img
-              src={BandPhoto1}
-              alt="Band photo 1"
-              className="img-fluid rounded"
-            />
+        {data.bandPhotos && data.bandPhotos.length > 0 && (
+          <div className="band-photos row justify-content-center mt-4">
+            {data.bandPhotos.map((photo) => (
+              <div key={photo.storagePath} className="col-12 col-md-5 mb-3">
+                <img
+                  src={photo.url}
+                  alt="Band"
+                  className="img-fluid rounded"
+                />
+              </div>
+            ))}
           </div>
-          <div className="col-12 col-md-5">
-            <img
-              src={BandPhoto2}
-              alt="Band photo 2"
-              className="img-fluid rounded"
-            />
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

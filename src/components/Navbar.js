@@ -114,11 +114,29 @@ const NavBar = () => {
                             >
                         <li className="nav-item">
                                 <Link
+                                    to="/shows"
+                                    className="nav-link text-white custom-nav-link"
+                                    onClick={handleLinkClick}
+                                >
+                                    Shows
+                                </Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link
                                     to="/releases"
                                     className="nav-link text-white custom-nav-link"
                                     onClick={handleLinkClick}
                                 >
                                     Releases
+                                </Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link
+                                    to="/gallery"
+                                    className="nav-link text-white custom-nav-link"
+                                    onClick={handleLinkClick}
+                                >
+                                    Gallery
                                 </Link>
                             </li>
                             {/* <li className="nav-item">

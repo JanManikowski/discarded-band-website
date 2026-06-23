@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { commonTitleStyle } from '../styles/constants';
+import useSiteContent from '../hooks/useSiteContent';
+import { buildSpotifyEmbedUrl } from '../utils/spotify';
 
 const Releases = () => {
-    const albumId = '0ANUjzcDPHW7odAObHKKJy'; // Replace with your album/track/playlist ID
+    // Fallback keeps the current release showing if Firestore is unreachable
+    // or the admin hasn't saved anything yet.
+    const { data } = useSiteContent('releases', {
+        spotifyType: 'album',
+        spotifyId: '0ANUjzcDPHW7odAObHKKJy',
+    });
+    const embedUrl = buildSpotifyEmbedUrl({ type: data.spotifyType, id: data.spotifyId });
+
     const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
 
     // Update cursor position
@@ -29,7 +38,7 @@ const Releases = () => {
             <div
                 className="container text-center"
                 style={{
-                    maxWidth: '900px',
+                    maxWidth: '1300px',
                 }}
             >
                 <h1 style={commonTitleStyle}>LATEST RELEASES</h1>
@@ -38,14 +47,14 @@ const Releases = () => {
                     style={{
                         backgroundColor: '#1e1e1e',
                         borderRadius: '10px',
-                        padding: '10px',
+                        padding: '14px',
                         boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
                         display: 'flex',
                         justifyContent: 'center',
                     }}
                 >
                     <iframe
-                        src={`https://open.spotify.com/embed/album/${albumId}`}
+                        src={embedUrl}
                         frameBorder="0"
                         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                         title="Spotify Player"
@@ -53,7 +62,7 @@ const Releases = () => {
                             borderRadius: '10px',
                             maxWidth: '100%', // Ensure full responsiveness
                             width: '100%', // Match container width
-                            height: '400px', // Set height for a horizontal view
+                            height: '560px', // Set height for a horizontal view
                             margin: '0 auto', // Center the iframe
                         }}
                     ></iframe>
@@ -63,4 +72,4 @@ const Releases = () => {
     );
 };
 
-export default Releases;
+export default Releases;    

@@ -11,7 +11,13 @@ import Products from "./pages/Products";
 import Basket from "./pages/Basket";
 import ProductPage from "./components/ProductPage";
 import Releases from "./pages/Releases";
+import Gallery from "./pages/Gallery";
+import Shows from "./pages/Shows";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
 import { BasketProvider, BasketContext } from "./contexts/BasketContext";
+import { AuthProvider } from "./contexts/AuthContext";
 import ScrollToTop from "./components/ScrollToTop";
 import SetPageTitle from "./components/SetPageTitle";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -27,6 +33,10 @@ const PAGE_TITLES = {
   "/products": "Products - DISCARDED",
   "/basket": "Your Basket - DISCARDED",
   "/releases": "Latest Releases - DISCARDED",
+  "/gallery": "Gallery - DISCARDED",
+  "/shows": "Upcoming Shows - DISCARDED",
+  "/admin/login": "Admin Login - DISCARDED",
+  "/admin": "Admin Dashboard - DISCARDED",
 };
 
 // Helper component to track page views
@@ -53,35 +63,66 @@ const DomainRedirect = () => {
   return null;
 };
 
+// Hides the public NavBar/Footer on admin pages so the dashboard feels separate.
+const SiteChrome = ({ children }) => {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
+  return (
+    <>
+      {!isAdminRoute && (
+        <BasketContext.Consumer>
+          {({ basketCount }) => <NavBar basketCount={basketCount} />}
+        </BasketContext.Consumer>
+      )}
+      {children}
+      {!isAdminRoute && <Footer />}
+    </>
+  );
+};
+
 const App = () => {
   useEffect(() => {
     initAnalytics();
   }, []);
 
   return (
-    <BasketProvider>
-      <Router>
-        <DomainRedirect />
-        <AnalyticsTracker />
-        <SetPageTitle pageTitles={PAGE_TITLES} />
-        <ScrollToTop />
-        <BasketContext.Consumer>
-          {({ basketCount }) => <NavBar basketCount={basketCount} />}
-        </BasketContext.Consumer>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/about-us" element={<AboutUs />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/support-us" element={<SupportUs />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/product/:id" element={<ProductPage />} />
-          <Route path="/basket" element={<Basket />} />
-          <Route path="/releases" element={<Releases />} />
-        </Routes>
-        <Footer />
-      </Router>
-    </BasketProvider>
+    <AuthProvider>
+      <BasketProvider>
+        <Router>
+          <DomainRedirect />
+          <AnalyticsTracker />
+          <SetPageTitle pageTitles={PAGE_TITLES} />
+          <ScrollToTop />
+          <SiteChrome>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/about-us" element={<AboutUs />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/support-us" element={<SupportUs />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/product/:id" element={<ProductPage />} />
+              <Route path="/basket" element={<Basket />} />
+              <Route path="/releases" element={<Releases />} />
+              <Route path="/gallery" element={<Gallery />} />
+              <Route path="/shows" element={<Shows />} />
+
+              {/* Admin */}
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </SiteChrome>
+        </Router>
+      </BasketProvider>
+    </AuthProvider>
   );
 };
 

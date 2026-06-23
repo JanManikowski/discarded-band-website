@@ -1,0 +1,34 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Public site content: the Spotify link, About Us text, gallery, shows.
+    // Anyone can READ this (the public website needs it to render).
+    // Only YOUR Firebase Auth account can WRITE to it.
+    match /site_content/{document} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.auth.uid == "huHoymPMz5PH3P6x9vmgZQ7jIxP2";
+    }
+
+    // Show galleries: same public-read / admin-write pattern.
+    match /shows/{showId} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.auth.uid == "huHoymPMz5PH3P6x9vmgZQ7jIxP2";
+    }
+
+    // Upcoming shows calendar (date/venue/tickets) - same pattern.
+    match /upcomingShows/{showId} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.auth.uid == "huHoymPMz5PH3P6x9vmgZQ7jIxP2";
+    }
+
+    // Default: deny everything else not explicitly matched above.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
