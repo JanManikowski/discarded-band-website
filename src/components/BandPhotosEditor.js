@@ -35,9 +35,9 @@ const BandPhotosEditor = () => {
     load();
   }, []);
 
-  const handleUploaded = async ({ url, storagePath }) => {
+  const handleUploaded = async ({ url, storagePath, lqip }) => {
     setStatus(null);
-    const next = [...photosRef.current, { url, storagePath }];
+    const next = [...photosRef.current, { url, storagePath, lqip: lqip || null }];
     photosRef.current = next;
     setPhotos(next);
     try {

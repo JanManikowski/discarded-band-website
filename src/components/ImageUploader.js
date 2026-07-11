@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from "react";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebase/config";
-import { compressImage } from "../utils/compressImage";
+import { compressImage, generateLQIP } from "../utils/compressImage";
 
 /**
  * Drag-and-drop / multi-select image uploader. Compresses each image
@@ -23,7 +23,12 @@ const ImageUploader = ({ folder, onUploaded, buttonLabel = "Add Photos" }) => {
         prev.map((it) => (it.id === item.id ? { ...it, status: "compressing" } : it))
       );
 
-      const compressed = await compressImage(item.file);
+      // Run compression and LQIP generation in parallel — both use canvas
+      // so they're CPU-bound but complete quickly on a modern device.
+      const [compressed, lqip] = await Promise.all([
+        compressImage(item.file),
+        generateLQIP(item.file),
+      ]);
 
       setItems((prev) =>
         prev.map((it) => (it.id === item.id ? { ...it, status: "uploading", progress: 0 } : it))
@@ -51,7 +56,7 @@ const ImageUploader = ({ folder, onUploaded, buttonLabel = "Add Photos" }) => {
         async () => {
           try {
             const url = await getDownloadURL(uploadTask.snapshot.ref);
-            onUploaded({ url, storagePath });
+            onUploaded({ url, storagePath, lqip: lqip || null });
             // Remove the completed item from the queue shortly after, so
             // the uploader stays tidy without the photo "disappearing"
             // instantly before the user registers it finished.

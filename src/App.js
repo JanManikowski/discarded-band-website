@@ -15,6 +15,10 @@ import Gallery from "./pages/Gallery";
 import Shows from "./pages/Shows";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminRelease from "./pages/AdminRelease";
+import AdminAbout from "./pages/AdminAbout.js";
+import AdminGallery from "./pages/AdminGallery";
+import AdminShows from "./pages/AdminShows";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { BasketProvider, BasketContext } from "./contexts/BasketContext";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -37,6 +41,10 @@ const PAGE_TITLES = {
   "/shows": "Upcoming Shows - DISCARDED",
   "/admin/login": "Admin Login - DISCARDED",
   "/admin": "Admin Dashboard - DISCARDED",
+  "/admin/release": "Release - Admin",
+  "/admin/about": "About Us - Admin",
+  "/admin/gallery": "Gallery - Admin",
+  "/admin/shows": "Shows - Admin",
 };
 
 // Helper component to track page views
@@ -110,14 +118,11 @@ const App = () => {
 
               {/* Admin */}
               <Route path="/admin/login" element={<AdminLogin />} />
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+              <Route path="/admin/release" element={<ProtectedRoute><AdminRelease /></ProtectedRoute>} />
+              <Route path="/admin/about" element={<ProtectedRoute><AdminAbout /></ProtectedRoute>} />
+              <Route path="/admin/gallery" element={<ProtectedRoute><AdminGallery /></ProtectedRoute>} />
+              <Route path="/admin/shows" element={<ProtectedRoute><AdminShows /></ProtectedRoute>} />
             </Routes>
           </SiteChrome>
         </Router>

@@ -13,27 +13,163 @@ import {
 import { ref, deleteObject } from "firebase/storage";
 import { db, storage } from "../firebase/config";
 import ImageUploader from "./ImageUploader";
+import SortablePhoto from "./SortablePhoto";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  rectSortingStrategy,
+  arrayMove,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
+// ── Sortable show row (for reordering shows) ─────────────────────────────────
+const SortableShowRow = ({ show, onDelete, busyShowId, isCollapsed, onToggle, children }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: show.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    border: isDragging ? "1px solid #b61c1c" : "1px solid #2a2a2a",
+    borderRadius: "6px",
+    padding: "14px",
+    backgroundColor: isDragging ? "rgba(182,28,28,0.06)" : "rgba(255,255,255,0.02)",
+  };
+
+  const photoCount = (show.photos || []).length;
+
+  return (
+    <div ref={setNodeRef} style={style}>
+      <div className="d-flex justify-content-between align-items-center">
+        <div className="d-flex align-items-center" style={{ gap: "10px" }}>
+          {/* Show drag handle */}
+          <div
+            {...listeners}
+            {...attributes}
+            title="Drag to reorder shows"
+            style={{
+              cursor: isDragging ? "grabbing" : "grab",
+              color: "#666",
+              fontSize: "1rem",
+              touchAction: "none",
+              padding: "4px",
+              userSelect: "none",
+            }}
+          >
+            ⠿
+          </div>
+
+          <button
+            type="button"
+            onClick={onToggle}
+            style={{
+              background: "none",
+              border: "none",
+              color: "#e0e0e0",
+              padding: 0,
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              cursor: "pointer",
+              fontSize: "1.05rem",
+            }}
+          >
+            <span style={{ fontSize: "0.8rem", color: "#999" }}>
+              {isCollapsed ? "▸" : "▾"}
+            </span>
+            {show.name}
+            <span style={{ fontSize: "0.8rem", color: "#999" }}>
+              ({photoCount} photo{photoCount === 1 ? "" : "s"})
+            </span>
+          </button>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => onDelete(show)}
+          disabled={busyShowId === show.id}
+          style={{
+            backgroundColor: "transparent",
+            border: "1px solid #b61c1c",
+            color: "#ff9b9b",
+            padding: "4px 10px",
+            fontSize: "0.75rem",
+            textTransform: "uppercase",
+            cursor: busyShowId === show.id ? "not-allowed" : "pointer",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Delete Show
+        </button>
+      </div>
+
+      {!isCollapsed && <div className="mt-3">{children}</div>}
+    </div>
+  );
+};
+
+// ── Main editor ───────────────────────────────────────────────────────────────
 const ShowGalleryEditor = () => {
-  const [shows, setShows] = useState([]); // [{ id, name, photos: [{url, storagePath}] }]
+  const [shows, setShows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newShowName, setNewShowName] = useState("");
   const [creating, setCreating] = useState(false);
   const [busyShowId, setBusyShowId] = useState(null);
   const [status, setStatus] = useState(null);
-  const [collapsed, setCollapsed] = useState({}); // { [showId]: bool }
+  const [collapsed, setCollapsed] = useState({});
 
-  // Mirrors `shows` so concurrent photo uploads (multiple files landing
-  // around the same time for the same show) always read the true latest
-  // photos array instead of a stale value captured at render time.
   const showsRef = useRef([]);
-
   const showsCollection = collection(db, "shows");
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      // Require 8px movement before drag starts so taps/clicks still work.
+      activationConstraint: { distance: 8 },
+    })
+  );
 
   const loadShows = async () => {
     try {
+      // Use a single orderBy to avoid needing a composite Firestore index.
+      // Falls back gracefully: if no docs have "order" yet, Firestore returns
+      // them in an arbitrary order and we assign order values immediately.
       const snap = await getDocs(query(showsCollection, orderBy("createdAt", "desc")));
-      const loaded = snap.docs.map((d) => ({ id: d.id, photos: [], ...d.data() }));
+      let loaded = snap.docs.map((d) => ({ id: d.id, photos: [], ...d.data() }));
+
+      // If any show is missing an "order" field, write one now so future
+      // drags have a stable base to work from.
+      const needsOrder = loaded.filter((s) => s.order === undefined || s.order === null);
+      if (needsOrder.length > 0) {
+        // Sort by createdAt desc (already the query order), assign 0,1,2...
+        await Promise.all(
+          loaded.map((show, idx) =>
+            show.order === undefined || show.order === null
+              ? updateDoc(doc(db, "shows", show.id), { order: idx })
+              : Promise.resolve()
+          )
+        );
+        loaded = loaded.map((show, idx) => ({
+          ...show,
+          order: show.order !== undefined && show.order !== null ? show.order : idx,
+        }));
+      }
+
+      // Sort by the order field so the UI reflects the saved order
+      loaded.sort((a, b) => a.order - b.order);
       setShows(loaded);
       showsRef.current = loaded;
     } catch (err) {
@@ -49,6 +185,54 @@ const ShowGalleryEditor = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // ── Shows drag end (reorder shows) ─────────────────────────────────────────
+  const handleShowsDragEnd = async ({ active, over }) => {
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = showsRef.current.findIndex((s) => s.id === active.id);
+    const newIndex = showsRef.current.findIndex((s) => s.id === over.id);
+    const reordered = arrayMove(showsRef.current, oldIndex, newIndex);
+    showsRef.current = reordered;
+    setShows(reordered);
+
+    // Persist the new order to Firestore
+    try {
+      await Promise.all(
+        reordered.map((show, idx) =>
+          updateDoc(doc(db, "shows", show.id), { order: idx })
+        )
+      );
+    } catch (err) {
+      console.error("Failed to save show order:", err);
+      setStatus({ type: "error", message: "Couldn't save show order. Try again." });
+    }
+  };
+
+  // ── Photos drag end (reorder photos within a show) ─────────────────────────
+  const handlePhotosDragEnd = async (showId, { active, over }) => {
+    if (!over || active.id === over.id) return;
+
+    const current = showsRef.current.find((s) => s.id === showId);
+    if (!current) return;
+
+    const oldIndex = current.photos.findIndex((p) => p.storagePath === active.id);
+    const newIndex = current.photos.findIndex((p) => p.storagePath === over.id);
+    const reordered = arrayMove(current.photos, oldIndex, newIndex);
+
+    const next = showsRef.current.map((s) =>
+      s.id === showId ? { ...s, photos: reordered } : s
+    );
+    showsRef.current = next;
+    setShows(next);
+
+    try {
+      await updateDoc(doc(db, "shows", showId), { photos: reordered });
+    } catch (err) {
+      console.error("Failed to save photo order:", err);
+      setStatus({ type: "error", message: "Couldn't save photo order. Try again." });
+    }
+  };
+
   const handleCreateShow = async (e) => {
     e.preventDefault();
     if (!newShowName.trim()) return;
@@ -58,6 +242,7 @@ const ShowGalleryEditor = () => {
       await addDoc(showsCollection, {
         name: newShowName.trim(),
         photos: [],
+        order: showsRef.current.length,
         createdAt: serverTimestamp(),
       });
       setNewShowName("");
@@ -71,10 +256,14 @@ const ShowGalleryEditor = () => {
   };
 
   const handleDeleteShow = async (show) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${show.name}" and all its photos? This cannot be undone.`
+    );
+    if (!confirmed) return;
+
     setBusyShowId(show.id);
     setStatus(null);
     try {
-      // Delete all photos from Storage first, then the Firestore doc.
       await Promise.all(
         (show.photos || []).map((p) => deleteObject(ref(storage, p.storagePath)).catch(() => {}))
       );
@@ -90,16 +279,14 @@ const ShowGalleryEditor = () => {
     }
   };
 
-  const handlePhotoUploaded = async (showId, { url, storagePath }) => {
+  const handlePhotoUploaded = async (showId, { url, storagePath, lqip }) => {
     setStatus(null);
     const current = showsRef.current.find((s) => s.id === showId);
     if (!current) return;
-
-    const nextPhotos = [...(current.photos || []), { url, storagePath }];
+    const nextPhotos = [...(current.photos || []), { url, storagePath, lqip: lqip || null }];
     const next = showsRef.current.map((s) => (s.id === showId ? { ...s, photos: nextPhotos } : s));
     showsRef.current = next;
     setShows(next);
-
     try {
       await updateDoc(doc(db, "shows", showId), { photos: nextPhotos });
     } catch (err) {
@@ -114,11 +301,10 @@ const ShowGalleryEditor = () => {
     try {
       const current = showsRef.current.find((s) => s.id === showId);
       if (!current) return;
-      const nextPhotos = (current.photos || []).filter((p) => p.storagePath !== photo.storagePath);
+      const nextPhotos = current.photos.filter((p) => p.storagePath !== photo.storagePath);
       const next = showsRef.current.map((s) => (s.id === showId ? { ...s, photos: nextPhotos } : s));
       showsRef.current = next;
       setShows(next);
-
       await updateDoc(doc(db, "shows", showId), { photos: nextPhotos });
       await deleteObject(ref(storage, photo.storagePath));
     } catch (err) {
@@ -129,18 +315,20 @@ const ShowGalleryEditor = () => {
     }
   };
 
-  const toggleCollapsed = (showId) => {
+  const toggleCollapsed = (showId) =>
     setCollapsed((prev) => ({ ...prev, [showId]: !prev[showId] }));
-  };
 
   return (
     <div
       className="p-4 rounded-3 shadow-lg w-100"
       style={{ backgroundColor: "rgba(0, 0, 0, 0.9)", maxWidth: "700px" }}
     >
-      <h2 className="mb-3" style={{ fontSize: "1.3rem", color: "#b61c1c" }}>
+      <h2 className="mb-1" style={{ fontSize: "1.3rem", color: "#b61c1c" }}>
         Show Galleries
       </h2>
+      <p style={{ color: "#666", fontSize: "0.8rem", marginBottom: "16px" }}>
+        Drag ⠿ to reorder shows or photos within a show.
+      </p>
 
       {status && (
         <div
@@ -195,130 +383,71 @@ const ShowGalleryEditor = () => {
       ) : shows.length === 0 ? (
         <p style={{ color: "#999" }}>No shows yet. Add one above.</p>
       ) : (
-        <div className="d-flex flex-column gap-3">
-          {shows.map((show) => {
-            const isCollapsed = !!collapsed[show.id];
-            const photoCount = (show.photos || []).length;
-            return (
-              <div
-                key={show.id}
-                style={{
-                  border: "1px solid #2a2a2a",
-                  borderRadius: "6px",
-                  padding: "14px",
-                  backgroundColor: "rgba(255,255,255,0.02)",
-                }}
-              >
-                <div className="d-flex justify-content-between align-items-center">
-                  <button
-                    type="button"
-                    onClick={() => toggleCollapsed(show.id)}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      color: "#e0e0e0",
-                      padding: 0,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                      cursor: "pointer",
-                      fontSize: "1.05rem",
-                    }}
+        // Outer DndContext for reordering shows
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleShowsDragEnd}
+        >
+          <SortableContext
+            items={shows.map((s) => s.id)}
+            strategy={rectSortingStrategy}
+          >
+            <div className="d-flex flex-column gap-3">
+              {shows.map((show) => {
+                const isCollapsed = !!collapsed[show.id];
+                return (
+                  <SortableShowRow
+                    key={show.id}
+                    show={show}
+                    onDelete={handleDeleteShow}
+                    busyShowId={busyShowId}
+                    isCollapsed={isCollapsed}
+                    onToggle={() => toggleCollapsed(show.id)}
                   >
-                    <span style={{ fontSize: "0.8rem", color: "#999" }}>
-                      {isCollapsed ? "▸" : "▾"}
-                    </span>
-                    {show.name}
-                    <span style={{ fontSize: "0.8rem", color: "#999" }}>
-                      ({photoCount} photo{photoCount === 1 ? "" : "s"})
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteShow(show)}
-                    disabled={busyShowId === show.id}
-                    style={{
-                      backgroundColor: "transparent",
-                      border: "1px solid #b61c1c",
-                      color: "#ff9b9b",
-                      padding: "4px 10px",
-                      fontSize: "0.75rem",
-                      textTransform: "uppercase",
-                      cursor: busyShowId === show.id ? "not-allowed" : "pointer",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    Delete Show
-                  </button>
-                </div>
-
-                {!isCollapsed && (
-                  <div className="mt-3">
-                    {photoCount > 0 && (
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "repeat(auto-fill, minmax(85px, 1fr))",
-                          gap: "8px",
-                          marginBottom: "12px",
-                        }}
+                    {/* Inner DndContext for reordering photos within this show */}
+                    <DndContext
+                      sensors={sensors}
+                      collisionDetection={closestCenter}
+                      onDragEnd={(event) => handlePhotosDragEnd(show.id, event)}
+                    >
+                      <SortableContext
+                        items={(show.photos || []).map((p) => p.storagePath)}
+                        strategy={rectSortingStrategy}
                       >
-                        {show.photos.map((photo) => (
+                        {(show.photos || []).length > 0 && (
                           <div
-                            key={photo.storagePath}
-                            style={{ position: "relative", aspectRatio: "1 / 1" }}
+                            style={{
+                              display: "flex",
+                              flexWrap: "wrap",
+                              gap: "8px",
+                              marginBottom: "12px",
+                            }}
                           >
-                            <img
-                              src={photo.url}
-                              alt={show.name}
-                              style={{
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "cover",
-                                borderRadius: "4px",
-                                border: "1px solid #444",
-                                display: "block",
-                              }}
-                            />
-                            <button
-                              type="button"
-                              onClick={() => handlePhotoRemove(show.id, photo)}
-                              disabled={busyShowId === show.id}
-                              title="Remove photo"
-                              style={{
-                                position: "absolute",
-                                top: "-6px",
-                                right: "-6px",
-                                width: "20px",
-                                height: "20px",
-                                borderRadius: "50%",
-                                backgroundColor: "#b61c1c",
-                                color: "white",
-                                border: "1px solid white",
-                                cursor: busyShowId === show.id ? "not-allowed" : "pointer",
-                                lineHeight: "1",
-                                fontSize: "0.7rem",
-                                opacity: busyShowId === show.id ? 0.6 : 1,
-                              }}
-                            >
-                              ✕
-                            </button>
+                            {show.photos.map((photo) => (
+                              <SortablePhoto
+                                key={photo.storagePath}
+                                photo={photo}
+                                onRemove={(p) => handlePhotoRemove(show.id, p)}
+                                disabled={busyShowId === show.id}
+                              />
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    )}
+                        )}
+                      </SortableContext>
+                    </DndContext>
 
                     <ImageUploader
                       folder={`shows/${show.id}`}
                       onUploaded={(uploaded) => handlePhotoUploaded(show.id, uploaded)}
                       buttonLabel="Add Photos to This Show"
                     />
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+                  </SortableShowRow>
+                );
+              })}
+            </div>
+          </SortableContext>
+        </DndContext>
       )}
     </div>
   );
