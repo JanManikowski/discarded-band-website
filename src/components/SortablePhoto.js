@@ -2,13 +2,7 @@ import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-/**
- * A single draggable photo tile used inside a SortableContext.
- * Shows a drag handle (⠿) in the top-left corner and a remove button (✕)
- * in the top-right. While dragging, the tile becomes semi-transparent so
- * you can see where it'll land.
- */
-const SortablePhoto = ({ photo, onRemove, disabled, size = 85 }) => {
+const SortablePhoto = ({ photo, onRemove, onEdit, disabled, size = 85 }) => {
   const {
     attributes,
     listeners,
@@ -45,6 +39,29 @@ const SortablePhoto = ({ photo, onRemove, disabled, size = 85 }) => {
         draggable={false}
       />
 
+      {/* Credit indicator — small dot if credit exists */}
+      {photo.credit && (
+        <div
+          title={photo.credit}
+          style={{
+            position: "absolute",
+            bottom: "4px",
+            left: "4px",
+            backgroundColor: "rgba(182,28,28,0.85)",
+            borderRadius: "3px",
+            padding: "1px 4px",
+            fontSize: "0.6rem",
+            color: "white",
+            maxWidth: "calc(100% - 8px)",
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+          }}
+        >
+          © {photo.credit}
+        </div>
+      )}
+
       {/* Drag handle — top-left */}
       <div
         {...listeners}
@@ -69,6 +86,32 @@ const SortablePhoto = ({ photo, onRemove, disabled, size = 85 }) => {
       >
         ⠿
       </div>
+
+      {/* Edit credit button — top-right, slightly inset to leave room for remove */}
+      <button
+        type="button"
+        onClick={() => onEdit(photo)}
+        disabled={disabled}
+        title="Edit photographer credit"
+        style={{
+          position: "absolute",
+          top: "-6px",
+          right: "18px",
+          width: "20px",
+          height: "20px",
+          borderRadius: "50%",
+          backgroundColor: "#444",
+          color: "white",
+          border: "1px solid white",
+          cursor: disabled ? "not-allowed" : "pointer",
+          lineHeight: "1",
+          fontSize: "0.65rem",
+          opacity: disabled ? 0.6 : 1,
+          zIndex: 2,
+        }}
+      >
+        ✎
+      </button>
 
       {/* Remove button — top-right */}
       <button

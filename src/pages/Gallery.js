@@ -109,13 +109,36 @@ const Gallery = () => {
               <div className="row g-3">
                 {show.photos.map((photo, photoIndex) => (
                   <div key={photo.storagePath} className="col-6 col-md-4 col-lg-3">
-                    <ProgressiveImage
-                      src={photo.url}
-                      lqip={photo.lqip || null}
-                      alt={show.name}
-                      onClick={() => openLightbox(showIndex, photoIndex)}
-                      style={{ width: "100%", height: "200px", borderRadius: "4px" }}
-                    />
+                    <div style={{ position: "relative" }}>
+                      <ProgressiveImage
+                        src={photo.url}
+                        lqip={photo.lqip || null}
+                        alt={show.name}
+                        onClick={() => openLightbox(showIndex, photoIndex)}
+                        style={{ width: "100%", height: "200px", borderRadius: "4px" }}
+                      />
+                      {photo.credit && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            bottom: "6px",
+                            left: "6px",
+                            backgroundColor: "rgba(0,0,0,0.6)",
+                            color: "rgba(255,255,255,0.85)",
+                            fontSize: "0.65rem",
+                            padding: "2px 6px",
+                            borderRadius: "3px",
+                            pointerEvents: "none",
+                            maxWidth: "calc(100% - 12px)",
+                            overflow: "hidden",
+                            whiteSpace: "nowrap",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          © {photo.credit}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -179,6 +202,23 @@ const Gallery = () => {
             >
               {lightbox.photoIndex + 1} / {totalPhotos}
             </div>
+
+            {/* Photographer credit caption */}
+            {activePhoto.credit && (
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "-52px",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  color: "#666",
+                  fontSize: "0.8rem",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                © {activePhoto.credit}
+              </div>
+            )}
           </div>
 
           {/* Prev button */}

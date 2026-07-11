@@ -131,6 +131,7 @@ const ShowGalleryEditor = () => {
   const [busyShowId, setBusyShowId] = useState(null);
   const [status, setStatus] = useState(null);
   const [collapsed, setCollapsed] = useState({});
+  const [editingPhoto, setEditingPhoto] = useState(null); // { showId, storagePath, credit }
 
   const showsRef = useRef([]);
   const showsCollection = collection(db, "shows");
@@ -318,6 +319,31 @@ const ShowGalleryEditor = () => {
   const toggleCollapsed = (showId) =>
     setCollapsed((prev) => ({ ...prev, [showId]: !prev[showId] }));
 
+  const handleCreditSave = async (showId, storagePath, credit) => {
+    setStatus(null);
+    const current = showsRef.current.find((s) => s.id === showId);
+    if (!current) return;
+
+    const nextPhotos = current.photos.map((p) =>
+      p.storagePath === storagePath
+        ? { ...p, credit: credit.trim() || null }
+        : p
+    );
+    const next = showsRef.current.map((s) =>
+      s.id === showId ? { ...s, photos: nextPhotos } : s
+    );
+    showsRef.current = next;
+    setShows(next);
+    setEditingPhoto(null);
+
+    try {
+      await updateDoc(doc(db, "shows", showId), { photos: nextPhotos });
+    } catch (err) {
+      console.error("Failed to save credit:", err);
+      setStatus({ type: "error", message: "Couldn't save the credit. Try again." });
+    }
+  };
+
   return (
     <div
       className="p-4 rounded-3 shadow-lg w-100"
@@ -425,13 +451,96 @@ const ShowGalleryEditor = () => {
                             }}
                           >
                             {show.photos.map((photo) => (
-                              <SortablePhoto
-                                key={photo.storagePath}
-                                photo={photo}
-                                onRemove={(p) => handlePhotoRemove(show.id, p)}
-                                disabled={busyShowId === show.id}
-                              />
+                              <div key={photo.storagePath}>
+                                <SortablePhoto
+                                  photo={photo}
+                                  onRemove={(p) => handlePhotoRemove(show.id, p)}
+                                  onEdit={(p) =>
+                                    setEditingPhoto({
+                                      showId: show.id,
+                                      storagePath: p.storagePath,
+                                      credit: p.credit || "",
+                                    })
+                                  }
+                                  disabled={busyShowId === show.id}
+                                />
+                              </div>
                             ))}
+                          </div>
+                        )}
+
+                        {/* Inline credit editor */}
+                        {editingPhoto && editingPhoto.showId === show.id && (
+                          <div
+                            style={{
+                              marginBottom: "12px",
+                              padding: "12px",
+                              backgroundColor: "rgba(255,255,255,0.04)",
+                              border: "1px solid #333",
+                              borderRadius: "6px",
+                            }}
+                          >
+                            <p style={{ fontSize: "0.8rem", color: "#999", margin: "0 0 8px" }}>
+                              Photographer credit (optional)
+                            </p>
+                            <div className="d-flex gap-2">
+                              <input
+                                type="text"
+                                value={editingPhoto.credit}
+                                onChange={(e) =>
+                                  setEditingPhoto((prev) => ({ ...prev, credit: e.target.value }))
+                                }
+                                placeholder="e.g. Je dikke moeder"
+                                autoFocus
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") handleCreditSave(editingPhoto.showId, editingPhoto.storagePath, editingPhoto.credit);
+                                  if (e.key === "Escape") setEditingPhoto(null);
+                                }}
+                                style={{
+                                  flex: 1,
+                                  backgroundColor: "transparent",
+                                  color: "white",
+                                  border: "1px solid #555",
+                                  borderRadius: "4px",
+                                  padding: "6px 10px",
+                                  fontSize: "0.9rem",
+                                }}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleCreditSave(editingPhoto.showId, editingPhoto.storagePath, editingPhoto.credit)}
+                                style={{
+                                  backgroundColor: "transparent",
+                                  border: "1px solid white",
+                                  color: "#ff4d4d",
+                                  padding: "6px 14px",
+                                  fontSize: "0.8rem",
+                                  textTransform: "uppercase",
+                                  cursor: "pointer",
+                                  borderRadius: "4px",
+                                }}
+                              >
+                                Save
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setEditingPhoto(null)}
+                                style={{
+                                  backgroundColor: "transparent",
+                                  border: "1px solid #555",
+                                  color: "#999",
+                                  padding: "6px 12px",
+                                  fontSize: "0.8rem",
+                                  cursor: "pointer",
+                                  borderRadius: "4px",
+                                }}
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                            <p style={{ fontSize: "0.75rem", color: "#555", margin: "6px 0 0" }}>
+                              Leave blank to remove the credit. Press Enter to save, Escape to cancel.
+                            </p>
                           </div>
                         )}
                       </SortableContext>
