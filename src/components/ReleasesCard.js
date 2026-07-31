@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 const ReleasesCard = ({ embedUrl, title, style }) => {
     const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
 
-    // Update cursor position
+    // Track the cursor so the glow follows it across the card
     useEffect(() => {
         const handleMouseMove = (e) => {
             setCursorPos({ x: e.clientX, y: e.clientY });
@@ -18,7 +18,7 @@ const ReleasesCard = ({ embedUrl, title, style }) => {
             className="release-card text-white d-flex flex-column justify-content-center align-items-center"
             style={{
                 backgroundColor: '#0A060D',
-                backgroundImage: `radial-gradient(circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(182, 28, 28, 0.2), transparent)`,
+                backgroundImage: `radial-gradient(circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(196, 169, 106, 0.16), transparent)`,
                 width: '100%',
                 boxShadow: '0 4px 15px rgba(0, 0, 0, 0.6)',
                 ...style, // Allow overriding styles via props
@@ -27,9 +27,9 @@ const ReleasesCard = ({ embedUrl, title, style }) => {
                 alignItems: 'center',
                 padding: '20px', // Add padding for spacing
                 boxSizing: 'border-box', // Prevent padding overflow
-                borderBottom: '1px solid white', // Added 1px white border bottom
-                borderTop: '1px solid white', // Added 1px white border bottom
-            
+                borderTop: '1px solid rgba(255, 255, 255, 0.85)',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.85)',
+                transition: 'background 0.1s',
             }}
         >
             <div
@@ -45,7 +45,7 @@ const ReleasesCard = ({ embedUrl, title, style }) => {
                         fontSize: '3rem',
                         fontWeight: 'bold',
                         textTransform: 'uppercase',
-                        color: '#b61c1c',
+                        color: '#c4a96a',
                     }}
                 >
                     {title || 'Latest Release'}
@@ -53,7 +53,7 @@ const ReleasesCard = ({ embedUrl, title, style }) => {
                 <div
                     className="spotify-embed-wrapper"
                     style={{
-                        backgroundColor: '#1e1e1e',
+                        backgroundColor: "#0A060D",
                         borderRadius: '10px',
                         padding: '14px',
                         boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',

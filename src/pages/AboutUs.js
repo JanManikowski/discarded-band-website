@@ -8,7 +8,7 @@ const DEFAULT_INTRO = `
   <p>Within the short time our species has walked this planet, through cooperation, we have built civilizations with the power to shatter mountains and conquer the sky.</p>
   <p>Wise humans, we named ourselves. But our empire is crumbling, and wisdom seems scarcer every single day.</p>
   <p>Despair, disillusionment, and dystopian atmospheres abound. How to lend meaning to a single human life has become increasingly meaningless as the experience of overwhelm through ever-increasing complexity is commonplace. This is our backdrop, this is our stage.</p>
-  <p>Humanity feels <span style="color: #b61c1c; font-weight: bold;">DISCARDED</span>.</p>
+  <p>Humanity feels <span style="color: #c4a96a; font-weight: bold;">DISCARDED</span>.</p>
 `;
 
 const DEFAULT_BAND_BIO = `
@@ -28,7 +28,6 @@ const AboutUs = () => {
   return (
     <div
       className="about-us-page container-fluid text-white"
-      style={{ backgroundColor: "#0A060D" }}
     >
       {/* ABOUT US Section */}
       <div className="text-section container text-center py-5">
@@ -44,7 +43,7 @@ const AboutUs = () => {
       <div className="text-section container text-center">
         <h1
           style={{
-            color: "#b61c1c",
+            color: "#c4a96a",
             fontWeight: "bold",
             fontSize: "2.5rem",
           }}
@@ -77,8 +76,6 @@ const AboutUs = () => {
           <p>Rhythm: Nei Nikki Šon & Liam Rolink</p>
           {/* <p>Lead: Jan Manikowski</p> */}
           <p>Drums: Bas Gijzen</p>
-          <p>Bass: Still looking, contact for audition.</p>
-          <p style={{fontSize: "0.8rem"}}>Friend: Jan Manikowski</p>
         </div>
 
         {data.bandPhotos && data.bandPhotos.length > 0 && (

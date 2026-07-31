@@ -79,7 +79,6 @@ const Gallery = () => {
     <div
       className="container-fluid text-white"
       style={{
-        backgroundColor: "#0A060D",
         minHeight: "100vh",
         paddingTop: "120px",
         paddingBottom: "60px",
@@ -97,7 +96,7 @@ const Gallery = () => {
             <div key={show.id} className="mb-5">
               <h2
                 style={{
-                  color: "#b61c1c",
+                  color: "#c4a96a",
                   fontWeight: "bold",
                   fontSize: "1.6rem",
                   marginBottom: "1rem",

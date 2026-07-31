@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo_centered.png";
 import backgroundLow from "../assets/background-low.png";
@@ -25,10 +25,12 @@ const Home = () => {
   const [backgroundImage, setBackgroundImage] = useState(backgroundLow);
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const [logoStyle, setLogoStyle] = useState({
-    opacity: 1,
-    transform: "scale(1)",
-  });
+
+  // The logo fade is driven by writing styles straight to the DOM node via
+  // this ref. Using React state here meant every scroll event re-rendered
+  // the whole Home page (including the Spotify card and show list), which
+  // caused bad stutter on mobile during fast scrolling.
+  const logoRef = useRef(null);
 
   // Fallback keeps today's release showing if Firestore is unreachable
   // or the admin hasn't saved anything yet.
@@ -45,6 +47,8 @@ const Home = () => {
   const { shows: upcomingShows, loading: showsLoading } = useUpcomingShows(3);
 
   useEffect(() => {
+    let rafId = null;
+
     const loadProducts = async () => {
       try {
         const productData = await fetchProducts();
@@ -61,19 +65,36 @@ const Home = () => {
     highImage.onload = () => setBackgroundImage(backgroundHigh);
 
     const handleScroll = () => {
-      const headerHeight = document.querySelector(".home-header")?.offsetHeight || 1;
-      const scrollTop = window.scrollY;
-      const scrollFraction = Math.min(scrollTop / (headerHeight / 2), 1);
+      // Coalesce multiple scroll events into one write per animation frame.
+      // Fast flick-scrolling on mobile can fire scroll far more often than
+      // the screen actually repaints, so without this we do a pile of
+      // redundant work and drop frames.
+      if (rafId !== null) return;
 
-      setLogoStyle({
-        opacity: 1 - scrollFraction,
-        transform: `scale(${1 - scrollFraction * 0.5})`,
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null;
+
+        const viewportHeight = window.innerHeight || 1;
+        const scrollTop = window.scrollY;
+        const scrollFraction = Math.min(scrollTop / (viewportHeight / 2), 1);
+
+        const node = logoRef.current;
+        if (!node) return;
+
+        // Write directly to the node instead of going through React state.
+        node.style.opacity = String(1 - scrollFraction);
+        node.style.transform = `scale(${1 - scrollFraction * 0.5}) translateZ(0)`;
       });
     };
 
-    window.addEventListener("scroll", handleScroll);
+    // passive: true tells the browser we'll never call preventDefault, so it
+    // can keep scrolling smoothly instead of waiting on our handler.
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
     };
   }, []);
 
@@ -100,18 +121,32 @@ const Home = () => {
 
       <div
         className="home-header"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          // Solid dark fill behind the image. If the browser briefly drops
+          // the decoded bitmap during a fast scroll, this shows through
+          // instead of a black bar.
+          backgroundColor: "#0A060D",
+          // Promote to its own compositor layer so fast scrolling composites
+          // the existing layer rather than repainting the large image.
+          transform: "translateZ(0)",
+          backfaceVisibility: "hidden",
+        }}
       >
-        <img
-          src={logo}
-          alt="Discarded Logo"
-          className="logo"
-          style={{
-            ...logoStyle,
-            transition: "opacity 0.3s ease, transform 0.3s ease",
-          }}
-        />
-        <button
+        <div className="home-header-content">
+          <img
+            ref={logoRef}
+            src={logo}
+            alt="Discarded Logo"
+            className="logo"
+            style={{
+              opacity: 1,
+              transform: "scale(1) translateZ(0)",
+              transition: "opacity 0.3s ease, transform 0.3s ease",
+              backfaceVisibility: "hidden",
+            }}
+          />
+          <button
   className="btn btn-outline-light mt-4"
   onClick={() => {
     const featuredSection = document.getElementById("latest");
@@ -129,7 +164,7 @@ const Home = () => {
   See Latest Release
 </button>
 
-
+        </div>
       </div>
 
       {/* Releases Card Section */}

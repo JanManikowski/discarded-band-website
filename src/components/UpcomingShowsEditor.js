@@ -122,7 +122,7 @@ const UpcomingShowsEditor = () => {
       className="p-4 rounded-3 shadow-lg w-100"
       style={{ backgroundColor: "rgba(0, 0, 0, 0.9)", maxWidth: "700px" }}
     >
-      <h2 className="mb-3" style={{ fontSize: "1.3rem", color: "#b61c1c" }}>
+      <h2 className="mb-3" style={{ fontSize: "1.3rem", color: "#c4a96a" }}>
         Upcoming Shows
       </h2>
 
@@ -205,7 +205,7 @@ const UpcomingShowsEditor = () => {
           style={{
             backgroundColor: "transparent",
             border: "1px solid white",
-            color: "#ff4d4d",
+            color: "#c4a96a",
             padding: "8px 18px",
             textTransform: "uppercase",
             fontSize: "0.85rem",

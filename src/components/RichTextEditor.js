@@ -17,7 +17,7 @@ const FONT_SIZES = [
 const COLOR_SWATCHES = [
   { label: "Default", value: "#e0e0e0" },
   { label: "White", value: "#ffffff" },
-  { label: "Discarded Red", value: "#b61c1c" },
+  { label: "Discarded Gold", value: "#c4a96a" },
   { label: "Grey", value: "#999999" },
 ];
 
@@ -27,9 +27,9 @@ const ToolbarButton = ({ onClick, active, children, title }) => (
     onClick={onClick}
     title={title}
     style={{
-      backgroundColor: active ? "#b61c1c" : "transparent",
+      backgroundColor: active ? "#c4a96a" : "transparent",
       border: "1px solid white",
-      color: "white",
+      color: active ? "#1a0a02" : "white",
       padding: "4px 10px",
       marginRight: "6px",
       marginBottom: "6px",

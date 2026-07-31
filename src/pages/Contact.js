@@ -47,7 +47,6 @@ const Contact = () => {
     <div
       className="d-flex flex-column align-items-center justify-content-center"
       style={{
-        backgroundColor: "#0A060D",
         color: "white",
         minHeight: "100vh",
         padding: "120px 20px",
@@ -200,7 +199,7 @@ const Contact = () => {
             backgroundColor: "transparent",
             border: "1px solid white",
             fontWeight: "bold",
-            color: "#ff4d4d",
+            color: "#c4a96a",
             padding: "15px 20px",
             textTransform: "uppercase",
           }}

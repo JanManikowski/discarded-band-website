@@ -28,5 +28,8 @@ export const parseSpotifyLink = (input) => {
 };
 
 export const buildSpotifyEmbedUrl = ({ type, id }) => {
-  return `https://open.spotify.com/embed/${type}/${id}`;
+  // theme=0 forces Spotify's dark player. Without it, Spotify tints the
+  // player background using colours sampled from the album artwork, which
+  // clashes with the site whenever a release has a bright cover.
+  return `https://open.spotify.com/embed/${type}/${id}?theme=0`;
 };

@@ -118,7 +118,7 @@ const AdminLogin = () => {
             backgroundColor: "transparent",
             border: "1px solid white",
             fontWeight: "bold",
-            color: "#ff4d4d",
+            color: "#c4a96a",
             padding: "15px 20px",
             textTransform: "uppercase",
             opacity: submitting ? 0.6 : 1,

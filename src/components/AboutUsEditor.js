@@ -7,7 +7,7 @@ const DEFAULT_INTRO = `
   <p>Within the short time our species has walked this planet, through cooperation, we have built civilizations with the power to shatter mountains and conquer the sky.</p>
   <p>Wise humans, we named ourselves. But our empire is crumbling, and wisdom seems scarcer every single day.</p>
   <p>Despair, disillusionment, and dystopian atmospheres abound. How to lend meaning to a single human life has become increasingly meaningless as the experience of overwhelm through ever-increasing complexity is commonplace. This is our backdrop, this is our stage.</p>
-  <p>Humanity feels <span style="color: #b61c1c; font-weight: bold;">DISCARDED</span>.</p>
+  <p>Humanity feels <span style="color: #c4a96a; font-weight: bold;">DISCARDED</span>.</p>
 `;
 
 const DEFAULT_BAND_BIO = `
@@ -65,7 +65,7 @@ const AboutUsEditor = () => {
       className="p-4 rounded-3 shadow-lg w-100"
       style={{ backgroundColor: "rgba(0, 0, 0, 0.9)", maxWidth: "700px" }}
     >
-      <h2 className="mb-3" style={{ fontSize: "1.3rem", color: "#b61c1c" }}>
+      <h2 className="mb-3" style={{ fontSize: "1.3rem", color: "#c4a96a" }}>
         About Us Page
       </h2>
 
@@ -110,7 +110,7 @@ const AboutUsEditor = () => {
               backgroundColor: "transparent",
               border: "1px solid white",
               fontWeight: "bold",
-              color: "#ff4d4d",
+              color: "#c4a96a",
               padding: "12px 20px",
               textTransform: "uppercase",
               opacity: saving ? 0.6 : 1,

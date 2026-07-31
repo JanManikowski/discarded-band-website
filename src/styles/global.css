@@ -34,6 +34,18 @@
     user-select: none;
     background-size: cover;
     background-position: center;
+    background-attachment: scroll; /* Explicit: background scrolls with the page, not pinned in place */
+}
+
+/* Wrapper around the logo + "See Latest Release" button.
+   Without this rule the div defaults to display:block, which lets the
+   inline <img> and inline-block <button> sit side by side on one line. */
+.home-header-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
 .logo {
@@ -86,7 +98,7 @@
 }
 
 .product-card .card:hover .card-title {
-    color: #b61c1c;
+    color: #c4a96a;
 }
 
 .product-card .card:hover {
@@ -113,7 +125,7 @@
     font-size: 1.2rem;
     font-weight: bold;
     text-align: center;
-    color: #b61c1c;
+    color: #c4a96a;
 }
 
 /* Buttons */
@@ -157,7 +169,7 @@
 .custom-navbar {
     height: 100px;
     background-color: rgba(0, 0, 0, 1); /* Solid by default */
-    border-bottom: 2px solid #ffffff;
+    border-bottom: 2px solid #c4a96a;
     transition: background-color 0.5s ease, border-color 0.5s ease;
 }
 .custom-navbar.transparent {
@@ -173,7 +185,7 @@
     text-decoration: none;
 }
 .custom-navbar-links .custom-nav-link:hover {
-    color: #b61c1c; /* Red color on hover */
+    color: #c4a96a; /* Gold color on hover */
 }
 .custom-navbar-links .custom-nav-link::after {
     content: "";
@@ -182,7 +194,7 @@
     left: 0;
     width: 0;
     height: 2px;
-    background-color: #741414cf; /* Underline color */
+    background-color: #c4a96a97; /* Underline color */
     opacity: 0;
     transition: width 0.3s ease, opacity 0.3s ease;
 }
@@ -237,7 +249,7 @@ html, body {
     padding: 0;
     width: 100%; /* Prevent overflow */
     overflow-x: hidden; /* Disable horizontal scrolling */
-    background-color: #0A060D;
+    background-color: #0D0A07;
 }
 
 .discounted-price {

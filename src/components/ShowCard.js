@@ -24,7 +24,7 @@ const ShowCard = ({ show }) => {
             paddingRight: "16px",
           }}
         >
-          <div style={{ fontSize: "1.8rem", fontWeight: "bold", color: "#b61c1c", lineHeight: 1 }}>
+          <div style={{ fontSize: "1.8rem", fontWeight: "bold", color: "#c4a96a", lineHeight: 1 }}>
             {show.day}
           </div>
           <div style={{ fontSize: "0.95rem", color: "#e0e0e0", letterSpacing: "1px" }}>
@@ -36,10 +36,10 @@ const ShowCard = ({ show }) => {
         {/* Location / venue */}
         <div>
           <div style={{ fontSize: "1.1rem", fontWeight: "bold", color: "white" }}>
-            {show.city}, {show.country}
+            {show.venue}
           </div>
           <div style={{ fontSize: "0.95rem", color: "#999" }}>
-            {show.venue}
+            {show.city}, {show.country}
           </div>
         </div>
       </div>
@@ -53,7 +53,7 @@ const ShowCard = ({ show }) => {
           style={{
             backgroundColor: "transparent",
             border: "1px solid white",
-            color: "#ff4d4d",
+            color: "#c4a96a",
             padding: "8px 18px",
             textTransform: "uppercase",
             fontSize: "0.85rem",

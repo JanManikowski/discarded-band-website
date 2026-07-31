@@ -67,7 +67,7 @@ const AdminDashboard = () => {
             Discarded
           </span>
           <span style={{ color: "#444", margin: "0 10px" }}>|</span>
-          <span style={{ fontSize: "14px", fontWeight: "500", color: "#b61c1c", letterSpacing: "1px" }}>
+          <span style={{ fontSize: "14px", fontWeight: "500", color: "#c4a96a", letterSpacing: "1px" }}>
             ADMIN
           </span>
         </div>
@@ -90,9 +90,9 @@ const AdminDashboard = () => {
           <button
             onClick={logout}
             style={{
-              background: "#b61c1c",
+              background: "#c4a96a",
               border: "none",
-              color: "white",
+              color: "#1a0a02",
               fontSize: "13px",
               padding: "6px 14px",
               borderRadius: "6px",
@@ -144,8 +144,8 @@ const AdminDashboard = () => {
                 width: "100%",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "#b61c1c";
-                e.currentTarget.style.background = "rgba(182,28,28,0.05)";
+                e.currentTarget.style.borderColor = "#c4a96a";
+                e.currentTarget.style.background = "rgba(196, 169, 106, 0.05)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
@@ -157,7 +157,7 @@ const AdminDashboard = () => {
                   style={{
                     width: "44px",
                     height: "44px",
-                    background: "rgba(182,28,28,0.12)",
+                    background: "rgba(196, 169, 106, 0.12)",
                     borderRadius: "10px",
                     display: "flex",
                     alignItems: "center",
@@ -177,6 +177,52 @@ const AdminDashboard = () => {
               </div>
             </button>
           ))}
+        </div>
+
+        {/* Bottom status strip */}
+        <div
+          style={{
+            background: "rgba(255,255,255,0.03)",
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: "12px",
+            padding: "18px 24px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div
+              style={{
+                width: "8px",
+                height: "8px",
+                borderRadius: "50%",
+                backgroundColor: "#22c55e",
+                boxShadow: "0 0 6px #22c55e",
+              }}
+            />
+            <div>
+              <p style={{ fontSize: "13px", fontWeight: "500", color: "#e0e0e0", margin: 0 }}>
+                Admin access
+              </p>
+              <p style={{ fontSize: "12px", color: "#555", margin: 0 }}>
+                Logged in as {currentUser?.email}
+              </p>
+            </div>
+          </div>
+          <span
+            style={{
+              fontSize: "12px",
+              background: "rgba(196, 169, 106, 0.15)",
+              color: "#c4a96a",
+              padding: "4px 12px",
+              borderRadius: "20px",
+              fontWeight: "500",
+              letterSpacing: "0.5px",
+            }}
+          >
+            LIVE
+          </span>
         </div>
       </div>
     </div>

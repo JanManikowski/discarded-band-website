@@ -72,7 +72,7 @@ const ReleaseEditor = () => {
       className="p-4 rounded-3 shadow-lg w-100"
       style={{ backgroundColor: "rgba(0, 0, 0, 0.9)", maxWidth: "500px" }}
     >
-      <h2 className="mb-3" style={{ fontSize: "1.3rem", color: "#b61c1c" }}>
+      <h2 className="mb-3" style={{ fontSize: "1.3rem", color: "#c4a96a" }}>
         Latest Release (Spotify)
       </h2>
 
@@ -126,7 +126,7 @@ const ReleaseEditor = () => {
               backgroundColor: "transparent",
               border: "1px solid white",
               fontWeight: "bold",
-              color: "#ff4d4d",
+              color: "#c4a96a",
               padding: "12px 20px",
               textTransform: "uppercase",
               opacity: saving ? 0.6 : 1,

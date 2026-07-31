@@ -76,9 +76,9 @@ const AdminNavbar = () => {
         <button
           onClick={logout}
           style={{
-            background: "#b61c1c",
+            background: "#c4a96a",
             border: "none",
-            color: "white",
+            color: "#1a0a02",
             fontSize: "13px",
             padding: "6px 14px",
             borderRadius: "6px",
@@ -139,7 +139,7 @@ const AdminNavbar = () => {
             <p style={{ fontSize: "13px", color: "#555", margin: "0 0 10px" }}>{currentUser?.email}</p>
             <button
               onClick={logout}
-              style={{ background: "#b61c1c", border: "none", color: "white", padding: "8px 16px", borderRadius: "6px", fontSize: "13px", cursor: "pointer", width: "100%" }}
+              style={{ background: "#c4a96a", border: "none", color: "#1a0a02", padding: "8px 16px", borderRadius: "6px", fontSize: "13px", cursor: "pointer", width: "100%" }}
             >
               Log out
             </button>

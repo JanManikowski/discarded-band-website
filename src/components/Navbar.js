@@ -17,33 +17,59 @@ const NavBar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
-        const updateNavbarStyle = () => {
-            const isHomePage = location.pathname === '/';
-            
-            if (!isHomePage) {
-                setNavbarStyle({
-                    backgroundColor: 'rgba(0, 0, 0, 1)',
-                    borderBottom: '2px solid #ffffff',
-                    transition: 'background-color 0.5s ease, border-color 0.5s ease',
-                });
-            } else {
-                const header = document.querySelector('.home-header');
-                const headerBottom = header ? header.getBoundingClientRect().bottom : 0;
-    
-                setNavbarStyle({
-                    backgroundColor: headerBottom <= 0 ? 'rgba(0, 0, 0, 1)' : 'rgba(0, 0, 0, 0)',
-                    borderBottom: headerBottom <= 0 ? '2px solid #ffffff' : '2px solid transparent',
-                    transition: 'background-color 0.5s ease, border-color 0.5s ease',
-                });
-            }
+        const isHomePage = location.pathname === '/';
+
+        const SOLID = {
+            backgroundColor: 'rgba(0, 0, 0, 1)',
+            borderBottom: '2px solid #c4a96a',
+            transition: 'background-color 0.5s ease, border-color 0.5s ease',
         };
-    
-        // Update on scroll and location change
-        updateNavbarStyle();
-        window.addEventListener('scroll', updateNavbarStyle);
-    
+        const TRANSPARENT = {
+            backgroundColor: 'rgba(0, 0, 0, 0)',
+            borderBottom: '2px solid transparent',
+            transition: 'background-color 0.5s ease, border-color 0.5s ease',
+        };
+
+        if (!isHomePage) {
+            setNavbarStyle(SOLID);
+            return;
+        }
+
+        // Measure the header once instead of calling getBoundingClientRect on
+        // every scroll event - reading layout mid-scroll forces the browser to
+        // flush pending layout work, which is what made fast scrolling stutter.
+        let headerHeight = document.querySelector('.home-header')?.offsetHeight || window.innerHeight;
+        let rafId = null;
+        // Track the current state so we only call setNavbarStyle when the value
+        // actually flips, rather than on every single scroll event.
+        let isSolid = null;
+
+        const applyStyle = () => {
+            rafId = null;
+            const nextSolid = window.scrollY >= headerHeight;
+            if (nextSolid === isSolid) return;
+            isSolid = nextSolid;
+            setNavbarStyle(nextSolid ? SOLID : TRANSPARENT);
+        };
+
+        const onScroll = () => {
+            if (rafId !== null) return;
+            rafId = window.requestAnimationFrame(applyStyle);
+        };
+
+        const onResize = () => {
+            headerHeight = document.querySelector('.home-header')?.offsetHeight || window.innerHeight;
+            applyStyle();
+        };
+
+        applyStyle();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onResize);
+
         return () => {
-            window.removeEventListener('scroll', updateNavbarStyle);
+            window.removeEventListener('scroll', onScroll);
+            window.removeEventListener('resize', onResize);
+            if (rafId !== null) window.cancelAnimationFrame(rafId);
         };
     }, [location.pathname]);
     
@@ -168,12 +194,12 @@ const NavBar = () => {
                                 </Link>
                             </li>
                             <li className="nav-item d-lg-none custom-cart-container">
-                            <Link to="/basket" className="nav-link text-white d-flex align-items-center">
+                            {/* <Link to="/basket" className="nav-link text-white d-flex align-items-center">
         <i className="bi bi-cart-fill" style={{ fontSize: '2rem', marginRight: '0.5rem' }}></i>
         <span className="cart-details">
             {basketCount} / €{calculateTotal().toFixed(2)}
         </span>
-    </Link>
+    </Link> */}
                             </li>
                         </ul>
                     </div>

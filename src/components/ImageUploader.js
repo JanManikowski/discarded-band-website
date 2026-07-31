@@ -131,12 +131,12 @@ const ImageUploader = ({ folder, onUploaded, buttonLabel = "Add Photos" }) => {
       onDrop={handleDrop}
       onClick={() => inputRef.current?.click()}
       style={{
-        border: `2px dashed ${isDragOver ? "#b61c1c" : "#555"}`,
+        border: `2px dashed ${isDragOver ? "#c4a96a" : "#555"}`,
         borderRadius: "8px",
         padding: "20px",
         textAlign: "center",
         cursor: "pointer",
-        backgroundColor: isDragOver ? "rgba(182, 28, 28, 0.08)" : "rgba(255,255,255,0.02)",
+        backgroundColor: isDragOver ? "rgba(196, 169, 106, 0.08)" : "rgba(255,255,255,0.02)",
         transition: "border-color 0.2s, background-color 0.2s",
       }}
     >
@@ -218,7 +218,7 @@ const ImageUploader = ({ folder, onUploaded, buttonLabel = "Add Photos" }) => {
                     style={{
                       height: "100%",
                       width: item.status === "compressing" ? "30%" : `${item.progress}%`,
-                      backgroundColor: "#b61c1c",
+                      backgroundColor: "#c4a96a",
                       borderRadius: "0 0 4px 4px",
                       transition: "width 0.2s",
                     }}

@@ -44,10 +44,10 @@ const SortableShowRow = ({ show, onDelete, busyShowId, isCollapsed, onToggle, ch
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    border: isDragging ? "1px solid #b61c1c" : "1px solid #2a2a2a",
+    border: isDragging ? "1px solid #c4a96a" : "1px solid #2a2a2a",
     borderRadius: "6px",
     padding: "14px",
-    backgroundColor: isDragging ? "rgba(182,28,28,0.06)" : "rgba(255,255,255,0.02)",
+    backgroundColor: isDragging ? "rgba(196, 169, 106, 0.06)" : "rgba(255,255,255,0.02)",
   };
 
   const photoCount = (show.photos || []).length;
@@ -349,7 +349,7 @@ const ShowGalleryEditor = () => {
       className="p-4 rounded-3 shadow-lg w-100"
       style={{ backgroundColor: "rgba(0, 0, 0, 0.9)", maxWidth: "700px" }}
     >
-      <h2 className="mb-1" style={{ fontSize: "1.3rem", color: "#b61c1c" }}>
+      <h2 className="mb-1" style={{ fontSize: "1.3rem", color: "#c4a96a" }}>
         Show Galleries
       </h2>
       <p style={{ color: "#666", fontSize: "0.8rem", marginBottom: "16px" }}>
@@ -392,7 +392,7 @@ const ShowGalleryEditor = () => {
           style={{
             backgroundColor: "transparent",
             border: "1px solid white",
-            color: "#ff4d4d",
+            color: "#c4a96a",
             padding: "8px 16px",
             textTransform: "uppercase",
             fontSize: "0.85rem",
@@ -490,7 +490,7 @@ const ShowGalleryEditor = () => {
                                 onChange={(e) =>
                                   setEditingPhoto((prev) => ({ ...prev, credit: e.target.value }))
                                 }
-                                placeholder="e.g. Je dikke moeder"
+                                placeholder="e.g. Jan Manikowski"
                                 autoFocus
                                 onKeyDown={(e) => {
                                   if (e.key === "Enter") handleCreditSave(editingPhoto.showId, editingPhoto.storagePath, editingPhoto.credit);
@@ -512,7 +512,7 @@ const ShowGalleryEditor = () => {
                                 style={{
                                   backgroundColor: "transparent",
                                   border: "1px solid white",
-                                  color: "#ff4d4d",
+                                  color: "#c4a96a",
                                   padding: "6px 14px",
                                   fontSize: "0.8rem",
                                   textTransform: "uppercase",
