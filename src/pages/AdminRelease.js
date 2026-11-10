@@ -11,7 +11,7 @@ const AdminRelease = () => (
         backgroundColor: "#0A060D",
         color: "white",
         minHeight: "100vh",
-        padding: "100px 20px 60px",
+        padding: "48px 20px 60px",
       }}
     >
       <ReleaseEditor />

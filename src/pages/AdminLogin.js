@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { commonTitleStyle } from "../styles/constants";
+import { sectionTitleStyle } from "../styles/constants";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -49,7 +49,7 @@ const AdminLogin = () => {
         padding: "120px 20px",
       }}
     >
-      <h1 style={commonTitleStyle}>Admin Login</h1>
+      <h1 style={sectionTitleStyle}>Admin Login</h1>
 
       <form
         onSubmit={handleSubmit}
@@ -110,21 +110,7 @@ const AdminLogin = () => {
           />
         </div>
 
-        <button
-          type="submit"
-          disabled={submitting}
-          className="w-100"
-          style={{
-            backgroundColor: "transparent",
-            border: "1px solid white",
-            fontWeight: "bold",
-            color: "#c4a96a",
-            padding: "15px 20px",
-            textTransform: "uppercase",
-            opacity: submitting ? 0.6 : 1,
-            cursor: submitting ? "not-allowed" : "pointer",
-          }}
-        >
+        <button type="submit" disabled={submitting} className="site-btn site-btn-block">
           {submitting ? "Logging in..." : "Log In"}
         </button>
       </form>

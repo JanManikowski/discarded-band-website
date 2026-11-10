@@ -23,11 +23,10 @@ export const ShowsView = ({ upcoming, past, loading }) => {
 
   return (
     <div
-      className="container-fluid text-white"
+      className="container-fluid page-shell text-white"
       style={{
         backgroundColor: "#0A060D",
         minHeight: "100vh",
-        paddingTop: "120px",
         paddingBottom: "60px",
       }}
     >

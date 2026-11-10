@@ -14,6 +14,7 @@ import { ref, deleteObject } from "firebase/storage";
 import { db, storage } from "../firebase/config";
 import ImageUploader from "./ImageUploader";
 import SortablePhoto from "./SortablePhoto";
+import { adminSaveButtonStyle, adminSmallButtonStyle } from "../styles/adminStyles";
 import {
   DndContext,
   closestCenter,
@@ -102,16 +103,7 @@ const SortableShowRow = ({ show, onDelete, busyShowId, isCollapsed, onToggle, ch
           type="button"
           onClick={() => onDelete(show)}
           disabled={busyShowId === show.id}
-          style={{
-            backgroundColor: "transparent",
-            border: "1px solid #b61c1c",
-            color: "#ff9b9b",
-            padding: "4px 10px",
-            fontSize: "0.75rem",
-            textTransform: "uppercase",
-            cursor: busyShowId === show.id ? "not-allowed" : "pointer",
-            whiteSpace: "nowrap",
-          }}
+          style={adminSmallButtonStyle("danger", busyShowId === show.id)}
         >
           Delete Show
         </button>
@@ -389,16 +381,7 @@ const ShowGalleryEditor = () => {
         <button
           type="submit"
           disabled={creating || !newShowName.trim()}
-          style={{
-            backgroundColor: "transparent",
-            border: "1px solid white",
-            color: "#c4a96a",
-            padding: "8px 16px",
-            textTransform: "uppercase",
-            fontSize: "0.85rem",
-            cursor: creating ? "not-allowed" : "pointer",
-            opacity: creating ? 0.6 : 1,
-          }}
+          style={{ ...adminSaveButtonStyle(creating), padding: "8px 16px", fontSize: "0.85rem" }}
         >
           {creating ? "Adding..." : "Add Show"}
         </button>
@@ -509,31 +492,14 @@ const ShowGalleryEditor = () => {
                               <button
                                 type="button"
                                 onClick={() => handleCreditSave(editingPhoto.showId, editingPhoto.storagePath, editingPhoto.credit)}
-                                style={{
-                                  backgroundColor: "transparent",
-                                  border: "1px solid white",
-                                  color: "#c4a96a",
-                                  padding: "6px 14px",
-                                  fontSize: "0.8rem",
-                                  textTransform: "uppercase",
-                                  cursor: "pointer",
-                                  borderRadius: "4px",
-                                }}
+                                style={{ ...adminSmallButtonStyle("gold"), padding: "6px 14px" }}
                               >
                                 Save
                               </button>
                               <button
                                 type="button"
                                 onClick={() => setEditingPhoto(null)}
-                                style={{
-                                  backgroundColor: "transparent",
-                                  border: "1px solid #555",
-                                  color: "#999",
-                                  padding: "6px 12px",
-                                  fontSize: "0.8rem",
-                                  cursor: "pointer",
-                                  borderRadius: "4px",
-                                }}
+                                style={{ ...adminSmallButtonStyle("default"), padding: "6px 12px" }}
                               >
                                 Cancel
                               </button>

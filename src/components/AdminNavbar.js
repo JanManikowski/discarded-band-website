@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
+import { LuMenu, LuX } from "react-icons/lu";
 
 const PAGE_LABELS = {
   "/admin/release": "Releases",
@@ -12,6 +13,8 @@ const PAGE_LABELS = {
   "/admin/merch": "Merch",
 };
 
+// Top bar on every admin editor. Styles live in features.css (.admin-topbar…)
+// and are shared with the dashboard.
 const AdminNavbar = () => {
   const { currentUser, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -20,130 +23,64 @@ const AdminNavbar = () => {
   const pageLabel = PAGE_LABELS[location.pathname] ?? "Admin";
 
   return (
-    <nav
-      style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 100,
-        backgroundColor: "rgba(10,6,13,0.95)",
-        borderBottom: "1px solid rgba(255,255,255,0.08)",
-        height: "64px",
-        display: "flex",
-        alignItems: "center",
-        padding: "0 40px",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: "16px", flex: 1 }}>
+    <nav className="admin-topbar">
+      <div className="admin-topbar-brand" style={{ flex: 1 }}>
         {/* Back to dashboard */}
         <button
+          type="button"
+          className="admin-topbar-back"
           onClick={() => navigate("/admin")}
-          style={{
-            background: "none",
-            border: "none",
-            color: "#555",
-            fontSize: "20px",
-            cursor: "pointer",
-            padding: "0 4px",
-            lineHeight: 1,
-            display: "flex",
-            alignItems: "center",
-          }}
           title="Back to dashboard"
+          aria-label="Back to dashboard"
         >
           ←
         </button>
-        <span style={{ color: "rgba(255,255,255,0.15)" }}>|</span>
-        <span style={{ fontSize: "14px", fontWeight: "600", color: "white" }}>
-          {pageLabel}
-        </span>
+        <span className="admin-topbar-divider" aria-hidden="true" />
+        <span className="admin-topbar-section">{pageLabel}</span>
       </div>
 
       {/* Desktop right side */}
-      <div className="d-none d-lg-flex" style={{ alignItems: "center", gap: "16px" }}>
-        <button
-          onClick={() => navigate("/")}
-          style={{
-            background: "none",
-            border: "1px solid rgba(255,255,255,0.15)",
-            color: "#aaa",
-            fontSize: "13px",
-            padding: "6px 14px",
-            borderRadius: "6px",
-            cursor: "pointer",
-          }}
-        >
+      <div className="d-none d-lg-flex admin-topbar-actions">
+        <button type="button" className="admin-btn" onClick={() => navigate("/")}>
           ← Website
         </button>
-        <span style={{ fontSize: "13px", color: "#555" }}>{currentUser?.email}</span>
-        <button
-          onClick={logout}
-          style={{
-            background: "#c4a96a",
-            border: "none",
-            color: "#1a0a02",
-            fontSize: "13px",
-            padding: "6px 14px",
-            borderRadius: "6px",
-            cursor: "pointer",
-            fontWeight: "500",
-          }}
-        >
+        <span className="admin-topbar-email">{currentUser?.email}</span>
+        <button type="button" className="admin-btn is-primary" onClick={logout}>
           Log out
         </button>
       </div>
 
       {/* Mobile toggle */}
       <button
-        className="d-lg-none"
+        type="button"
+        className="d-lg-none admin-btn is-icon"
         onClick={() => setMenuOpen((p) => !p)}
-        style={{
-          background: "none",
-          border: "1px solid rgba(255,255,255,0.15)",
-          color: "white",
-          padding: "6px 10px",
-          borderRadius: "6px",
-          cursor: "pointer",
-        }}
+        aria-expanded={menuOpen}
+        aria-label={menuOpen ? "Close menu" : "Open menu"}
       >
-        {menuOpen ? "✕" : "☰"}
+        {menuOpen ? <LuX aria-hidden="true" /> : <LuMenu aria-hidden="true" />}
       </button>
 
       {/* Mobile dropdown */}
       {menuOpen && (
-        <div
-          className="d-lg-none"
-          style={{
-            position: "absolute",
-            top: "64px",
-            left: 0,
-            right: 0,
-            backgroundColor: "#0A060D",
-            borderBottom: "1px solid rgba(255,255,255,0.08)",
-            padding: "16px 24px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "12px",
-          }}
-        >
+        <div className="d-lg-none admin-topbar-menu">
           <button
+            type="button"
+            className="admin-topbar-menu-link"
             onClick={() => { setMenuOpen(false); navigate("/"); }}
-            style={{ background: "none", border: "none", color: "#aaa", fontSize: "14px", textAlign: "left", cursor: "pointer", padding: 0 }}
           >
             ← Back to website
           </button>
           <button
+            type="button"
+            className="admin-topbar-menu-link"
             onClick={() => { setMenuOpen(false); navigate("/admin"); }}
-            style={{ background: "none", border: "none", color: "#aaa", fontSize: "14px", textAlign: "left", cursor: "pointer", padding: 0 }}
           >
             ← Back to dashboard
           </button>
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "12px" }}>
-            <p style={{ fontSize: "13px", color: "#555", margin: "0 0 10px" }}>{currentUser?.email}</p>
-            <button
-              onClick={logout}
-              style={{ background: "#c4a96a", border: "none", color: "#1a0a02", padding: "8px 16px", borderRadius: "6px", fontSize: "13px", cursor: "pointer", width: "100%" }}
-            >
+          <div className="admin-topbar-menu-footer">
+            <span className="admin-topbar-email">{currentUser?.email}</span>
+            <button type="button" className="admin-btn is-primary" onClick={logout}>
               Log out
             </button>
           </div>

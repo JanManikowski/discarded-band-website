@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/global.css";
 import "../styles/responsive.css";
-import { commonTitleStyle } from "../styles/constants";
+import { commonTitleStyle, sectionTitleStyle } from "../styles/constants";
 import useSiteContent from "../hooks/useSiteContent";
 import { DEFAULT_ABOUT_US } from "../content/aboutUsDefaults";
 
@@ -13,7 +13,7 @@ export const AboutUsView = ({ data }) => {
   return (
     <div className="about-us-page container-fluid text-white">
       {/* ABOUT US Section */}
-      <div className="text-section container text-center py-5">
+      <div className="text-section container text-center pt-0 pb-5">
         <h1 style={commonTitleStyle}>{data.title || DEFAULT_ABOUT_US.title}</h1>
         <div
           className="about-text mx-auto"
@@ -24,16 +24,7 @@ export const AboutUsView = ({ data }) => {
 
       {/* THE BAND Section */}
       <div className="text-section container text-center">
-        <h1
-          style={{
-            color: "#c4a96a",
-            fontWeight: "bold",
-            fontSize: "2.5rem",
-            textTransform: "uppercase",
-          }}
-        >
-          {data.bandTitle || DEFAULT_ABOUT_US.bandTitle}
-        </h1>
+        <h2 style={sectionTitleStyle}>{data.bandTitle || DEFAULT_ABOUT_US.bandTitle}</h2>
         <div
           className="band-text mx-auto"
           style={{

@@ -64,7 +64,7 @@ export const MerchView = ({ items, intro, loading }) => (
     ) : (
       <div className="merch-empty">
         <p>New merch is on its way. In the meantime, everything we have is on Bandcamp.</p>
-        <a className="merch-empty-button" href={BANDCAMP_MERCH_URL} target="_blank" rel="noopener noreferrer">
+        <a className="site-btn" href={BANDCAMP_MERCH_URL} target="_blank" rel="noopener noreferrer">
           Visit our Bandcamp <FaArrowRight />
         </a>
       </div>

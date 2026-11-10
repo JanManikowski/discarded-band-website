@@ -24,7 +24,15 @@ const ShowCard = ({ show, past = false }) => {
             paddingRight: "16px",
           }}
         >
-          <div style={{ fontSize: "1.8rem", fontWeight: "bold", color: "#c4a96a", lineHeight: 1 }}>
+          <div
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "1.8rem",
+              fontWeight: "bold",
+              color: "#c4a96a",
+              lineHeight: 1,
+            }}
+          >
             {show.day}
           </div>
           <div style={{ fontSize: "0.95rem", color: "#e0e0e0", letterSpacing: "1px" }}>
@@ -52,22 +60,12 @@ const ShowCard = ({ show, past = false }) => {
           href={show.ticketsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          style={{
-            backgroundColor: "transparent",
-            border: "1px solid white",
-            color: "#c4a96a",
-            padding: "8px 18px",
-            textTransform: "uppercase",
-            fontSize: "0.85rem",
-            fontWeight: "bold",
-            textDecoration: "none",
-            whiteSpace: "nowrap",
-          }}
+          className="site-btn site-btn-sm"
         >
           Tickets
         </a>
       ) : (
-        <span style={{ color: "#666", fontSize: "0.85rem" }}>Tickets TBA</span>
+        <span className="show-card-played">Tickets TBA</span>
       )}
     </div>
   );

@@ -249,7 +249,7 @@ html, body {
     padding: 0;
     width: 100%; /* Prevent overflow */
     overflow-x: hidden; /* Disable horizontal scrolling */
-    background-color: #0D0A07;
+    background-color: #0A060D; /* same near-black as every page and the footer */
 }
 
 .discounted-price {
@@ -257,5 +257,7 @@ html, body {
     font-weight: bold;
 }
 body {
-    font-family: 'Roboto ', monospace;
+    /* Was 'Roboto ' (with a stray space), which never matched, so the whole
+       site fell back to the browser's monospace font. */
+    font-family: "Source Sans 3 Variable", "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
 }

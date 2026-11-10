@@ -12,6 +12,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { buildShowDateFields, startOfToday } from "../utils/showDates";
+import { adminSaveButtonStyle, adminSmallButtonStyle } from "../styles/adminStyles";
 
 const emptyForm = {
   date: "",
@@ -202,16 +203,7 @@ const UpcomingShowsEditor = () => {
         <button
           type="submit"
           disabled={saving}
-          style={{
-            backgroundColor: "transparent",
-            border: "1px solid white",
-            color: "#c4a96a",
-            padding: "8px 18px",
-            textTransform: "uppercase",
-            fontSize: "0.85rem",
-            cursor: saving ? "not-allowed" : "pointer",
-            opacity: saving ? 0.6 : 1,
-          }}
+          style={{ ...adminSaveButtonStyle(saving), padding: "8px 18px", fontSize: "0.85rem" }}
         >
           {saving ? "Adding..." : "Add Show"}
         </button>
@@ -247,17 +239,7 @@ const UpcomingShowsEditor = () => {
                   type="button"
                   onClick={() => handleDelete(show.id)}
                   disabled={deletingId === show.id}
-                  style={{
-                    backgroundColor: "transparent",
-                    border: "1px solid #b61c1c",
-                    color: "#ff9b9b",
-                    padding: "4px 10px",
-                    fontSize: "0.75rem",
-                    textTransform: "uppercase",
-                    cursor: deletingId === show.id ? "not-allowed" : "pointer",
-                    whiteSpace: "nowrap",
-                    marginLeft: "10px",
-                  }}
+                  style={{ ...adminSmallButtonStyle("danger", deletingId === show.id), marginLeft: "10px" }}
                 >
                   Delete
                 </button>

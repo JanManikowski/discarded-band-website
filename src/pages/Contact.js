@@ -48,11 +48,11 @@ const Contact = () => {
 
   return (
     <div
-      className="d-flex flex-column align-items-center justify-content-center"
+      className="d-flex flex-column align-items-center"
       style={{
         color: "white",
         minHeight: "100vh",
-        padding: "120px 20px",
+        padding: "0 20px 120px",
       }}
     >
       {/* Toast Notification */}
@@ -205,18 +205,7 @@ const Contact = () => {
         </div>
 
         {/* Submit Button */}
-        <button
-          type="submit"
-          className=" w-100"
-          style={{
-            backgroundColor: "transparent",
-            border: "1px solid white",
-            fontWeight: "bold",
-            color: "#c4a96a",
-            padding: "15px 20px",
-            textTransform: "uppercase",
-          }}
-        >
+        <button type="submit" className="site-btn site-btn-block">
           Send Message
         </button>
       </form>

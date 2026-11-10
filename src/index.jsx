@@ -1,5 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+// Self-hosted fonts (no requests to Google): Cinzel for headings, menu and
+// buttons (it echoes the logo's lettering), Source Sans 3 for all other text.
+import '@fontsource-variable/cinzel';
+import '@fontsource-variable/source-sans-3';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 

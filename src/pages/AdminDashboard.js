@@ -1,249 +1,122 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { LuDisc3, LuUsers, LuImages, LuCalendarDays, LuLink, LuShirt, LuNewspaper } from "react-icons/lu";
 import { useAuth } from "../contexts/AuthContext";
+import useAdminOverview from "../hooks/useAdminOverview";
 
 const CARDS = [
   {
+    key: "releases",
     path: "/admin/release",
     label: "Releases",
-    description: "Set the two Spotify players: latest release and current album.",
-    icon: "🎵",
+    description: "The two Spotify players on Home and Releases.",
+    Icon: LuDisc3,
   },
   {
+    key: "about",
     path: "/admin/about",
     label: "About Us",
-    description: "Edit headings, text, band members and band photos.",
-    icon: "📝",
+    description: "Headings, text, band members and photos.",
+    Icon: LuUsers,
   },
   {
+    key: "gallery",
     path: "/admin/gallery",
     label: "Gallery",
-    description: "Create shows, upload photos and manage the order.",
-    icon: "📸",
+    description: "Show galleries, photos and their order.",
+    Icon: LuImages,
   },
   {
+    key: "shows",
     path: "/admin/shows",
     label: "Shows",
-    description: "Add and remove show dates, venues and ticket links. Past shows move to 'Past' by themselves.",
-    icon: "🎸",
+    description: "Dates, venues and ticket links. Past shows move to 'Past' by themselves.",
+    Icon: LuCalendarDays,
   },
   {
+    key: "socials",
     path: "/admin/socials",
     label: "Socials",
-    description: "Add, edit, reorder and remove social links and their card images.",
-    icon: "🔗",
+    description: "Links and card images for the Socials page and footer.",
+    Icon: LuLink,
   },
   {
+    key: "merch",
     path: "/admin/merch",
     label: "Merch",
-    description: "Synced from Bandcamp every day. Check the last sync and choose which items show.",
-    icon: "👕",
+    description: "Synced from Bandcamp daily. Choose which items show.",
+    Icon: LuShirt,
   },
   {
+    key: "press",
     path: "/admin/press",
     label: "Press Kit",
-    description: "Genre line, manifesto, lineup photo, press quotes, video and tech rider.",
-    icon: "📰",
+    description: "Genre line, manifesto, photo, quotes, video and tech rider.",
+    Icon: LuNewspaper,
   },
 ];
 
-const ICON_MAP = {
-  "Release":        { svg: "M9 18V5l12-2v13", paths: [] },
-};
+/** Presentational part of the dashboard (kept separate so it can be tested). */
+export const AdminDashboardView = ({ overview = {}, loading = false, email, onNavigate, onLogout }) => (
+  <div className="admin-page">
+    {/* Top bar */}
+    <div className="admin-topbar">
+      <div className="admin-topbar-brand">
+        <span className="admin-topbar-name">Discarded</span>
+        <span className="admin-topbar-divider" aria-hidden="true" />
+        <span className="admin-topbar-section">Admin</span>
+      </div>
+      <div className="admin-topbar-actions">
+        <button type="button" className="admin-btn" onClick={() => onNavigate("/")}>
+          ← Website
+        </button>
+        <button type="button" className="admin-btn is-primary" onClick={onLogout}>
+          Log out
+        </button>
+      </div>
+    </div>
+
+    {/* Main content */}
+    <div className="admin-main">
+      <h1 className="admin-heading">Dashboard</h1>
+      <p className="admin-subheading">Changes go live on the website as soon as you save.</p>
+
+      <div className="admin-grid">
+        {CARDS.map(({ key, path, label, description, Icon }) => {
+          const status = overview[key];
+          return (
+            <button key={path} type="button" className="admin-card" onClick={() => onNavigate(path)}>
+              <Icon className="admin-card-icon" aria-hidden="true" />
+              <span className="admin-card-title">{label}</span>
+              <span className="admin-card-desc">{description}</span>
+              {(status || loading) && (
+                <span className={`admin-card-status${status ? ` is-${status.tone}` : ""}`}>
+                  {status ? status.text : "…"}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {email && <p className="admin-signed-in">Signed in as {email}</p>}
+    </div>
+  </div>
+);
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
+  const { overview, loading } = useAdminOverview();
 
   return (
-    <div
-      style={{
-        backgroundColor: "#0A060D",
-        minHeight: "100vh",
-        padding: "0",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
-      {/* Top bar */}
-      <div
-        style={{
-          borderBottom: "1px solid rgba(255,255,255,0.08)",
-          padding: "0 40px",
-          height: "64px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          position: "sticky",
-          top: 0,
-          backgroundColor: "rgba(10,6,13,0.95)",
-          backdropFilter: "blur(8px)",
-          zIndex: 100,
-        }}
-      >
-        <div>
-          <span style={{ fontSize: "11px", letterSpacing: "3px", color: "#666", textTransform: "uppercase" }}>
-            Discarded
-          </span>
-          <span style={{ color: "#444", margin: "0 10px" }}>|</span>
-          <span style={{ fontSize: "14px", fontWeight: "500", color: "#c4a96a", letterSpacing: "1px" }}>
-            ADMIN
-          </span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <span style={{ fontSize: "13px", color: "#555" }}>{currentUser?.email}</span>
-          <button
-            onClick={() => navigate("/")}
-            style={{
-              background: "none",
-              border: "1px solid rgba(255,255,255,0.15)",
-              color: "#aaa",
-              fontSize: "13px",
-              padding: "6px 14px",
-              borderRadius: "6px",
-              cursor: "pointer",
-            }}
-          >
-            ← Website
-          </button>
-          <button
-            onClick={logout}
-            style={{
-              background: "#c4a96a",
-              border: "none",
-              color: "#1a0a02",
-              fontSize: "13px",
-              padding: "6px 14px",
-              borderRadius: "6px",
-              cursor: "pointer",
-              fontWeight: "500",
-            }}
-          >
-            Log out
-          </button>
-        </div>
-      </div>
-
-      {/* Main content */}
-      <div style={{ maxWidth: "900px", margin: "0 auto", padding: "48px 40px" }}>
-        <div style={{ marginBottom: "40px" }}>
-          <p style={{ fontSize: "12px", letterSpacing: "2px", color: "#555", textTransform: "uppercase", margin: "0 0 8px" }}>
-            Dashboard
-          </p>
-          <h1 style={{ fontSize: "32px", fontWeight: "600", color: "white", margin: "0 0 8px" }}>
-            What do you want to manage?
-          </h1>
-          <p style={{ fontSize: "14px", color: "#666", margin: 0 }}>
-            Changes go live on the website immediately after saving.
-          </p>
-        </div>
-
-        {/* Cards grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: "16px",
-            marginBottom: "16px",
-          }}
-        >
-          {CARDS.map((card) => (
-            <button
-              key={card.path}
-              onClick={() => navigate(card.path)}
-              style={{
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                borderRadius: "12px",
-                padding: "28px",
-                textAlign: "left",
-                cursor: "pointer",
-                color: "white",
-                transition: "border-color 0.15s, background 0.15s",
-                width: "100%",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "#c4a96a";
-                e.currentTarget.style.background = "rgba(196, 169, 106, 0.05)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
-                e.currentTarget.style.background = "rgba(255,255,255,0.03)";
-              }}
-            >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px" }}>
-                <div
-                  style={{
-                    width: "44px",
-                    height: "44px",
-                    background: "rgba(196, 169, 106, 0.12)",
-                    borderRadius: "10px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "20px",
-                  }}
-                >
-                  {card.icon}
-                </div>
-                <span style={{ fontSize: "18px", color: "#444" }}>↗</span>
-              </div>
-              <div style={{ fontSize: "16px", fontWeight: "600", color: "white", marginBottom: "8px" }}>
-                {card.label}
-              </div>
-              <div style={{ fontSize: "13px", color: "#666", lineHeight: "1.5" }}>
-                {card.description}
-              </div>
-            </button>
-          ))}
-        </div>
-
-        {/* Bottom status strip */}
-        <div
-          style={{
-            background: "rgba(255,255,255,0.03)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: "12px",
-            padding: "18px 24px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <div
-              style={{
-                width: "8px",
-                height: "8px",
-                borderRadius: "50%",
-                backgroundColor: "#22c55e",
-                boxShadow: "0 0 6px #22c55e",
-              }}
-            />
-            <div>
-              <p style={{ fontSize: "13px", fontWeight: "500", color: "#e0e0e0", margin: 0 }}>
-                Admin access
-              </p>
-              <p style={{ fontSize: "12px", color: "#555", margin: 0 }}>
-                Logged in as {currentUser?.email}
-              </p>
-            </div>
-          </div>
-          <span
-            style={{
-              fontSize: "12px",
-              background: "rgba(196, 169, 106, 0.15)",
-              color: "#c4a96a",
-              padding: "4px 12px",
-              borderRadius: "20px",
-              fontWeight: "500",
-              letterSpacing: "0.5px",
-            }}
-          >
-            LIVE
-          </span>
-        </div>
-      </div>
-    </div>
+    <AdminDashboardView
+      overview={overview}
+      loading={loading}
+      email={currentUser?.email}
+      onNavigate={navigate}
+      onLogout={logout}
+    />
   );
 };
 

@@ -1,13 +1,131 @@
-/* Styles for the footer booking line, contact email, shows toggle,
-   Spotify releases, Socials page and Press kit page. */
+/* Site-wide look (fonts, colours, buttons, focus) plus the styles for the
+   footer, contact email, shows toggle, Spotify players, Socials, Merch and
+   Press kit pages. */
 
 :root {
   --gold: #c4a96a;
   --gold-soft: rgba(196, 169, 106, 0.15);
   --ink: #0a060d;
   --text: #e0e0e0;
-  --muted: #999;
+  --muted: #a3a3a3;
   --line: rgba(255, 255, 255, 0.12);
+  /* Cinzel echoes the logo's lettering: headings, menu, buttons.
+     Source Sans 3 for everything you read. */
+  --font-display: "Cinzel Variable", "Cinzel", Georgia, "Times New Roman", serif;
+  --font-text: "Source Sans 3 Variable", "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark; /* dark scrollbars, date pickers and dropdowns */
+}
+
+/* ── Type ───────────────────────────────────────────────── */
+body {
+  font-family: var(--font-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: 0.06em;
+}
+::selection {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+/* ── Focus and form controls ────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--gold);
+}
+/* Bootstrap's default blue focus glow didn't belong on this site */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 0 0.2rem rgba(196, 169, 106, 0.25);
+  background-color: transparent;
+  color: #fff;
+}
+
+/* ── Buttons: one style everywhere on the public site ───── */
+.site-btn,
+.btn-outline-light {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid #fff;
+  border-radius: 0;
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 11px 24px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.site-btn:hover,
+.site-btn:focus-visible,
+.btn-outline-light:hover,
+.btn-outline-light:focus-visible,
+.btn-outline-light:active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--ink);
+}
+.site-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.site-btn-sm {
+  font-size: 0.8rem;
+  padding: 8px 16px;
+}
+.site-btn-block {
+  width: 100%;
+  padding: 14px 20px;
+}
+
+/* ── Navbar ─────────────────────────────────────────────── */
+.custom-navbar-links .custom-nav-link {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+/* Bootstrap's .text-white is !important, which also blocked the old gold hover */
+.custom-navbar-links .custom-nav-link.text-white:hover,
+.custom-navbar-links .custom-nav-link.text-white.active {
+  color: var(--gold) !important;
+}
+.custom-navbar-links .custom-nav-link.active::after {
+  width: 100%;
+  opacity: 1;
+}
+/* Menu button: square like the other buttons, no Bootstrap glow after a tap */
+.custom-navbar .navbar-toggler {
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 0;
+}
+.custom-navbar .navbar-toggler:focus {
+  box-shadow: none;
+}
+.custom-navbar .navbar-toggler:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* Pages whose content sits in a .container-fluid: responsive.css turns those
+   into a flex row on phones, which floated short pages to mid-screen. */
+.page-shell {
+  display: block !important;
 }
 
 /* ── Navbar (desktop) ───────────────────────────────────── */
@@ -19,12 +137,12 @@
     white-space: nowrap;
   }
 }
-@media (min-width: 1500px) {
+@media (min-width: 1600px) {
   .custom-navbar-links {
     width: max-content;
   }
 }
-@media (min-width: 992px) and (max-width: 1499.98px) {
+@media (min-width: 992px) and (max-width: 1599.98px) {
   .custom-navbar-links {
     position: static !important;
     transform: none !important;
@@ -116,7 +234,7 @@
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.4);
   color: #fff;
-  border-radius: 4px;
+  border-radius: 0;
   width: 32px;
   height: 32px;
   display: inline-flex;
@@ -292,7 +410,7 @@
   min-height: 240px;
   padding: 26px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: 12px;
   background:
     radial-gradient(circle at 85% 15%, var(--brand-glow), transparent 60%),
     linear-gradient(160deg, #1a1320 0%, #0a060d 70%);
@@ -552,22 +670,8 @@
   max-width: 520px;
   margin: 0 auto;
 }
-.merch-empty-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
+.merch-empty .site-btn {
   margin-top: 12px;
-  border: 1px solid #fff;
-  color: var(--gold);
-  padding: 12px 22px;
-  text-transform: uppercase;
-  font-weight: bold;
-  text-decoration: none;
-}
-.merch-empty-button:hover,
-.merch-empty-button:focus-visible {
-  color: var(--gold);
-  border-color: var(--gold);
 }
 @media (max-width: 575.98px) {
   /* Two small cards per row on phones */
@@ -918,4 +1022,284 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   white-space: nowrap;
+}
+
+/* ── Display font for titles, labels and calls to action ── */
+.spotify-release-label,
+.social-card-title,
+.shows-toggle-btn,
+.social-card-cta,
+.merch-card-cta,
+.press-card-cta,
+.press-kicker,
+.merch-card-price {
+  font-family: var(--font-display);
+}
+
+/* ── Admin ──────────────────────────────────────────────── */
+/* Dashboard and the editors' top bar share these, so the admin looks like
+   the same site: Cinzel headings, gold accents, square outline buttons. */
+.admin-page {
+  background-color: var(--ink);
+  min-height: 100vh;
+  color: var(--text);
+}
+.admin-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 40px;
+  background-color: rgba(10, 6, 13, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.admin-topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
+}
+.admin-topbar-divider {
+  flex-shrink: 0;
+  width: 1px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.2);
+}
+.admin-topbar-section {
+  color: var(--gold);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.admin-topbar-back {
+  background: none;
+  border: 0;
+  padding: 4px;
+  margin-left: -4px;
+  color: var(--muted);
+  font-size: 1.2rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.admin-topbar-back:hover,
+.admin-topbar-back:focus-visible {
+  color: var(--gold);
+}
+.admin-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.admin-topbar-email {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1;
+  padding: 9px 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+.admin-btn:hover,
+.admin-btn:focus-visible {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.admin-btn.is-primary {
+  border-color: #fff;
+  color: var(--gold);
+}
+.admin-btn.is-primary:hover,
+.admin-btn.is-primary:focus-visible {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--ink);
+}
+.admin-btn.is-icon {
+  font-family: var(--font-text);
+  font-size: 1.1rem;
+  padding: 6px 10px;
+}
+/* Phone menu under the editors' top bar */
+.admin-topbar-menu {
+  position: absolute;
+  top: 64px;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 20px 20px;
+  background-color: var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+.admin-topbar-menu-link {
+  background: none;
+  border: 0;
+  padding: 10px 0;
+  text-align: left;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+.admin-topbar-menu-link:hover,
+.admin-topbar-menu-link:focus-visible {
+  color: var(--gold);
+}
+.admin-topbar-menu-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+.admin-topbar-menu-footer .admin-btn {
+  width: 100%;
+  padding: 12px 14px;
+}
+
+.admin-main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 40px;
+}
+.admin-heading {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 8px;
+}
+.admin-subheading {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 0 0 36px;
+}
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.admin-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  width: 100%;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 28px;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.admin-card:hover,
+.admin-card:focus-visible {
+  border-color: var(--gold);
+  background: rgba(196, 169, 106, 0.05);
+}
+.admin-card-icon {
+  color: var(--gold);
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+}
+.admin-card-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+}
+.admin-card-desc {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+/* What's on the site right now; sits at the bottom so a row lines up */
+.admin-card-status {
+  margin-top: auto;
+  width: 100%;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  color: #d6d6d6;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+.admin-card-status.is-warn {
+  color: #f2b46d;
+}
+.admin-card-status.is-error {
+  color: #ff9b9b;
+}
+.admin-signed-in {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 32px 0 0;
+}
+@media (max-width: 640px) {
+  .admin-topbar {
+    padding: 0 16px;
+    gap: 10px;
+  }
+  .admin-topbar-actions {
+    gap: 8px;
+  }
+  .admin-main {
+    padding: 32px 16px 48px;
+  }
+  .admin-heading {
+    font-size: 1.6rem;
+  }
+  .admin-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .admin-card {
+    padding: 22px;
+  }
+}
+@media (max-width: 400px) {
+  /* "Admin" is enough next to the two buttons on small phones */
+  .admin-topbar-brand .admin-topbar-name,
+  .admin-topbar-brand .admin-topbar-name + .admin-topbar-divider {
+    display: none;
+  }
 }

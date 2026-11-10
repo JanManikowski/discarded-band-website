@@ -39,7 +39,9 @@ export const adminCardStyle = {
 export const adminSaveButtonStyle = (saving) => ({
   backgroundColor: "transparent",
   border: "1px solid white",
+  fontFamily: "var(--font-display)",
   fontWeight: "bold",
+  letterSpacing: "0.1em",
   color: "#c4a96a",
   padding: "12px 20px",
   textTransform: "uppercase",
@@ -56,7 +58,10 @@ export const adminSmallButtonStyle = (variant = "default", disabled = false) => 
   return {
     backgroundColor: "transparent",
     padding: "4px 10px",
-    fontSize: "0.75rem",
+    fontFamily: "var(--font-display)",
+    fontWeight: 700,
+    fontSize: "0.72rem",
+    letterSpacing: "0.06em",
     textTransform: "uppercase",
     whiteSpace: "nowrap",
     cursor: disabled ? "not-allowed" : "pointer",

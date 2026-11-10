@@ -11,7 +11,7 @@ import fetchProducts from "../utils/fetchProducts";
 import ProductCard from "../components/ProductCard";
 import ReleasesCard from "../components/ReleasesCard"; // Import the ReleasesCard
 import ShowCard from "../components/ShowCard";
-import { commonTitleStyle } from "../styles/constants";
+import { sectionTitleStyle } from "../styles/constants";
 import { trackEvent } from "../utils/analytics";
 import useSiteContent from "../hooks/useSiteContent";
 import useUpcomingShows from "../hooks/useUpcomingShows";
@@ -197,7 +197,7 @@ const Home = () => {
           style={{ backgroundColor: "#0A060D", padding: "60px 20px" }}
         >
           <div className="container text-center" style={{ maxWidth: "800px" }}>
-            <h1 style={commonTitleStyle}>UPCOMING SHOWS</h1>
+            <h2 style={sectionTitleStyle}>UPCOMING SHOWS</h2>
             <div className="d-flex flex-column gap-3 text-start mt-4">
               {upcomingShows.map((show) => (
                 <ShowCard key={show.id} show={show} />

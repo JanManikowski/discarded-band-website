@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import logo from '../assets/Discarded-Clean-Circle-Transparent.png';
 import { BasketContext } from '../contexts/BasketContext';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -139,77 +139,77 @@ const NavBar = () => {
                             }}
                             >
                         <li className="nav-item">
-                                <Link
+                                <NavLink
                                     to="/shows"
                                     className="nav-link text-white custom-nav-link"
                                     onClick={handleLinkClick}
                                 >
                                     Shows
-                                </Link>
+                                </NavLink>
                             </li>
                             <li className="nav-item">
-                                <Link
+                                <NavLink
                                     to="/releases"
                                     className="nav-link text-white custom-nav-link"
                                     onClick={handleLinkClick}
                                 >
                                     Releases
-                                </Link>
+                                </NavLink>
                             </li>
                             <li className="nav-item">
-                                <Link
+                                <NavLink
                                     to="/merch"
                                     className="nav-link text-white custom-nav-link"
                                     onClick={handleLinkClick}
                                 >
                                     Merch
-                                </Link>
+                                </NavLink>
                             </li>
                             <li className="nav-item">
-                                <Link
+                                <NavLink
                                     to="/gallery"
                                     className="nav-link text-white custom-nav-link"
                                     onClick={handleLinkClick}
                                 >
                                     Gallery
-                                </Link>
+                                </NavLink>
                             </li>
                             {/* <li className="nav-item">
-                                <Link
+                                <NavLink
                                     to="/products"
                                     className="nav-link text-white custom-nav-link"
                                     onClick={handleLinkClick}
                                 >
                                     Products
-                                </Link>
+                                </NavLink>
                             </li> */}
                             <li className="nav-item">
-                                <Link
+                                <NavLink
                                     to="/about-us"
                                     className="nav-link text-white custom-nav-link"
                                     onClick={handleLinkClick}
                                 >
                                     About Us
-                                </Link>
+                                </NavLink>
                             </li>
                             <li className="nav-item">
-                                <Link
+                                <NavLink
                                     to="/socials"
                                     className="nav-link text-white custom-nav-link"
                                     onClick={handleLinkClick}
                                 >
                                     Socials
-                                </Link>
+                                </NavLink>
                             </li>
 
                             <li className="nav-item">
-                                <Link
+                                <NavLink
                                     to="/contact"
                                     className="nav-link text-white custom-nav-link"
                                     onClick={handleLinkClick}
                                 >
                                     Contact
-                                </Link>
+                                </NavLink>
                             </li>
                             <li className="nav-item d-lg-none custom-cart-container">
                             {/* <Link to="/basket" className="nav-link text-white d-flex align-items-center">
