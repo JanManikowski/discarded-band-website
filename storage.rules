@@ -1,19 +1,37 @@
 rules_version = '2';
 
+// Paste this into Firebase console → Storage → Rules and click Publish.
+// (This repo has no firebase.json, so rules aren't deployed from here.)
+
 service firebase.storage {
   match /b/{bucket}/o {
 
-    // Band photos (About Us page) and show gallery photos.
-    // Anyone can view them (the public site needs to render images).
-    // Only YOUR Firebase Auth account can upload or delete.
+    // Same admin account as firestore.rules.
+    function isAdmin() {
+      return request.auth != null
+          && request.auth.uid == "huHoymPMz5PH3P6x9vmgZQ7jIxP2";
+    }
+
+    // Everything (band photos, gallery, social card images, press kit)
+    // is public to read - the website needs to show it.
     match /{allPaths=**} {
       allow read: if true;
-      allow write: if request.auth != null
-                   && request.auth.uid == "REPLACE_WITH_YOUR_UID"
-                   // Only allow image files
-                   && request.resource.contentType.matches('image/.*')
-                   // Cap uploads at 10MB each
-                   && request.resource.size < 10 * 1024 * 1024;
+
+      // Images, anywhere, up to 10 MB each.
+      allow create, update: if isAdmin()
+                            && request.resource.contentType.matches('image/.*')
+                            && request.resource.size < 10 * 1024 * 1024;
+
+      // Deleting has no request.resource, so it needs its own rule
+      // (a single "allow write" with contentType checks blocks deletes).
+      allow delete: if isAdmin();
+    }
+
+    // Press kit downloads: the tech rider PDF, up to 20 MB.
+    match /press/{allPaths=**} {
+      allow create, update: if isAdmin()
+                            && request.resource.contentType == 'application/pdf'
+                            && request.resource.size < 20 * 1024 * 1024;
     }
   }
 }

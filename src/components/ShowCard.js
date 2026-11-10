@@ -1,8 +1,8 @@
 import React from "react";
 
-// Compact, reusable display for one upcoming show: date block on the left,
-// venue/location in the middle, tickets link on the right.
-const ShowCard = ({ show }) => {
+// Compact, reusable display for one show: date block on the left,
+// venue/location in the middle, tickets link (or "Played") on the right.
+const ShowCard = ({ show, past = false }) => {
   return (
     <div
       className="d-flex align-items-center justify-content-between flex-wrap"
@@ -44,8 +44,10 @@ const ShowCard = ({ show }) => {
         </div>
       </div>
 
-      {/* Tickets */}
-      {show.ticketsUrl ? (
+      {/* Tickets (or a "Played" tag once the date has passed) */}
+      {past ? (
+        <span className="show-card-played">Played</span>
+      ) : show.ticketsUrl ? (
         <a
           href={show.ticketsUrl}
           target="_blank"

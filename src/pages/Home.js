@@ -15,7 +15,7 @@ import { commonTitleStyle } from "../styles/constants";
 import { trackEvent } from "../utils/analytics";
 import useSiteContent from "../hooks/useSiteContent";
 import useUpcomingShows from "../hooks/useUpcomingShows";
-import { buildSpotifyEmbedUrl } from "../utils/spotify";
+import { DEFAULT_RELEASES, getReleaseSlots } from "../utils/spotify";
 
 
 const Home = () => {
@@ -34,14 +34,10 @@ const Home = () => {
 
   // Fallback keeps today's release showing if Firestore is unreachable
   // or the admin hasn't saved anything yet.
-  const { data: releaseContent } = useSiteContent("releases", {
-    spotifyType: "album",
-    spotifyId: "0ANUjzcDPHW7odAObHKKJy",
-  });
-  const embedUrl = buildSpotifyEmbedUrl({
-    type: releaseContent.spotifyType,
-    id: releaseContent.spotifyId,
-  });
+  const { data: releaseContent } = useSiteContent("releases", DEFAULT_RELEASES);
+  const releaseSlots = getReleaseSlots(releaseContent);
+  const releasesTitle =
+    releaseSlots.length > 1 ? "Latest Releases" : releaseSlots[0]?.label || "Latest Release";
 
   // Next 3 upcoming shows for the Home page teaser.
   const { shows: upcomingShows, loading: showsLoading } = useUpcomingShows(3);
@@ -183,8 +179,8 @@ const Home = () => {
   }}
 >
   <ReleasesCard
-    embedUrl={embedUrl}
-    title="Latest Release"
+    slots={releaseSlots}
+    title={releasesTitle}
     style={{
       width: "100%", // Stretch the card to the full width of its container
       minHeight: "100vh", // Full viewport height

@@ -28,4 +28,11 @@ export const startOfToday = () => {
   return now;
 };
 
+/**
+ * Which list the Shows page opens on: upcoming shows when anything is
+ * planned, otherwise the shows already played (if there are any).
+ */
+export const pickDefaultShowsTab = (upcomingCount, pastCount) =>
+  upcomingCount === 0 && pastCount > 0 ? "past" : "upcoming";
+
 export { MONTHS };

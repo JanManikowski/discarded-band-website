@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import SpotifyReleases from './SpotifyReleases';
 
-const ReleasesCard = ({ embedUrl, title, style }) => {
+const ReleasesCard = ({ slots, title, style }) => {
     const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
 
     // Track the cursor so the glow follows it across the card
@@ -50,31 +51,7 @@ const ReleasesCard = ({ embedUrl, title, style }) => {
                 >
                     {title || 'Latest Release'}
                 </h1>
-                <div
-                    className="spotify-embed-wrapper"
-                    style={{
-                        backgroundColor: "#0A060D",
-                        borderRadius: '10px',
-                        padding: '14px',
-                        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
-                        display: 'flex',
-                        justifyContent: 'center',
-                    }}
-                >
-                    <iframe
-                        src={embedUrl}
-                        frameBorder="0"
-                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                        title="Spotify Player"
-                        style={{
-                            borderRadius: '10px',
-                            maxWidth: '100%', // Ensure full responsiveness
-                            width: '100%', // Match container width
-                            height: '560px', // Set height for a horizontal view
-                            margin: '0 auto', // Center the iframe
-                        }}
-                    ></iframe>
-                </div>
+                <SpotifyReleases slots={slots} />
             </div>
             {/* <button
           className="btn btn-outline-light mt-5"

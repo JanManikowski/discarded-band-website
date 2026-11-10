@@ -183,7 +183,16 @@ const NavBar = () => {
                                     About Us
                                 </Link>
                             </li>
-                            
+                            <li className="nav-item">
+                                <Link
+                                    to="/socials"
+                                    className="nav-link text-white custom-nav-link"
+                                    onClick={handleLinkClick}
+                                >
+                                    Socials
+                                </Link>
+                            </li>
+
                             <li className="nav-item">
                                 <Link
                                     to="/contact"

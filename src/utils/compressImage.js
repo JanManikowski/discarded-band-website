@@ -83,11 +83,14 @@ const applyOrientation = (ctx, orientation, width, height) => {
 
 /**
  * @param {File} file - original image file
+ * @param {object} [options]
+ * @param {number} [options.maxWidth] - defaults to 1280 (gallery/band photos)
+ * @param {number} [options.quality] - JPEG quality 0-1, defaults to 0.7
  * @returns {Promise<File>} a new, compressed File (always .jpg), or the
  *   original file unchanged if compression fails for any reason - an
  *   upload should never be blocked by a compression error.
  */
-export const compressImage = (file) => {
+export const compressImage = (file, { maxWidth = MAX_WIDTH, quality = JPEG_QUALITY } = {}) => {
   return new Promise((resolve) => {
     const reader = new FileReader();
 
@@ -111,7 +114,7 @@ export const compressImage = (file) => {
           const sourceWidth = img.width;
           const sourceHeight = img.height;
 
-          const scale = Math.min(1, MAX_WIDTH / sourceWidth);
+          const scale = Math.min(1, maxWidth / sourceWidth);
           const targetWidth = Math.round(sourceWidth * scale);
           const targetHeight = Math.round(sourceHeight * scale);
 
@@ -134,7 +137,7 @@ export const compressImage = (file) => {
               resolve(new File([blob], newName, { type: "image/jpeg" }));
             },
             "image/jpeg",
-            JPEG_QUALITY
+            quality
           );
         } catch (err) {
           console.error("Compression failed, using original file:", err);

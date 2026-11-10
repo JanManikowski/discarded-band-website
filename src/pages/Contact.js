@@ -1,6 +1,9 @@
 import React, { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import emailjs from "@emailjs/browser";
 import { commonTitleStyle } from "../styles/constants";
+import EmailLink from "../components/EmailLink";
+import { BOOKING_EMAIL } from "../config/site";
 
 const Contact = () => {
   const form = useRef();
@@ -65,6 +68,16 @@ const Contact = () => {
       )}
 
       <h1 style={commonTitleStyle}>Contact Us</h1>
+
+      {/* Plain email for bookers/press who'd rather not use a form */}
+      <div className="contact-direct">
+        <p className="contact-direct-label">Booking or press? Skip the form and email us directly:</p>
+        <EmailLink email={BOOKING_EMAIL} className="contact-direct-email" />
+        <p className="contact-direct-note">
+          Photos, quotes and our tech rider are in the <Link to="/press">press kit</Link>. Or send us
+          a message below.
+        </p>
+      </div>
 
       <form
         ref={form}

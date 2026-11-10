@@ -1,8 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaSpotify, FaInstagram } from 'react-icons/fa';
+import { BOOKING_EMAIL } from '../config/site';
+import useSocials from '../hooks/useSocials';
+
+const FOOTER_LINKS = [
+  { to: '/', label: 'Home' },
+  { to: '/about-us', label: 'About Us' },
+  { to: '/socials', label: 'Socials' },
+  { to: '/contact', label: 'Contact' },
+  { to: '/press', label: 'Press' },
+];
 
 const Footer = () => {
+  // Always the current year, so the footer never goes out of date.
+  const year = new Date().getFullYear();
+  // Same links as the Socials page, managed in admin.
+  const { links } = useSocials();
+
   return (
     <footer
       className="text-center text-white py-4"
@@ -11,7 +25,10 @@ const Footer = () => {
         borderTop: '1px solid #ffffff',
       }}
     >
-      <p>&copy; 2024 Discarded Band. All rights reserved.</p>
+      <p className="footer-booking">
+        For booking you can contact us at{' '}
+        <a href={`mailto:${BOOKING_EMAIL}`}>{BOOKING_EMAIL}</a>
+      </p>
       <div style={{
         display: 'flex',
         justifyContent: 'center',
@@ -21,34 +38,35 @@ const Footer = () => {
         padding: '0 20px',
         textAlign: 'center',
       }}>
-        <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
-          <Link to="/" className="text-white">Home</Link>
-          <span>|</span>
-          <Link to="/about-us" className="text-white">About Us</Link>
-          <span>|</span>
-          <Link to="/contact" className="text-white">Contact</Link>
-        </div>
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a
-            href="https://open.spotify.com/artist/2qkiNoOXU7MqFWGuXACSHK?si=3xcv-PL3RHCXNySWUkIAnA&nd=1&dlsi=27601fa728f0405f"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-white"
-            style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
-          >
-            <FaSpotify size={24} /> Spotify
-          </a>
-          <a
-            href="https://www.instagram.com/discarded_band/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-white"
-            style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
-          >
-            <FaInstagram size={24} /> Instagram
-          </a>
-        </div>
+        <nav className="footer-links" aria-label="Footer">
+          {FOOTER_LINKS.map((link, i) => (
+            <React.Fragment key={link.to}>
+              {i > 0 && <span className="footer-sep" aria-hidden="true">|</span>}
+              <Link to={link.to} className="text-white">{link.label}</Link>
+            </React.Fragment>
+          ))}
+        </nav>
+        {links.length > 0 && (
+          <div className="footer-socials">
+            {links.map((link) => {
+              const Icon = link.platform.icon;
+              return (
+                <a
+                  key={link.id || link.url}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={link.title}
+                  title={link.title}
+                >
+                  <Icon size={22} />
+                </a>
+              );
+            })}
+          </div>
+        )}
       </div>
+      <p className="footer-copyright">&copy; {year} Discarded Band. All rights reserved.</p>
     </footer>
   );
 };

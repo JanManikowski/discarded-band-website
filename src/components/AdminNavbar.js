@@ -3,10 +3,12 @@ import { useAuth } from "../contexts/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const PAGE_LABELS = {
-  "/admin/release": "Release",
+  "/admin/release": "Releases",
   "/admin/about": "About Us",
   "/admin/gallery": "Gallery",
-  "/admin/shows": "Upcoming Shows",
+  "/admin/shows": "Shows",
+  "/admin/socials": "Socials",
+  "/admin/press": "Press Kit",
 };
 
 const AdminNavbar = () => {

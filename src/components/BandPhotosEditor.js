@@ -3,11 +3,28 @@ import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
 import { db, storage } from "../firebase/config";
 import ImageUploader from "./ImageUploader";
+import { LOAD_FAILED_MESSAGE } from "./AdminStatus";
+import { moveItem } from "../utils/list";
+
+const moveButtonStyle = (disabled) => ({
+  width: "24px",
+  height: "24px",
+  borderRadius: "4px",
+  border: "1px solid rgba(255,255,255,0.6)",
+  backgroundColor: "rgba(0,0,0,0.7)",
+  color: "white",
+  fontSize: "0.8rem",
+  lineHeight: 1,
+  padding: 0,
+  cursor: disabled ? "not-allowed" : "pointer",
+  visibility: disabled ? "hidden" : "visible",
+});
 
 const BandPhotosEditor = () => {
   const [photos, setPhotos] = useState([]); // [{ url, storagePath }]
   const [loading, setLoading] = useState(true);
   const [removingPath, setRemovingPath] = useState(null);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [status, setStatus] = useState(null);
 
   // Keep a ref mirroring the latest photos array so concurrent uploads
@@ -27,6 +44,9 @@ const BandPhotosEditor = () => {
         }
       } catch (err) {
         console.error("Failed to load band photos:", err);
+        // Uploading would save a list without the existing photos, so stop here.
+        setLoadFailed(true);
+        setStatus({ type: "error", message: LOAD_FAILED_MESSAGE });
       } finally {
         setLoading(false);
       }
@@ -45,6 +65,21 @@ const BandPhotosEditor = () => {
     } catch (err) {
       console.error("Failed to save new photo:", err);
       setStatus({ type: "error", message: "Photo uploaded but failed to save. Try refreshing." });
+    }
+  };
+
+  // Reordering saves straight away, like uploading and removing do.
+  const handleMove = async (from, to) => {
+    if (to < 0 || to >= photosRef.current.length) return;
+    setStatus(null);
+    const next = moveItem(photosRef.current, from, to);
+    photosRef.current = next;
+    setPhotos(next);
+    try {
+      await setDoc(docRef, { bandPhotos: next, updatedAt: serverTimestamp() }, { merge: true });
+    } catch (err) {
+      console.error("Failed to save photo order:", err);
+      setStatus({ type: "error", message: "Couldn't save the new order. Try again." });
     }
   };
 
@@ -75,6 +110,9 @@ const BandPhotosEditor = () => {
       <h2 className="mb-3" style={{ fontSize: "1.3rem", color: "#c4a96a" }}>
         About Us — Band Photos
       </h2>
+      <p style={{ color: "#999", fontSize: "0.85rem" }}>
+        Changes here save straight away. Use the arrows to change the order on the page.
+      </p>
 
       {loading ? (
         <p style={{ color: "#e0e0e0" }}>Loading photos...</p>
@@ -103,7 +141,7 @@ const BandPhotosEditor = () => {
                 marginBottom: "16px",
               }}
             >
-              {photos.map((photo) => (
+              {photos.map((photo, index) => (
                 <div
                   key={photo.storagePath}
                   style={{ position: "relative", aspectRatio: "1 / 1" }}
@@ -143,12 +181,47 @@ const BandPhotosEditor = () => {
                   >
                     {removingPath === photo.storagePath ? "…" : "✕"}
                   </button>
+                  {photos.length > 1 && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        bottom: "4px",
+                        left: "4px",
+                        right: "4px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => handleMove(index, index - 1)}
+                        disabled={index === 0}
+                        title="Move left"
+                        aria-label="Move photo left"
+                        style={moveButtonStyle(index === 0)}
+                      >
+                        ←
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleMove(index, index + 1)}
+                        disabled={index === photos.length - 1}
+                        title="Move right"
+                        aria-label="Move photo right"
+                        style={moveButtonStyle(index === photos.length - 1)}
+                      >
+                        →
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           )}
 
-          <ImageUploader folder="band-photos" onUploaded={handleUploaded} buttonLabel="Add Photos" />
+          {!loadFailed && (
+            <ImageUploader folder="band-photos" onUploaded={handleUploaded} buttonLabel="Add Photos" />
+          )}
         </>
       )}
     </div>

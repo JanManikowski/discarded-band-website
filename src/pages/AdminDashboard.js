@@ -5,14 +5,14 @@ import { useAuth } from "../contexts/AuthContext";
 const CARDS = [
   {
     path: "/admin/release",
-    label: "Release",
-    description: "Update the Spotify link shown on the home and releases page.",
+    label: "Releases",
+    description: "Set the two Spotify players: latest release and current album.",
     icon: "🎵",
   },
   {
     path: "/admin/about",
     label: "About Us",
-    description: "Edit the band bio text and manage band photos.",
+    description: "Edit headings, text, band members and band photos.",
     icon: "📝",
   },
   {
@@ -23,9 +23,21 @@ const CARDS = [
   },
   {
     path: "/admin/shows",
-    label: "Upcoming Shows",
-    description: "Add and remove show dates, venues and ticket links.",
+    label: "Shows",
+    description: "Add and remove show dates, venues and ticket links. Past shows move to 'Past' by themselves.",
     icon: "🎸",
+  },
+  {
+    path: "/admin/socials",
+    label: "Socials",
+    description: "Add, edit, reorder and remove social links and their card images.",
+    icon: "🔗",
+  },
+  {
+    path: "/admin/press",
+    label: "Press Kit",
+    description: "Genre line, manifesto, lineup photo, press quotes, video and tech rider.",
+    icon: "📰",
   },
 ];
 

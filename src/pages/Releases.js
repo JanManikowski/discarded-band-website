@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { commonTitleStyle } from '../styles/constants';
 import useSiteContent from '../hooks/useSiteContent';
-import { buildSpotifyEmbedUrl } from '../utils/spotify';
+import { DEFAULT_RELEASES, getReleaseSlots } from '../utils/spotify';
+import SpotifyReleases from '../components/SpotifyReleases';
 
 const Releases = () => {
     // Fallback keeps the current release showing if Firestore is unreachable
     // or the admin hasn't saved anything yet.
-    const { data } = useSiteContent('releases', {
-        spotifyType: 'album',
-        spotifyId: '0ANUjzcDPHW7odAObHKKJy',
-    });
-    const embedUrl = buildSpotifyEmbedUrl({ type: data.spotifyType, id: data.spotifyId });
+    const { data } = useSiteContent('releases', DEFAULT_RELEASES);
+    const slots = getReleaseSlots(data);
 
     const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
 
@@ -42,34 +40,10 @@ const Releases = () => {
                 }}
             >
                 <h1 style={commonTitleStyle}>LATEST RELEASES</h1>
-                <div
-                    className="spotify-embed-wrapper"
-                    style={{
-                        backgroundColor: '#1e1e1e',
-                        borderRadius: '10px',
-                        padding: '14px',
-                        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
-                        display: 'flex',
-                        justifyContent: 'center',
-                    }}
-                >
-                    <iframe
-                        src={embedUrl}
-                        frameBorder="0"
-                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                        title="Spotify Player"
-                        style={{
-                            borderRadius: '10px',
-                            maxWidth: '100%', // Ensure full responsiveness
-                            width: '100%', // Match container width
-                            height: '560px', // Set height for a horizontal view
-                            margin: '0 auto', // Center the iframe
-                        }}
-                    ></iframe>
-                </div>
+                <SpotifyReleases slots={slots} />
             </div>
         </div>
     );
 };
 
-export default Releases;    
+export default Releases;

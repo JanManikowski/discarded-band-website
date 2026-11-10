@@ -3,7 +3,8 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Public site content: the Spotify link, About Us text, gallery, shows.
+    // Public site content: Spotify players, About Us, Socials, Press kit.
+    // (New pages are new documents in here, so no rule changes needed.)
     // Anyone can READ this (the public website needs it to render).
     // Only YOUR Firebase Auth account can WRITE to it.
     match /site_content/{document} {

@@ -19,12 +19,17 @@ import AdminRelease from "./pages/AdminRelease";
 import AdminAbout from "./pages/AdminAbout.js";
 import AdminGallery from "./pages/AdminGallery";
 import AdminShows from "./pages/AdminShows";
+import Socials from "./pages/Socials";
+import AdminSocials from "./pages/AdminSocials";
+import Press from "./pages/Press";
+import AdminPress from "./pages/AdminPress";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { BasketProvider, BasketContext } from "./contexts/BasketContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import ScrollToTop from "./components/ScrollToTop";
 import SetPageTitle from "./components/SetPageTitle";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "./styles/features.css";
 import { initAnalytics, trackPageView } from "./utils/analytics";
 
 // Centralized page titles
@@ -38,13 +43,18 @@ const PAGE_TITLES = {
   "/basket": "Your Basket - DISCARDED",
   "/releases": "Latest Releases - DISCARDED",
   "/gallery": "Gallery - DISCARDED",
-  "/shows": "Upcoming Shows - DISCARDED",
+  "/shows": "Shows - DISCARDED",
+  "/socials": "Socials - DISCARDED",
+  "/press": "Press Kit - DISCARDED",
+  "/epk": "Press Kit - DISCARDED",
   "/admin/login": "Admin Login - DISCARDED",
   "/admin": "Admin Dashboard - DISCARDED",
-  "/admin/release": "Release - Admin",
+  "/admin/release": "Releases - Admin",
   "/admin/about": "About Us - Admin",
   "/admin/gallery": "Gallery - Admin",
   "/admin/shows": "Shows - Admin",
+  "/admin/socials": "Socials - Admin",
+  "/admin/press": "Press Kit - Admin",
 };
 
 // Helper component to track page views
@@ -115,6 +125,10 @@ const App = () => {
               <Route path="/releases" element={<Releases />} />
               <Route path="/gallery" element={<Gallery />} />
               <Route path="/shows" element={<Shows />} />
+              <Route path="/socials" element={<Socials />} />
+              <Route path="/press" element={<Press />} />
+              {/* Common alternative address people might type for the press kit */}
+              <Route path="/epk" element={<Press />} />
 
               {/* Admin */}
               <Route path="/admin/login" element={<AdminLogin />} />
@@ -123,6 +137,8 @@ const App = () => {
               <Route path="/admin/about" element={<ProtectedRoute><AdminAbout /></ProtectedRoute>} />
               <Route path="/admin/gallery" element={<ProtectedRoute><AdminGallery /></ProtectedRoute>} />
               <Route path="/admin/shows" element={<ProtectedRoute><AdminShows /></ProtectedRoute>} />
+              <Route path="/admin/socials" element={<ProtectedRoute><AdminSocials /></ProtectedRoute>} />
+              <Route path="/admin/press" element={<ProtectedRoute><AdminPress /></ProtectedRoute>} />
             </Routes>
           </SiteChrome>
         </Router>
