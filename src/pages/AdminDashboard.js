@@ -34,6 +34,12 @@ const CARDS = [
     icon: "🔗",
   },
   {
+    path: "/admin/merch",
+    label: "Merch",
+    description: "Synced from Bandcamp every day. Check the last sync and choose which items show.",
+    icon: "👕",
+  },
+  {
     path: "/admin/press",
     label: "Press Kit",
     description: "Genre line, manifesto, lineup photo, press quotes, video and tech rider.",

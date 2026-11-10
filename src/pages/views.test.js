@@ -5,6 +5,8 @@ import { ShowsView } from "./Shows";
 import { SocialsView } from "./Socials";
 import { PressView } from "./Press";
 import { AboutUsView } from "./AboutUs";
+import { MerchView } from "./Merch";
+import { prepareMerchItems } from "../utils/merch";
 import { resolveSocialLink } from "../utils/socialPlatforms";
 import { DEFAULT_ABOUT_US } from "../content/aboutUsDefaults";
 
@@ -100,6 +102,48 @@ describe("PressView", () => {
       "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?rel=0"
     );
     expect(screen.getByText(/PDF, 1.5 MB/)).toBeInTheDocument();
+  });
+});
+
+describe("MerchView", () => {
+  const items = prepareMerchItems([
+    {
+      id: "1",
+      title: "Premium Oversized T-Shirt (includes free CD copy)",
+      type: "Shirt",
+      url: "https://discardedband.bandcamp.com/merch/premium",
+      soldOut: true,
+      thumbUrl: "https://f4.bcbits.com/img/0040947399_36.jpg",
+    },
+    {
+      id: "2",
+      title: "Logo T-Shirt (includes digital album)",
+      type: "Shirt",
+      url: "https://discardedband.bandcamp.com/merch/logo-t-shirt-includes-digital-album",
+      priceText: "€20",
+      soldOut: false,
+      imageUrl: "https://f4.bcbits.com/img/0040947427_10.jpg",
+    },
+  ]);
+
+  it("shows each item as a link to Bandcamp, sold-out items last", () => {
+    render(<MerchView items={items} intro="Shirts and CDs" loading={false} />);
+    const cards = screen.getAllByRole("link", { name: /opens on bandcamp/i });
+    expect(cards).toHaveLength(2);
+    expect(cards[0]).toHaveAttribute("href", "https://discardedband.bandcamp.com/merch/logo-t-shirt-includes-digital-album");
+    expect(within(cards[0]).getByText("Logo T-Shirt")).toBeInTheDocument();
+    expect(within(cards[0]).getByText("Includes digital album")).toBeInTheDocument();
+    expect(within(cards[0]).getByText("€20")).toBeInTheDocument();
+    expect(within(cards[1]).getAllByText(/sold out/i).length).toBeGreaterThan(0);
+    cards.forEach((card) => expect(card).toHaveAttribute("rel", "noopener noreferrer"));
+  });
+
+  it("sends people to Bandcamp when nothing has synced yet", () => {
+    render(<MerchView items={[]} intro="" loading={false} />);
+    expect(screen.getByRole("link", { name: /visit our bandcamp/i })).toHaveAttribute(
+      "href",
+      "https://discardedband.bandcamp.com/merch"
+    );
   });
 });
 

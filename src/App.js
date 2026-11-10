@@ -23,6 +23,8 @@ import Socials from "./pages/Socials";
 import AdminSocials from "./pages/AdminSocials";
 import Press from "./pages/Press";
 import AdminPress from "./pages/AdminPress";
+import Merch from "./pages/Merch";
+import AdminMerch from "./pages/AdminMerch";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { BasketProvider, BasketContext } from "./contexts/BasketContext";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -45,6 +47,7 @@ const PAGE_TITLES = {
   "/gallery": "Gallery - DISCARDED",
   "/shows": "Shows - DISCARDED",
   "/socials": "Socials - DISCARDED",
+  "/merch": "Merch - DISCARDED",
   "/press": "Press Kit - DISCARDED",
   "/epk": "Press Kit - DISCARDED",
   "/admin/login": "Admin Login - DISCARDED",
@@ -55,6 +58,7 @@ const PAGE_TITLES = {
   "/admin/shows": "Shows - Admin",
   "/admin/socials": "Socials - Admin",
   "/admin/press": "Press Kit - Admin",
+  "/admin/merch": "Merch - Admin",
 };
 
 // Helper component to track page views
@@ -126,6 +130,7 @@ const App = () => {
               <Route path="/gallery" element={<Gallery />} />
               <Route path="/shows" element={<Shows />} />
               <Route path="/socials" element={<Socials />} />
+              <Route path="/merch" element={<Merch />} />
               <Route path="/press" element={<Press />} />
               {/* Common alternative address people might type for the press kit */}
               <Route path="/epk" element={<Press />} />
@@ -139,6 +144,7 @@ const App = () => {
               <Route path="/admin/shows" element={<ProtectedRoute><AdminShows /></ProtectedRoute>} />
               <Route path="/admin/socials" element={<ProtectedRoute><AdminSocials /></ProtectedRoute>} />
               <Route path="/admin/press" element={<ProtectedRoute><AdminPress /></ProtectedRoute>} />
+              <Route path="/admin/merch" element={<ProtectedRoute><AdminMerch /></ProtectedRoute>} />
             </Routes>
           </SiteChrome>
         </Router>

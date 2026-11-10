@@ -1,0 +1,51 @@
+# Copies the merch from https://discardedband.bandcamp.com/merch into
+# Firestore once a day, so the website's Merch page stays up to date.
+#
+# One-time setup: add a repository secret called FIREBASE_SERVICE_ACCOUNT
+# containing the Firebase service account key (Firebase console → Project
+# settings → Service accounts → Generate new private key → paste the whole
+# file). To sync right away: Actions tab → "Sync Bandcamp merch" → Run workflow.
+#
+# Note: GitHub pauses scheduled workflows in public repos after 60 days without
+# any commits/pushes. If that happens, re-enable it in the Actions tab.
+
+name: Sync Bandcamp merch
+
+on:
+  schedule:
+    - cron: "23 4 * * *" # every day at 04:23 UTC
+  workflow_dispatch: # "Run workflow" button
+
+permissions:
+  contents: read
+
+concurrency:
+  group: merch-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: scripts/merch-sync
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: scripts/merch-sync/package-lock.json
+
+      - run: npm ci
+
+      - name: Test the Bandcamp parser
+        run: npm test
+
+      - name: Sync merch to Firestore
+        run: node sync.js
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          MERCH_URL: https://discardedband.bandcamp.com/merch

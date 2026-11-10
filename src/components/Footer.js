@@ -5,6 +5,7 @@ import useSocials from '../hooks/useSocials';
 
 const FOOTER_LINKS = [
   { to: '/', label: 'Home' },
+  { to: '/merch', label: 'Merch' },
   { to: '/about-us', label: 'About Us' },
   { to: '/socials', label: 'Socials' },
   { to: '/contact', label: 'Contact' },

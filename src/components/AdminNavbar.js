@@ -9,6 +9,7 @@ const PAGE_LABELS = {
   "/admin/shows": "Shows",
   "/admin/socials": "Socials",
   "/admin/press": "Press Kit",
+  "/admin/merch": "Merch",
 };
 
 const AdminNavbar = () => {

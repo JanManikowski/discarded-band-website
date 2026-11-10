@@ -1,0 +1,19 @@
+{
+  "name": "discarded-merch-sync",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Copies the merch from the band's Bandcamp page into Firestore so the website can show it. Runs daily from GitHub Actions.",
+  "main": "sync.js",
+  "scripts": {
+    "sync": "node sync.js",
+    "dry-run": "node sync.js --dry-run",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "cheerio": "^1.2.0",
+    "firebase-admin": "^14.5.0"
+  }
+}
