@@ -1,0 +1,2173 @@
+From d614b330776cc93559945dc0ffacea331bb82c27 Mon Sep 17 00:00:00 2001
+From: Janek210102j <janek210102j@gmail.com>
+Date: Tue, 10 Nov 2026 18:34:00 +0100
+Subject: [PATCH] One consistent look across the site and admin
+
+- Fonts: the body font was 'Roboto ' (stray space), which never matched,
+  so every page fell back to monospace. Self-host Cinzel (headings, menu,
+  buttons; echoes the logo) and Source Sans 3 (text).
+- Page titles: same font, size and distance from the menu on every page
+  (were 120-240px down on desktop, up to 476px on phones).
+- One background colour (#0A060D) for html, pages and footer.
+- One button style (square outline, gold Cinzel) for public buttons,
+  ticket links and the login/contact forms; Bootstrap blue focus replaced
+  with gold; the menu shows the current page.
+- Releases: static gold light instead of a mouse-following glow that
+  re-rendered the page on every mouse move.
+- Admin: dashboard and editor top bars restyled to match the site (no
+  emoji, no status strip), each card shows what's live right now (next
+  show, merch sync, what the press kit is missing). Admin buttons share
+  one style. Cards stack on phones.
+- Centred menu breakpoint moved to 1600px so the wider font never runs
+  into the logo.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_0115yEir6TJxrDkkp9hfACwd
+---
+ package-lock.json                     |  20 ++
+ package.json                          |   2 +
+ src/components/AdminNavbar.js         | 119 ++-----
+ src/components/Navbar.js              |  34 +-
+ src/components/ReleasesCard.js        |  44 +--
+ src/components/ShowCard.js            |  24 +-
+ src/components/ShowGalleryEditor.js   |  44 +--
+ src/components/UpcomingShowsEditor.js |  24 +-
+ src/hooks/useAdminOverview.js         | 147 +++++++++
+ src/hooks/useAdminOverview.test.js    |  72 +++++
+ src/index.jsx                         |   4 +
+ src/pages/AboutUs.js                  |  15 +-
+ src/pages/AdminAbout.js               |   2 +-
+ src/pages/AdminDashboard.js           | 285 +++++------------
+ src/pages/AdminDashboard.test.js      |  42 +++
+ src/pages/AdminGallery.js             |   2 +-
+ src/pages/AdminLogin.js               |  20 +-
+ src/pages/AdminMerch.js               |   2 +-
+ src/pages/AdminPress.js               |   2 +-
+ src/pages/AdminRelease.js             |   2 +-
+ src/pages/AdminShows.js               |   2 +-
+ src/pages/AdminSocials.js             |   2 +-
+ src/pages/Contact.js                  |  17 +-
+ src/pages/Gallery.js                  |   3 +-
+ src/pages/Home.js                     |   4 +-
+ src/pages/Merch.js                    |   2 +-
+ src/pages/Releases.js                 |  21 +-
+ src/pages/Shows.js                    |   3 +-
+ src/styles/adminStyles.js             |   7 +-
+ src/styles/constants.js               |  21 +-
+ src/styles/features.css               | 428 ++++++++++++++++++++++++--
+ src/styles/global.css                 |   6 +-
+ 32 files changed, 895 insertions(+), 527 deletions(-)
+ create mode 100644 src/hooks/useAdminOverview.js
+ create mode 100644 src/hooks/useAdminOverview.test.js
+ create mode 100644 src/pages/AdminDashboard.test.js
+
+diff --git a/package-lock.json b/package-lock.json
+index c4805bf..cbbf2dd 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -12,6 +12,8 @@
+         "@dnd-kit/sortable": "^10.0.0",
+         "@dnd-kit/utilities": "^3.2.2",
+         "@emailjs/browser": "^4.4.1",
++        "@fontsource-variable/cinzel": "^5.3.0",
++        "@fontsource-variable/source-sans-3": "^5.3.1",
+         "@fontsource/metal-mania": "^5.1.0",
+         "@testing-library/jest-dom": "^5.17.0",
+         "@testing-library/react": "^13.4.0",
+@@ -3637,6 +3639,24 @@
+       "license": "MIT",
+       "optional": true
+     },
++    "node_modules/@fontsource-variable/cinzel": {
++      "version": "5.3.0",
++      "resolved": "https://registry.npmjs.org/@fontsource-variable/cinzel/-/cinzel-5.3.0.tgz",
++      "integrity": "sha512-eFcU0TwaAP5QESF2pV8VoOPJJXJ6sSGm/6mXMwqTdMBPAJMaLhfa6oISHuOtFeddsoHP9RYm4Io0j1j3mNEz2Q==",
++      "license": "OFL-1.1",
++      "funding": {
++        "url": "https://github.com/sponsors/ayuhito"
++      }
++    },
++    "node_modules/@fontsource-variable/source-sans-3": {
++      "version": "5.3.1",
++      "resolved": "https://registry.npmjs.org/@fontsource-variable/source-sans-3/-/source-sans-3-5.3.1.tgz",
++      "integrity": "sha512-u0p5Z/PM2e1uxYOMiodLM6NVzxHwULcB6Oi7QSr2WU/sdoLBFP/BeOZ3YYHeJ6rHsjPZA1nZweZVaV7sf2MAyQ==",
++      "license": "OFL-1.1",
++      "funding": {
++        "url": "https://github.com/sponsors/ayuhito"
++      }
++    },
+     "node_modules/@fontsource/metal-mania": {
+       "version": "5.1.0",
+       "resolved": "https://registry.npmjs.org/@fontsource/metal-mania/-/metal-mania-5.1.0.tgz",
+diff --git a/package.json b/package.json
+index 93061bd..3542263 100644
+--- a/package.json
++++ b/package.json
+@@ -8,6 +8,8 @@
+     "@dnd-kit/sortable": "^10.0.0",
+     "@dnd-kit/utilities": "^3.2.2",
+     "@emailjs/browser": "^4.4.1",
++    "@fontsource-variable/cinzel": "^5.3.0",
++    "@fontsource-variable/source-sans-3": "^5.3.1",
+     "@fontsource/metal-mania": "^5.1.0",
+     "@testing-library/jest-dom": "^5.17.0",
+     "@testing-library/react": "^13.4.0",
+diff --git a/src/components/AdminNavbar.js b/src/components/AdminNavbar.js
+index 057bfa0..0fe049a 100644
+--- a/src/components/AdminNavbar.js
++++ b/src/components/AdminNavbar.js
+@@ -1,6 +1,7 @@
+ import React, { useState } from "react";
+ import { useAuth } from "../contexts/AuthContext";
+ import { useNavigate, useLocation } from "react-router-dom";
++import { LuMenu, LuX } from "react-icons/lu";
+ 
+ const PAGE_LABELS = {
+   "/admin/release": "Releases",
+@@ -12,6 +13,8 @@ const PAGE_LABELS = {
+   "/admin/merch": "Merch",
+ };
+ 
++// Top bar on every admin editor. Styles live in features.css (.admin-topbar…)
++// and are shared with the dashboard.
+ const AdminNavbar = () => {
+   const { currentUser, logout } = useAuth();
+   const [menuOpen, setMenuOpen] = useState(false);
+@@ -20,130 +23,64 @@ const AdminNavbar = () => {
+   const pageLabel = PAGE_LABELS[location.pathname] ?? "Admin";
+ 
+   return (
+-    <nav
+-      style={{
+-        position: "sticky",
+-        top: 0,
+-        zIndex: 100,
+-        backgroundColor: "rgba(10,6,13,0.95)",
+-        borderBottom: "1px solid rgba(255,255,255,0.08)",
+-        height: "64px",
+-        display: "flex",
+-        alignItems: "center",
+-        padding: "0 40px",
+-        fontFamily: "system-ui, -apple-system, sans-serif",
+-      }}
+-    >
+-      <div style={{ display: "flex", alignItems: "center", gap: "16px", flex: 1 }}>
++    <nav className="admin-topbar">
++      <div className="admin-topbar-brand" style={{ flex: 1 }}>
+         {/* Back to dashboard */}
+         <button
++          type="button"
++          className="admin-topbar-back"
+           onClick={() => navigate("/admin")}
+-          style={{
+-            background: "none",
+-            border: "none",
+-            color: "#555",
+-            fontSize: "20px",
+-            cursor: "pointer",
+-            padding: "0 4px",
+-            lineHeight: 1,
+-            display: "flex",
+-            alignItems: "center",
+-          }}
+           title="Back to dashboard"
++          aria-label="Back to dashboard"
+         >
+           ←
+         </button>
+-        <span style={{ color: "rgba(255,255,255,0.15)" }}>|</span>
+-        <span style={{ fontSize: "14px", fontWeight: "600", color: "white" }}>
+-          {pageLabel}
+-        </span>
++        <span className="admin-topbar-divider" aria-hidden="true" />
++        <span className="admin-topbar-section">{pageLabel}</span>
+       </div>
+ 
+       {/* Desktop right side */}
+-      <div className="d-none d-lg-flex" style={{ alignItems: "center", gap: "16px" }}>
+-        <button
+-          onClick={() => navigate("/")}
+-          style={{
+-            background: "none",
+-            border: "1px solid rgba(255,255,255,0.15)",
+-            color: "#aaa",
+-            fontSize: "13px",
+-            padding: "6px 14px",
+-            borderRadius: "6px",
+-            cursor: "pointer",
+-          }}
+-        >
++      <div className="d-none d-lg-flex admin-topbar-actions">
++        <button type="button" className="admin-btn" onClick={() => navigate("/")}>
+           ← Website
+         </button>
+-        <span style={{ fontSize: "13px", color: "#555" }}>{currentUser?.email}</span>
+-        <button
+-          onClick={logout}
+-          style={{
+-            background: "#c4a96a",
+-            border: "none",
+-            color: "#1a0a02",
+-            fontSize: "13px",
+-            padding: "6px 14px",
+-            borderRadius: "6px",
+-            cursor: "pointer",
+-            fontWeight: "500",
+-          }}
+-        >
++        <span className="admin-topbar-email">{currentUser?.email}</span>
++        <button type="button" className="admin-btn is-primary" onClick={logout}>
+           Log out
+         </button>
+       </div>
+ 
+       {/* Mobile toggle */}
+       <button
+-        className="d-lg-none"
++        type="button"
++        className="d-lg-none admin-btn is-icon"
+         onClick={() => setMenuOpen((p) => !p)}
+-        style={{
+-          background: "none",
+-          border: "1px solid rgba(255,255,255,0.15)",
+-          color: "white",
+-          padding: "6px 10px",
+-          borderRadius: "6px",
+-          cursor: "pointer",
+-        }}
++        aria-expanded={menuOpen}
++        aria-label={menuOpen ? "Close menu" : "Open menu"}
+       >
+-        {menuOpen ? "✕" : "☰"}
++        {menuOpen ? <LuX aria-hidden="true" /> : <LuMenu aria-hidden="true" />}
+       </button>
+ 
+       {/* Mobile dropdown */}
+       {menuOpen && (
+-        <div
+-          className="d-lg-none"
+-          style={{
+-            position: "absolute",
+-            top: "64px",
+-            left: 0,
+-            right: 0,
+-            backgroundColor: "#0A060D",
+-            borderBottom: "1px solid rgba(255,255,255,0.08)",
+-            padding: "16px 24px",
+-            display: "flex",
+-            flexDirection: "column",
+-            gap: "12px",
+-          }}
+-        >
++        <div className="d-lg-none admin-topbar-menu">
+           <button
++            type="button"
++            className="admin-topbar-menu-link"
+             onClick={() => { setMenuOpen(false); navigate("/"); }}
+-            style={{ background: "none", border: "none", color: "#aaa", fontSize: "14px", textAlign: "left", cursor: "pointer", padding: 0 }}
+           >
+             ← Back to website
+           </button>
+           <button
++            type="button"
++            className="admin-topbar-menu-link"
+             onClick={() => { setMenuOpen(false); navigate("/admin"); }}
+-            style={{ background: "none", border: "none", color: "#aaa", fontSize: "14px", textAlign: "left", cursor: "pointer", padding: 0 }}
+           >
+             ← Back to dashboard
+           </button>
+-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "12px" }}>
+-            <p style={{ fontSize: "13px", color: "#555", margin: "0 0 10px" }}>{currentUser?.email}</p>
+-            <button
+-              onClick={logout}
+-              style={{ background: "#c4a96a", border: "none", color: "#1a0a02", padding: "8px 16px", borderRadius: "6px", fontSize: "13px", cursor: "pointer", width: "100%" }}
+-            >
++          <div className="admin-topbar-menu-footer">
++            <span className="admin-topbar-email">{currentUser?.email}</span>
++            <button type="button" className="admin-btn is-primary" onClick={logout}>
+               Log out
+             </button>
+           </div>
+@@ -153,4 +90,4 @@ const AdminNavbar = () => {
+   );
+ };
+ 
+-export default AdminNavbar;
+\ No newline at end of file
++export default AdminNavbar;
+diff --git a/src/components/Navbar.js b/src/components/Navbar.js
+index 4031ed4..c6a075c 100644
+--- a/src/components/Navbar.js
++++ b/src/components/Navbar.js
+@@ -1,5 +1,5 @@
+ import React, { useState, useEffect, useContext } from 'react';
+-import { Link, useLocation } from 'react-router-dom';
++import { Link, NavLink, useLocation } from 'react-router-dom';
+ import logo from '../assets/Discarded-Clean-Circle-Transparent.png';
+ import { BasketContext } from '../contexts/BasketContext';
+ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+@@ -139,77 +139,77 @@ const NavBar = () => {
+                             }}
+                             >
+                         <li className="nav-item">
+-                                <Link
++                                <NavLink
+                                     to="/shows"
+                                     className="nav-link text-white custom-nav-link"
+                                     onClick={handleLinkClick}
+                                 >
+                                     Shows
+-                                </Link>
++                                </NavLink>
+                             </li>
+                             <li className="nav-item">
+-                                <Link
++                                <NavLink
+                                     to="/releases"
+                                     className="nav-link text-white custom-nav-link"
+                                     onClick={handleLinkClick}
+                                 >
+                                     Releases
+-                                </Link>
++                                </NavLink>
+                             </li>
+                             <li className="nav-item">
+-                                <Link
++                                <NavLink
+                                     to="/merch"
+                                     className="nav-link text-white custom-nav-link"
+                                     onClick={handleLinkClick}
+                                 >
+                                     Merch
+-                                </Link>
++                                </NavLink>
+                             </li>
+                             <li className="nav-item">
+-                                <Link
++                                <NavLink
+                                     to="/gallery"
+                                     className="nav-link text-white custom-nav-link"
+                                     onClick={handleLinkClick}
+                                 >
+                                     Gallery
+-                                </Link>
++                                </NavLink>
+                             </li>
+                             {/* <li className="nav-item">
+-                                <Link
++                                <NavLink
+                                     to="/products"
+                                     className="nav-link text-white custom-nav-link"
+                                     onClick={handleLinkClick}
+                                 >
+                                     Products
+-                                </Link>
++                                </NavLink>
+                             </li> */}
+                             <li className="nav-item">
+-                                <Link
++                                <NavLink
+                                     to="/about-us"
+                                     className="nav-link text-white custom-nav-link"
+                                     onClick={handleLinkClick}
+                                 >
+                                     About Us
+-                                </Link>
++                                </NavLink>
+                             </li>
+                             <li className="nav-item">
+-                                <Link
++                                <NavLink
+                                     to="/socials"
+                                     className="nav-link text-white custom-nav-link"
+                                     onClick={handleLinkClick}
+                                 >
+                                     Socials
+-                                </Link>
++                                </NavLink>
+                             </li>
+ 
+                             <li className="nav-item">
+-                                <Link
++                                <NavLink
+                                     to="/contact"
+                                     className="nav-link text-white custom-nav-link"
+                                     onClick={handleLinkClick}
+                                 >
+                                     Contact
+-                                </Link>
++                                </NavLink>
+                             </li>
+                             <li className="nav-item d-lg-none custom-cart-container">
+                             {/* <Link to="/basket" className="nav-link text-white d-flex align-items-center">
+diff --git a/src/components/ReleasesCard.js b/src/components/ReleasesCard.js
+index a61403c..3bf0808 100644
+--- a/src/components/ReleasesCard.js
++++ b/src/components/ReleasesCard.js
+@@ -1,25 +1,17 @@
+-import React, { useState, useEffect } from 'react';
++import React from 'react';
+ import SpotifyReleases from './SpotifyReleases';
++import { sectionTitleStyle } from '../styles/constants';
+ 
+ const ReleasesCard = ({ slots, title, style }) => {
+-    const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+-
+-    // Track the cursor so the glow follows it across the card
+-    useEffect(() => {
+-        const handleMouseMove = (e) => {
+-            setCursorPos({ x: e.clientX, y: e.clientY });
+-        };
+-        window.addEventListener('mousemove', handleMouseMove);
+-        return () => window.removeEventListener('mousemove', handleMouseMove);
+-    }, []);
+-
+     return (
+         <div
+             id="latest"
+             className="release-card text-white d-flex flex-column justify-content-center align-items-center"
+             style={{
+                 backgroundColor: '#0A060D',
+-                backgroundImage: `radial-gradient(circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(196, 169, 106, 0.16), transparent)`,
++                // A soft gold light from above (used to follow the mouse,
++                // which re-drew the whole section on every movement).
++                backgroundImage: 'radial-gradient(ellipse at 50% 0%, rgba(196, 169, 106, 0.12), transparent 60%)',
+                 width: '100%',
+                 boxShadow: '0 4px 15px rgba(0, 0, 0, 0.6)',
+                 ...style, // Allow overriding styles via props
+@@ -30,7 +22,6 @@ const ReleasesCard = ({ slots, title, style }) => {
+                 boxSizing: 'border-box', // Prevent padding overflow
+                 borderTop: '1px solid rgba(255, 255, 255, 0.85)',
+                 borderBottom: '1px solid rgba(255, 255, 255, 0.85)',
+-                transition: 'background 0.1s',
+             }}
+         >
+             <div
+@@ -40,32 +31,11 @@ const ReleasesCard = ({ slots, title, style }) => {
+                     width: '90vw', // Use 90% of the viewport width for flexibility
+                 }}
+             >
+-                <h1
+-                    className="mb-4"
+-                    style={{
+-                        fontSize: '3rem',
+-                        fontWeight: 'bold',
+-                        textTransform: 'uppercase',
+-                        color: '#c4a96a',
+-                    }}
+-                >
+-                    {title || 'Latest Release'}
+-                </h1>
++                <h1 style={sectionTitleStyle}>{title || 'Latest Release'}</h1>
+                 <SpotifyReleases slots={slots} />
+             </div>
+-            {/* <button
+-          className="btn btn-outline-light mt-5"
+-          onClick={() => {
+-            const featuredSection = document.getElementById("featured-section");
+-            if (featuredSection) {
+-              featuredSection.scrollIntoView({ behavior: "smooth", block: "start" });
+-            }
+-          }}
+-        >
+-          See Merch
+-        </button> */}
+         </div>
+     );
+ };
+ 
+-export default ReleasesCard;
+\ No newline at end of file
++export default ReleasesCard;
+diff --git a/src/components/ShowCard.js b/src/components/ShowCard.js
+index ec91732..b307b9e 100644
+--- a/src/components/ShowCard.js
++++ b/src/components/ShowCard.js
+@@ -24,7 +24,15 @@ const ShowCard = ({ show, past = false }) => {
+             paddingRight: "16px",
+           }}
+         >
+-          <div style={{ fontSize: "1.8rem", fontWeight: "bold", color: "#c4a96a", lineHeight: 1 }}>
++          <div
++            style={{
++              fontFamily: "var(--font-display)",
++              fontSize: "1.8rem",
++              fontWeight: "bold",
++              color: "#c4a96a",
++              lineHeight: 1,
++            }}
++          >
+             {show.day}
+           </div>
+           <div style={{ fontSize: "0.95rem", color: "#e0e0e0", letterSpacing: "1px" }}>
+@@ -52,22 +60,12 @@ const ShowCard = ({ show, past = false }) => {
+           href={show.ticketsUrl}
+           target="_blank"
+           rel="noopener noreferrer"
+-          style={{
+-            backgroundColor: "transparent",
+-            border: "1px solid white",
+-            color: "#c4a96a",
+-            padding: "8px 18px",
+-            textTransform: "uppercase",
+-            fontSize: "0.85rem",
+-            fontWeight: "bold",
+-            textDecoration: "none",
+-            whiteSpace: "nowrap",
+-          }}
++          className="site-btn site-btn-sm"
+         >
+           Tickets
+         </a>
+       ) : (
+-        <span style={{ color: "#666", fontSize: "0.85rem" }}>Tickets TBA</span>
++        <span className="show-card-played">Tickets TBA</span>
+       )}
+     </div>
+   );
+diff --git a/src/components/ShowGalleryEditor.js b/src/components/ShowGalleryEditor.js
+index e715a7b..8946b91 100644
+--- a/src/components/ShowGalleryEditor.js
++++ b/src/components/ShowGalleryEditor.js
+@@ -14,6 +14,7 @@ import { ref, deleteObject } from "firebase/storage";
+ import { db, storage } from "../firebase/config";
+ import ImageUploader from "./ImageUploader";
+ import SortablePhoto from "./SortablePhoto";
++import { adminSaveButtonStyle, adminSmallButtonStyle } from "../styles/adminStyles";
+ import {
+   DndContext,
+   closestCenter,
+@@ -102,16 +103,7 @@ const SortableShowRow = ({ show, onDelete, busyShowId, isCollapsed, onToggle, ch
+           type="button"
+           onClick={() => onDelete(show)}
+           disabled={busyShowId === show.id}
+-          style={{
+-            backgroundColor: "transparent",
+-            border: "1px solid #b61c1c",
+-            color: "#ff9b9b",
+-            padding: "4px 10px",
+-            fontSize: "0.75rem",
+-            textTransform: "uppercase",
+-            cursor: busyShowId === show.id ? "not-allowed" : "pointer",
+-            whiteSpace: "nowrap",
+-          }}
++          style={adminSmallButtonStyle("danger", busyShowId === show.id)}
+         >
+           Delete Show
+         </button>
+@@ -389,16 +381,7 @@ const ShowGalleryEditor = () => {
+         <button
+           type="submit"
+           disabled={creating || !newShowName.trim()}
+-          style={{
+-            backgroundColor: "transparent",
+-            border: "1px solid white",
+-            color: "#c4a96a",
+-            padding: "8px 16px",
+-            textTransform: "uppercase",
+-            fontSize: "0.85rem",
+-            cursor: creating ? "not-allowed" : "pointer",
+-            opacity: creating ? 0.6 : 1,
+-          }}
++          style={{ ...adminSaveButtonStyle(creating), padding: "8px 16px", fontSize: "0.85rem" }}
+         >
+           {creating ? "Adding..." : "Add Show"}
+         </button>
+@@ -509,31 +492,14 @@ const ShowGalleryEditor = () => {
+                               <button
+                                 type="button"
+                                 onClick={() => handleCreditSave(editingPhoto.showId, editingPhoto.storagePath, editingPhoto.credit)}
+-                                style={{
+-                                  backgroundColor: "transparent",
+-                                  border: "1px solid white",
+-                                  color: "#c4a96a",
+-                                  padding: "6px 14px",
+-                                  fontSize: "0.8rem",
+-                                  textTransform: "uppercase",
+-                                  cursor: "pointer",
+-                                  borderRadius: "4px",
+-                                }}
++                                style={{ ...adminSmallButtonStyle("gold"), padding: "6px 14px" }}
+                               >
+                                 Save
+                               </button>
+                               <button
+                                 type="button"
+                                 onClick={() => setEditingPhoto(null)}
+-                                style={{
+-                                  backgroundColor: "transparent",
+-                                  border: "1px solid #555",
+-                                  color: "#999",
+-                                  padding: "6px 12px",
+-                                  fontSize: "0.8rem",
+-                                  cursor: "pointer",
+-                                  borderRadius: "4px",
+-                                }}
++                                style={{ ...adminSmallButtonStyle("default"), padding: "6px 12px" }}
+                               >
+                                 Cancel
+                               </button>
+diff --git a/src/components/UpcomingShowsEditor.js b/src/components/UpcomingShowsEditor.js
+index 0b85bca..44ffe5e 100644
+--- a/src/components/UpcomingShowsEditor.js
++++ b/src/components/UpcomingShowsEditor.js
+@@ -12,6 +12,7 @@ import {
+ } from "firebase/firestore";
+ import { db } from "../firebase/config";
+ import { buildShowDateFields, startOfToday } from "../utils/showDates";
++import { adminSaveButtonStyle, adminSmallButtonStyle } from "../styles/adminStyles";
+ 
+ const emptyForm = {
+   date: "",
+@@ -202,16 +203,7 @@ const UpcomingShowsEditor = () => {
+         <button
+           type="submit"
+           disabled={saving}
+-          style={{
+-            backgroundColor: "transparent",
+-            border: "1px solid white",
+-            color: "#c4a96a",
+-            padding: "8px 18px",
+-            textTransform: "uppercase",
+-            fontSize: "0.85rem",
+-            cursor: saving ? "not-allowed" : "pointer",
+-            opacity: saving ? 0.6 : 1,
+-          }}
++          style={{ ...adminSaveButtonStyle(saving), padding: "8px 18px", fontSize: "0.85rem" }}
+         >
+           {saving ? "Adding..." : "Add Show"}
+         </button>
+@@ -247,17 +239,7 @@ const UpcomingShowsEditor = () => {
+                   type="button"
+                   onClick={() => handleDelete(show.id)}
+                   disabled={deletingId === show.id}
+-                  style={{
+-                    backgroundColor: "transparent",
+-                    border: "1px solid #b61c1c",
+-                    color: "#ff9b9b",
+-                    padding: "4px 10px",
+-                    fontSize: "0.75rem",
+-                    textTransform: "uppercase",
+-                    cursor: deletingId === show.id ? "not-allowed" : "pointer",
+-                    whiteSpace: "nowrap",
+-                    marginLeft: "10px",
+-                  }}
++                  style={{ ...adminSmallButtonStyle("danger", deletingId === show.id), marginLeft: "10px" }}
+                 >
+                   Delete
+                 </button>
+diff --git a/src/hooks/useAdminOverview.js b/src/hooks/useAdminOverview.js
+new file mode 100644
+index 0000000..3bb53ae
+--- /dev/null
++++ b/src/hooks/useAdminOverview.js
+@@ -0,0 +1,147 @@
++import { useEffect, useState } from "react";
++import { collection, doc, getDoc, getDocs, limit, orderBy, query, where } from "firebase/firestore";
++import { db } from "../firebase/config";
++import { startOfToday } from "../utils/showDates";
++import { DEFAULT_RELEASES, getReleaseSlots } from "../utils/spotify";
++import { DEFAULT_ABOUT_US } from "../content/aboutUsDefaults";
++import { DEFAULT_SOCIALS } from "../utils/socialPlatforms";
++import { toDate, daysBetween } from "../utils/merch";
++
++const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
++
++const formatShowDate = (date) => date.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
++
++/**
++ * One short status line per admin section, so the dashboard shows what's
++ * actually on the site ("Next: 5 Dec · Het Paard", "Missing: tech rider").
++ * Each line is { text, tone: "normal" | "warn" | "error" }. A section whose
++ * data can't be loaded simply gets no line.
++ */
++export const buildOverview = ({ nextShow, releases, about, gallery, socials, merch, press }) => {
++  const overview = {};
++
++  if (nextShow !== undefined) {
++    overview.shows = nextShow
++      ? {
++          text: `Next: ${[nextShow.date && formatShowDate(nextShow.date), nextShow.venue].filter(Boolean).join(" · ")}`,
++          tone: "normal",
++        }
++      : { text: "No upcoming shows", tone: "warn" };
++  }
++
++  if (releases !== undefined) {
++    // Same fallback as the Home and Releases pages
++    const count = getReleaseSlots({ ...DEFAULT_RELEASES, ...(releases || {}) }).length;
++    overview.releases = count
++      ? { text: `${plural(count, "Spotify player")} on the site`, tone: "normal" }
++      : { text: "No Spotify link set", tone: "warn" };
++  }
++
++  if (about !== undefined) {
++    const data = { ...DEFAULT_ABOUT_US, ...(about || {}) };
++    const members = (data.members || []).filter((m) => (m.name || "").trim()).length;
++    const photos = (data.bandPhotos || []).length;
++    overview.about = { text: `${plural(members, "band member")} · ${plural(photos, "photo")}`, tone: "normal" };
++  }
++
++  if (gallery !== undefined) {
++    const withPhotos = gallery.filter((show) => (show.photos || []).length > 0);
++    const photos = withPhotos.reduce((sum, show) => sum + show.photos.length, 0);
++    overview.gallery = withPhotos.length
++      ? { text: `${plural(withPhotos.length, "show")} · ${plural(photos, "photo")}`, tone: "normal" }
++      : { text: "No photos yet", tone: "warn" };
++  }
++
++  if (socials !== undefined) {
++    const links = (socials?.links || DEFAULT_SOCIALS.links).filter((l) => (l.url || "").trim()).length;
++    overview.socials = { text: `${plural(links, "link")} on the site`, tone: links ? "normal" : "warn" };
++  }
++
++  if (merch !== undefined) {
++    const syncedAt = toDate(merch?.syncedAt);
++    if (merch?.lastError) {
++      overview.merch = { text: "Last sync failed, see details", tone: "error" };
++    } else if (!syncedAt) {
++      overview.merch = { text: "Not synced yet", tone: "warn" };
++    } else {
++      const days = daysBetween(syncedAt);
++      const when = days <= 0 ? "today" : days === 1 ? "yesterday" : `${days} days ago`;
++      const items = (merch.items || []).length;
++      overview.merch = { text: `Synced ${when} · ${plural(items, "item")}`, tone: days > 3 ? "warn" : "normal" };
++    }
++  }
++
++  if (press !== undefined) {
++    const p = press || {};
++    const missing = [
++      !p.lineupPhoto?.url && "lineup photo",
++      !(p.quotes || []).some((q) => (q.text || "").trim()) && "press quotes",
++      !(p.videoUrl || "").trim() && "video",
++      !p.rider?.url && "tech rider",
++    ].filter(Boolean);
++    overview.press = missing.length
++      ? { text: `Missing: ${missing.join(", ")}`, tone: "warn" }
++      : { text: "Everything filled in", tone: "normal" };
++  }
++
++  return overview;
++};
++
++const readDoc = async (id) => {
++  const snap = await getDoc(doc(db, "site_content", id));
++  return snap.exists() ? snap.data() : null;
++};
++
++const useAdminOverview = () => {
++  const [overview, setOverview] = useState({});
++  const [loading, setLoading] = useState(true);
++
++  useEffect(() => {
++    let active = true;
++
++    const load = async () => {
++      const tasks = {
++        nextShow: async () => {
++          const snap = await getDocs(
++            query(
++              collection(db, "upcomingShows"),
++              where("eventDate", ">=", startOfToday()),
++              orderBy("eventDate", "asc"),
++              limit(1)
++            )
++          );
++          if (snap.empty) return null;
++          const data = snap.docs[0].data();
++          return { date: toDate(data.eventDate), venue: data.venue || "" };
++        },
++        releases: () => readDoc("releases"),
++        about: () => readDoc("aboutUs"),
++        gallery: async () => (await getDocs(collection(db, "shows"))).docs.map((d) => d.data()),
++        socials: () => readDoc("socials"),
++        merch: () => readDoc("merch"),
++        press: () => readDoc("press"),
++      };
++
++      const keys = Object.keys(tasks);
++      const results = await Promise.allSettled(keys.map((key) => tasks[key]()));
++      const data = {};
++      results.forEach((result, i) => {
++        if (result.status === "fulfilled") data[keys[i]] = result.value;
++      });
++
++      if (active) {
++        setOverview(buildOverview(data));
++        setLoading(false);
++      }
++    };
++
++    load();
++    return () => {
++      active = false;
++    };
++  }, []);
++
++  return { overview, loading };
++};
++
++export default useAdminOverview;
+diff --git a/src/hooks/useAdminOverview.test.js b/src/hooks/useAdminOverview.test.js
+new file mode 100644
+index 0000000..e4baec2
+--- /dev/null
++++ b/src/hooks/useAdminOverview.test.js
+@@ -0,0 +1,72 @@
++import { buildOverview } from "./useAdminOverview";
++
++// Only the pure overview builder is tested; keep Firebase out of the run.
++jest.mock("../firebase/config", () => ({ db: {}, auth: {}, storage: {} }));
++
++const daysAgo = (n) => new Date(Date.now() - n * 24 * 60 * 60 * 1000);
++
++describe("buildOverview", () => {
++  it("leaves out sections whose data couldn't be loaded", () => {
++    expect(buildOverview({})).toEqual({});
++  });
++
++  it("names the next show, or warns when nothing is planned", () => {
++    const next = buildOverview({ nextShow: { date: new Date(2026, 11, 5), venue: "Het Paard" } });
++    expect(next.shows).toEqual({ text: "Next: 5 Dec · Het Paard", tone: "normal" });
++
++    expect(buildOverview({ nextShow: null }).shows).toEqual({ text: "No upcoming shows", tone: "warn" });
++  });
++
++  it("counts Spotify players the same way the public pages do", () => {
++    // Nothing saved yet: the site falls back to the default release
++    expect(buildOverview({ releases: null }).releases.text).toBe("1 Spotify player on the site");
++
++    const two = buildOverview({
++      releases: { spotifyType: "album", spotifyId: "a1", albumType: "album", albumId: "a2" },
++    });
++    expect(two.releases.text).toBe("2 Spotify players on the site");
++
++    const cleared = buildOverview({ releases: { spotifyType: "album", spotifyId: "" } });
++    expect(cleared.releases).toEqual({ text: "No Spotify link set", tone: "warn" });
++  });
++
++  it("summarises About Us, the gallery and socials", () => {
++    const overview = buildOverview({
++      about: { members: [{ name: "Andy" }, { name: " " }], bandPhotos: [{}, {}, {}] },
++      gallery: [{ photos: [{}, {}] }, { photos: [] }, { photos: [{}] }],
++      socials: { links: [{ url: "https://instagram.com/x" }, { url: "" }] },
++    });
++    expect(overview.about.text).toBe("1 band member · 3 photos");
++    expect(overview.gallery.text).toBe("2 shows · 3 photos");
++    expect(overview.socials.text).toBe("1 link on the site");
++
++    expect(buildOverview({ gallery: [] }).gallery).toEqual({ text: "No photos yet", tone: "warn" });
++  });
++
++  it("reports the merch sync: failed, never run, recent and stale", () => {
++    expect(buildOverview({ merch: { lastError: "boom" } }).merch.tone).toBe("error");
++    expect(buildOverview({ merch: null }).merch).toEqual({ text: "Not synced yet", tone: "warn" });
++
++    const fresh = buildOverview({ merch: { syncedAt: new Date(), items: [{}, {}] } });
++    expect(fresh.merch).toEqual({ text: "Synced today · 2 items", tone: "normal" });
++
++    const stale = buildOverview({ merch: { syncedAt: daysAgo(5), items: [] } });
++    expect(stale.merch).toEqual({ text: "Synced 5 days ago · 0 items", tone: "warn" });
++  });
++
++  it("lists what the press kit is still missing", () => {
++    expect(buildOverview({ press: null }).press.text).toBe(
++      "Missing: lineup photo, press quotes, video, tech rider"
++    );
++
++    const complete = buildOverview({
++      press: {
++        lineupPhoto: { url: "https://x/photo.jpg" },
++        quotes: [{ text: "Crushing." }],
++        videoUrl: "https://youtu.be/abc",
++        rider: { url: "https://x/rider.pdf" },
++      },
++    });
++    expect(complete.press).toEqual({ text: "Everything filled in", tone: "normal" });
++  });
++});
+diff --git a/src/index.jsx b/src/index.jsx
+index 5d4fdcf..c9357b8 100644
+--- a/src/index.jsx
++++ b/src/index.jsx
+@@ -1,5 +1,9 @@
+ import React from 'react';
+ import ReactDOM from 'react-dom/client';
++// Self-hosted fonts (no requests to Google): Cinzel for headings, menu and
++// buttons (it echoes the logo's lettering), Source Sans 3 for all other text.
++import '@fontsource-variable/cinzel';
++import '@fontsource-variable/source-sans-3';
+ import App from './App';
+ import reportWebVitals from './reportWebVitals';
+ 
+diff --git a/src/pages/AboutUs.js b/src/pages/AboutUs.js
+index 62b1112..9c3de20 100644
+--- a/src/pages/AboutUs.js
++++ b/src/pages/AboutUs.js
+@@ -1,7 +1,7 @@
+ import React from "react";
+ import "../styles/global.css";
+ import "../styles/responsive.css";
+-import { commonTitleStyle } from "../styles/constants";
++import { commonTitleStyle, sectionTitleStyle } from "../styles/constants";
+ import useSiteContent from "../hooks/useSiteContent";
+ import { DEFAULT_ABOUT_US } from "../content/aboutUsDefaults";
+ 
+@@ -13,7 +13,7 @@ export const AboutUsView = ({ data }) => {
+   return (
+     <div className="about-us-page container-fluid text-white">
+       {/* ABOUT US Section */}
+-      <div className="text-section container text-center py-5">
++      <div className="text-section container text-center pt-0 pb-5">
+         <h1 style={commonTitleStyle}>{data.title || DEFAULT_ABOUT_US.title}</h1>
+         <div
+           className="about-text mx-auto"
+@@ -24,16 +24,7 @@ export const AboutUsView = ({ data }) => {
+ 
+       {/* THE BAND Section */}
+       <div className="text-section container text-center">
+-        <h1
+-          style={{
+-            color: "#c4a96a",
+-            fontWeight: "bold",
+-            fontSize: "2.5rem",
+-            textTransform: "uppercase",
+-          }}
+-        >
+-          {data.bandTitle || DEFAULT_ABOUT_US.bandTitle}
+-        </h1>
++        <h2 style={sectionTitleStyle}>{data.bandTitle || DEFAULT_ABOUT_US.bandTitle}</h2>
+         <div
+           className="band-text mx-auto"
+           style={{
+diff --git a/src/pages/AdminAbout.js b/src/pages/AdminAbout.js
+index 7039d77..bb66b38 100644
+--- a/src/pages/AdminAbout.js
++++ b/src/pages/AdminAbout.js
+@@ -12,7 +12,7 @@ const AdminAbout = () => (
+         backgroundColor: "#0A060D",
+         color: "white",
+         minHeight: "100vh",
+-        padding: "100px 20px 60px",
++        padding: "48px 20px 60px",
+         gap: "24px",
+       }}
+     >
+diff --git a/src/pages/AdminDashboard.js b/src/pages/AdminDashboard.js
+index 6f0a1f1..1ec5b84 100644
+--- a/src/pages/AdminDashboard.js
++++ b/src/pages/AdminDashboard.js
+@@ -1,250 +1,123 @@
+ import React from "react";
+ import { useNavigate } from "react-router-dom";
++import { LuDisc3, LuUsers, LuImages, LuCalendarDays, LuLink, LuShirt, LuNewspaper } from "react-icons/lu";
+ import { useAuth } from "../contexts/AuthContext";
++import useAdminOverview from "../hooks/useAdminOverview";
+ 
+ const CARDS = [
+   {
++    key: "releases",
+     path: "/admin/release",
+     label: "Releases",
+-    description: "Set the two Spotify players: latest release and current album.",
+-    icon: "🎵",
++    description: "The two Spotify players on Home and Releases.",
++    Icon: LuDisc3,
+   },
+   {
++    key: "about",
+     path: "/admin/about",
+     label: "About Us",
+-    description: "Edit headings, text, band members and band photos.",
+-    icon: "📝",
++    description: "Headings, text, band members and photos.",
++    Icon: LuUsers,
+   },
+   {
++    key: "gallery",
+     path: "/admin/gallery",
+     label: "Gallery",
+-    description: "Create shows, upload photos and manage the order.",
+-    icon: "📸",
++    description: "Show galleries, photos and their order.",
++    Icon: LuImages,
+   },
+   {
++    key: "shows",
+     path: "/admin/shows",
+     label: "Shows",
+-    description: "Add and remove show dates, venues and ticket links. Past shows move to 'Past' by themselves.",
+-    icon: "🎸",
++    description: "Dates, venues and ticket links. Past shows move to 'Past' by themselves.",
++    Icon: LuCalendarDays,
+   },
+   {
++    key: "socials",
+     path: "/admin/socials",
+     label: "Socials",
+-    description: "Add, edit, reorder and remove social links and their card images.",
+-    icon: "🔗",
++    description: "Links and card images for the Socials page and footer.",
++    Icon: LuLink,
+   },
+   {
++    key: "merch",
+     path: "/admin/merch",
+     label: "Merch",
+-    description: "Synced from Bandcamp every day. Check the last sync and choose which items show.",
+-    icon: "👕",
++    description: "Synced from Bandcamp daily. Choose which items show.",
++    Icon: LuShirt,
+   },
+   {
++    key: "press",
+     path: "/admin/press",
+     label: "Press Kit",
+-    description: "Genre line, manifesto, lineup photo, press quotes, video and tech rider.",
+-    icon: "📰",
++    description: "Genre line, manifesto, photo, quotes, video and tech rider.",
++    Icon: LuNewspaper,
+   },
+ ];
+ 
+-const ICON_MAP = {
+-  "Release":        { svg: "M9 18V5l12-2v13", paths: [] },
+-};
+-
+-const AdminDashboard = () => {
+-  const navigate = useNavigate();
+-  const { currentUser, logout } = useAuth();
+-
+-  return (
+-    <div
+-      style={{
+-        backgroundColor: "#0A060D",
+-        minHeight: "100vh",
+-        padding: "0",
+-        fontFamily: "system-ui, -apple-system, sans-serif",
+-      }}
+-    >
+-      {/* Top bar */}
+-      <div
+-        style={{
+-          borderBottom: "1px solid rgba(255,255,255,0.08)",
+-          padding: "0 40px",
+-          height: "64px",
+-          display: "flex",
+-          alignItems: "center",
+-          justifyContent: "space-between",
+-          position: "sticky",
+-          top: 0,
+-          backgroundColor: "rgba(10,6,13,0.95)",
+-          backdropFilter: "blur(8px)",
+-          zIndex: 100,
+-        }}
+-      >
+-        <div>
+-          <span style={{ fontSize: "11px", letterSpacing: "3px", color: "#666", textTransform: "uppercase" }}>
+-            Discarded
+-          </span>
+-          <span style={{ color: "#444", margin: "0 10px" }}>|</span>
+-          <span style={{ fontSize: "14px", fontWeight: "500", color: "#c4a96a", letterSpacing: "1px" }}>
+-            ADMIN
+-          </span>
+-        </div>
+-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+-          <span style={{ fontSize: "13px", color: "#555" }}>{currentUser?.email}</span>
+-          <button
+-            onClick={() => navigate("/")}
+-            style={{
+-              background: "none",
+-              border: "1px solid rgba(255,255,255,0.15)",
+-              color: "#aaa",
+-              fontSize: "13px",
+-              padding: "6px 14px",
+-              borderRadius: "6px",
+-              cursor: "pointer",
+-            }}
+-          >
+-            ← Website
+-          </button>
+-          <button
+-            onClick={logout}
+-            style={{
+-              background: "#c4a96a",
+-              border: "none",
+-              color: "#1a0a02",
+-              fontSize: "13px",
+-              padding: "6px 14px",
+-              borderRadius: "6px",
+-              cursor: "pointer",
+-              fontWeight: "500",
+-            }}
+-          >
+-            Log out
+-          </button>
+-        </div>
++/** Presentational part of the dashboard (kept separate so it can be tested). */
++export const AdminDashboardView = ({ overview = {}, loading = false, email, onNavigate, onLogout }) => (
++  <div className="admin-page">
++    {/* Top bar */}
++    <div className="admin-topbar">
++      <div className="admin-topbar-brand">
++        <span className="admin-topbar-name">Discarded</span>
++        <span className="admin-topbar-divider" aria-hidden="true" />
++        <span className="admin-topbar-section">Admin</span>
+       </div>
++      <div className="admin-topbar-actions">
++        <button type="button" className="admin-btn" onClick={() => onNavigate("/")}>
++          ← Website
++        </button>
++        <button type="button" className="admin-btn is-primary" onClick={onLogout}>
++          Log out
++        </button>
++      </div>
++    </div>
+ 
+-      {/* Main content */}
+-      <div style={{ maxWidth: "900px", margin: "0 auto", padding: "48px 40px" }}>
+-        <div style={{ marginBottom: "40px" }}>
+-          <p style={{ fontSize: "12px", letterSpacing: "2px", color: "#555", textTransform: "uppercase", margin: "0 0 8px" }}>
+-            Dashboard
+-          </p>
+-          <h1 style={{ fontSize: "32px", fontWeight: "600", color: "white", margin: "0 0 8px" }}>
+-            What do you want to manage?
+-          </h1>
+-          <p style={{ fontSize: "14px", color: "#666", margin: 0 }}>
+-            Changes go live on the website immediately after saving.
+-          </p>
+-        </div>
++    {/* Main content */}
++    <div className="admin-main">
++      <h1 className="admin-heading">Dashboard</h1>
++      <p className="admin-subheading">Changes go live on the website as soon as you save.</p>
+ 
+-        {/* Cards grid */}
+-        <div
+-          style={{
+-            display: "grid",
+-            gridTemplateColumns: "repeat(2, 1fr)",
+-            gap: "16px",
+-            marginBottom: "16px",
+-          }}
+-        >
+-          {CARDS.map((card) => (
+-            <button
+-              key={card.path}
+-              onClick={() => navigate(card.path)}
+-              style={{
+-                background: "rgba(255,255,255,0.03)",
+-                border: "1px solid rgba(255,255,255,0.08)",
+-                borderRadius: "12px",
+-                padding: "28px",
+-                textAlign: "left",
+-                cursor: "pointer",
+-                color: "white",
+-                transition: "border-color 0.15s, background 0.15s",
+-                width: "100%",
+-              }}
+-              onMouseEnter={(e) => {
+-                e.currentTarget.style.borderColor = "#c4a96a";
+-                e.currentTarget.style.background = "rgba(196, 169, 106, 0.05)";
+-              }}
+-              onMouseLeave={(e) => {
+-                e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+-                e.currentTarget.style.background = "rgba(255,255,255,0.03)";
+-              }}
+-            >
+-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px" }}>
+-                <div
+-                  style={{
+-                    width: "44px",
+-                    height: "44px",
+-                    background: "rgba(196, 169, 106, 0.12)",
+-                    borderRadius: "10px",
+-                    display: "flex",
+-                    alignItems: "center",
+-                    justifyContent: "center",
+-                    fontSize: "20px",
+-                  }}
+-                >
+-                  {card.icon}
+-                </div>
+-                <span style={{ fontSize: "18px", color: "#444" }}>↗</span>
+-              </div>
+-              <div style={{ fontSize: "16px", fontWeight: "600", color: "white", marginBottom: "8px" }}>
+-                {card.label}
+-              </div>
+-              <div style={{ fontSize: "13px", color: "#666", lineHeight: "1.5" }}>
+-                {card.description}
+-              </div>
++      <div className="admin-grid">
++        {CARDS.map(({ key, path, label, description, Icon }) => {
++          const status = overview[key];
++          return (
++            <button key={path} type="button" className="admin-card" onClick={() => onNavigate(path)}>
++              <Icon className="admin-card-icon" aria-hidden="true" />
++              <span className="admin-card-title">{label}</span>
++              <span className="admin-card-desc">{description}</span>
++              {(status || loading) && (
++                <span className={`admin-card-status${status ? ` is-${status.tone}` : ""}`}>
++                  {status ? status.text : "…"}
++                </span>
++              )}
+             </button>
+-          ))}
+-        </div>
+-
+-        {/* Bottom status strip */}
+-        <div
+-          style={{
+-            background: "rgba(255,255,255,0.03)",
+-            border: "1px solid rgba(255,255,255,0.08)",
+-            borderRadius: "12px",
+-            padding: "18px 24px",
+-            display: "flex",
+-            alignItems: "center",
+-            justifyContent: "space-between",
+-          }}
+-        >
+-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+-            <div
+-              style={{
+-                width: "8px",
+-                height: "8px",
+-                borderRadius: "50%",
+-                backgroundColor: "#22c55e",
+-                boxShadow: "0 0 6px #22c55e",
+-              }}
+-            />
+-            <div>
+-              <p style={{ fontSize: "13px", fontWeight: "500", color: "#e0e0e0", margin: 0 }}>
+-                Admin access
+-              </p>
+-              <p style={{ fontSize: "12px", color: "#555", margin: 0 }}>
+-                Logged in as {currentUser?.email}
+-              </p>
+-            </div>
+-          </div>
+-          <span
+-            style={{
+-              fontSize: "12px",
+-              background: "rgba(196, 169, 106, 0.15)",
+-              color: "#c4a96a",
+-              padding: "4px 12px",
+-              borderRadius: "20px",
+-              fontWeight: "500",
+-              letterSpacing: "0.5px",
+-            }}
+-          >
+-            LIVE
+-          </span>
+-        </div>
++          );
++        })}
+       </div>
++
++      {email && <p className="admin-signed-in">Signed in as {email}</p>}
+     </div>
++  </div>
++);
++
++const AdminDashboard = () => {
++  const navigate = useNavigate();
++  const { currentUser, logout } = useAuth();
++  const { overview, loading } = useAdminOverview();
++
++  return (
++    <AdminDashboardView
++      overview={overview}
++      loading={loading}
++      email={currentUser?.email}
++      onNavigate={navigate}
++      onLogout={logout}
++    />
+   );
+ };
+ 
+-export default AdminDashboard;
+\ No newline at end of file
++export default AdminDashboard;
+diff --git a/src/pages/AdminDashboard.test.js b/src/pages/AdminDashboard.test.js
+new file mode 100644
+index 0000000..3dafe14
+--- /dev/null
++++ b/src/pages/AdminDashboard.test.js
+@@ -0,0 +1,42 @@
++import React from "react";
++import "@testing-library/jest-dom";
++import { render, screen, fireEvent } from "@testing-library/react";
++import { AdminDashboardView } from "./AdminDashboard";
++
++// The view is pure; stub what the container next to it imports.
++// (This Jest version can't resolve react-router-dom v7's package exports.)
++jest.mock("react-router-dom", () => ({ useNavigate: () => jest.fn() }), { virtual: true });
++jest.mock("../contexts/AuthContext", () => ({ useAuth: () => ({ currentUser: null, logout: jest.fn() }) }));
++jest.mock("../hooks/useAdminOverview", () => ({ __esModule: true, default: () => ({ overview: {}, loading: false }) }));
++
++describe("AdminDashboardView", () => {
++  it("shows every section with what's on the site, and opens it on click", () => {
++    const onNavigate = jest.fn();
++    render(
++      <AdminDashboardView
++        overview={{
++          shows: { text: "Next: 5 Dec · Het Paard", tone: "normal" },
++          press: { text: "Missing: tech rider", tone: "warn" },
++        }}
++        email="band@example.com"
++        onNavigate={onNavigate}
++        onLogout={() => {}}
++      />
++    );
++
++    ["Releases", "About Us", "Gallery", "Shows", "Socials", "Merch", "Press Kit"].forEach((label) => {
++      expect(screen.getByRole("button", { name: new RegExp(`^${label}`) })).toBeInTheDocument();
++    });
++    expect(screen.getByText("Next: 5 Dec · Het Paard")).toBeInTheDocument();
++    expect(screen.getByText("Missing: tech rider")).toHaveClass("admin-card-status", "is-warn");
++    expect(screen.getByText("Signed in as band@example.com")).toBeInTheDocument();
++
++    fireEvent.click(screen.getByRole("button", { name: /^Press Kit/ }));
++    expect(onNavigate).toHaveBeenCalledWith("/admin/press");
++  });
++
++  it("shows a placeholder line while the overview loads", () => {
++    render(<AdminDashboardView loading onNavigate={() => {}} onLogout={() => {}} />);
++    expect(screen.getAllByText("…")).toHaveLength(7);
++  });
++});
+diff --git a/src/pages/AdminGallery.js b/src/pages/AdminGallery.js
+index d359bad..a5eb1dd 100644
+--- a/src/pages/AdminGallery.js
++++ b/src/pages/AdminGallery.js
+@@ -11,7 +11,7 @@ const AdminGallery = () => (
+         backgroundColor: "#0A060D",
+         color: "white",
+         minHeight: "100vh",
+-        padding: "100px 20px 60px",
++        padding: "48px 20px 60px",
+       }}
+     >
+       <ShowGalleryEditor />
+diff --git a/src/pages/AdminLogin.js b/src/pages/AdminLogin.js
+index 62b31a3..25e75ec 100644
+--- a/src/pages/AdminLogin.js
++++ b/src/pages/AdminLogin.js
+@@ -1,7 +1,7 @@
+ import React, { useState } from "react";
+ import { useNavigate, useLocation } from "react-router-dom";
+ import { useAuth } from "../contexts/AuthContext";
+-import { commonTitleStyle } from "../styles/constants";
++import { sectionTitleStyle } from "../styles/constants";
+ 
+ const AdminLogin = () => {
+   const [email, setEmail] = useState("");
+@@ -49,7 +49,7 @@ const AdminLogin = () => {
+         padding: "120px 20px",
+       }}
+     >
+-      <h1 style={commonTitleStyle}>Admin Login</h1>
++      <h1 style={sectionTitleStyle}>Admin Login</h1>
+ 
+       <form
+         onSubmit={handleSubmit}
+@@ -110,21 +110,7 @@ const AdminLogin = () => {
+           />
+         </div>
+ 
+-        <button
+-          type="submit"
+-          disabled={submitting}
+-          className="w-100"
+-          style={{
+-            backgroundColor: "transparent",
+-            border: "1px solid white",
+-            fontWeight: "bold",
+-            color: "#c4a96a",
+-            padding: "15px 20px",
+-            textTransform: "uppercase",
+-            opacity: submitting ? 0.6 : 1,
+-            cursor: submitting ? "not-allowed" : "pointer",
+-          }}
+-        >
++        <button type="submit" disabled={submitting} className="site-btn site-btn-block">
+           {submitting ? "Logging in..." : "Log In"}
+         </button>
+       </form>
+diff --git a/src/pages/AdminMerch.js b/src/pages/AdminMerch.js
+index 7e63613..dbee3e0 100644
+--- a/src/pages/AdminMerch.js
++++ b/src/pages/AdminMerch.js
+@@ -11,7 +11,7 @@ const AdminMerch = () => (
+         backgroundColor: "#0A060D",
+         color: "white",
+         minHeight: "100vh",
+-        padding: "100px 20px 60px",
++        padding: "48px 20px 60px",
+       }}
+     >
+       <MerchEditor />
+diff --git a/src/pages/AdminPress.js b/src/pages/AdminPress.js
+index 9503871..56821c8 100644
+--- a/src/pages/AdminPress.js
++++ b/src/pages/AdminPress.js
+@@ -11,7 +11,7 @@ const AdminPress = () => (
+         backgroundColor: "#0A060D",
+         color: "white",
+         minHeight: "100vh",
+-        padding: "100px 20px 60px",
++        padding: "48px 20px 60px",
+       }}
+     >
+       <PressEditor />
+diff --git a/src/pages/AdminRelease.js b/src/pages/AdminRelease.js
+index 241ac3a..123e439 100644
+--- a/src/pages/AdminRelease.js
++++ b/src/pages/AdminRelease.js
+@@ -11,7 +11,7 @@ const AdminRelease = () => (
+         backgroundColor: "#0A060D",
+         color: "white",
+         minHeight: "100vh",
+-        padding: "100px 20px 60px",
++        padding: "48px 20px 60px",
+       }}
+     >
+       <ReleaseEditor />
+diff --git a/src/pages/AdminShows.js b/src/pages/AdminShows.js
+index 25af666..8544f8f 100644
+--- a/src/pages/AdminShows.js
++++ b/src/pages/AdminShows.js
+@@ -11,7 +11,7 @@ const AdminShows = () => (
+         backgroundColor: "#0A060D",
+         color: "white",
+         minHeight: "100vh",
+-        padding: "100px 20px 60px",
++        padding: "48px 20px 60px",
+       }}
+     >
+       <UpcomingShowsEditor />
+diff --git a/src/pages/AdminSocials.js b/src/pages/AdminSocials.js
+index 2a39fb9..1ca1ae1 100644
+--- a/src/pages/AdminSocials.js
++++ b/src/pages/AdminSocials.js
+@@ -11,7 +11,7 @@ const AdminSocials = () => (
+         backgroundColor: "#0A060D",
+         color: "white",
+         minHeight: "100vh",
+-        padding: "100px 20px 60px",
++        padding: "48px 20px 60px",
+       }}
+     >
+       <SocialsEditor />
+diff --git a/src/pages/Contact.js b/src/pages/Contact.js
+index 7abca13..3023bd9 100644
+--- a/src/pages/Contact.js
++++ b/src/pages/Contact.js
+@@ -48,11 +48,11 @@ const Contact = () => {
+ 
+   return (
+     <div
+-      className="d-flex flex-column align-items-center justify-content-center"
++      className="d-flex flex-column align-items-center"
+       style={{
+         color: "white",
+         minHeight: "100vh",
+-        padding: "120px 20px",
++        padding: "0 20px 120px",
+       }}
+     >
+       {/* Toast Notification */}
+@@ -205,18 +205,7 @@ const Contact = () => {
+         </div>
+ 
+         {/* Submit Button */}
+-        <button
+-          type="submit"
+-          className=" w-100"
+-          style={{
+-            backgroundColor: "transparent",
+-            border: "1px solid white",
+-            fontWeight: "bold",
+-            color: "#c4a96a",
+-            padding: "15px 20px",
+-            textTransform: "uppercase",
+-          }}
+-        >
++        <button type="submit" className="site-btn site-btn-block">
+           Send Message
+         </button>
+       </form>
+diff --git a/src/pages/Gallery.js b/src/pages/Gallery.js
+index a162da5..29b365d 100644
+--- a/src/pages/Gallery.js
++++ b/src/pages/Gallery.js
+@@ -77,10 +77,9 @@ const Gallery = () => {
+ 
+   return (
+     <div
+-      className="container-fluid text-white"
++      className="container-fluid page-shell text-white"
+       style={{
+         minHeight: "100vh",
+-        paddingTop: "120px",
+         paddingBottom: "60px",
+       }}
+     >
+diff --git a/src/pages/Home.js b/src/pages/Home.js
+index 311eb5a..91a533e 100644
+--- a/src/pages/Home.js
++++ b/src/pages/Home.js
+@@ -11,7 +11,7 @@ import fetchProducts from "../utils/fetchProducts";
+ import ProductCard from "../components/ProductCard";
+ import ReleasesCard from "../components/ReleasesCard"; // Import the ReleasesCard
+ import ShowCard from "../components/ShowCard";
+-import { commonTitleStyle } from "../styles/constants";
++import { sectionTitleStyle } from "../styles/constants";
+ import { trackEvent } from "../utils/analytics";
+ import useSiteContent from "../hooks/useSiteContent";
+ import useUpcomingShows from "../hooks/useUpcomingShows";
+@@ -197,7 +197,7 @@ const Home = () => {
+           style={{ backgroundColor: "#0A060D", padding: "60px 20px" }}
+         >
+           <div className="container text-center" style={{ maxWidth: "800px" }}>
+-            <h1 style={commonTitleStyle}>UPCOMING SHOWS</h1>
++            <h2 style={sectionTitleStyle}>UPCOMING SHOWS</h2>
+             <div className="d-flex flex-column gap-3 text-start mt-4">
+               {upcomingShows.map((show) => (
+                 <ShowCard key={show.id} show={show} />
+diff --git a/src/pages/Merch.js b/src/pages/Merch.js
+index 7f49185..7f87e3b 100644
+--- a/src/pages/Merch.js
++++ b/src/pages/Merch.js
+@@ -64,7 +64,7 @@ export const MerchView = ({ items, intro, loading }) => (
+     ) : (
+       <div className="merch-empty">
+         <p>New merch is on its way. In the meantime, everything we have is on Bandcamp.</p>
+-        <a className="merch-empty-button" href={BANDCAMP_MERCH_URL} target="_blank" rel="noopener noreferrer">
++        <a className="site-btn" href={BANDCAMP_MERCH_URL} target="_blank" rel="noopener noreferrer">
+           Visit our Bandcamp <FaArrowRight />
+         </a>
+       </div>
+diff --git a/src/pages/Releases.js b/src/pages/Releases.js
+index a002c0b..d18dd97 100644
+--- a/src/pages/Releases.js
++++ b/src/pages/Releases.js
+@@ -1,4 +1,4 @@
+-import React, { useState, useEffect } from 'react';
++import React from 'react';
+ import { commonTitleStyle } from '../styles/constants';
+ import useSiteContent from '../hooks/useSiteContent';
+ import { DEFAULT_RELEASES, getReleaseSlots } from '../utils/spotify';
+@@ -10,27 +10,16 @@ const Releases = () => {
+     const { data } = useSiteContent('releases', DEFAULT_RELEASES);
+     const slots = getReleaseSlots(data);
+ 
+-    const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+-
+-    // Update cursor position
+-    useEffect(() => {
+-        const handleMouseMove = (e) => {
+-            setCursorPos({ x: e.clientX, y: e.clientY });
+-        };
+-        window.addEventListener('mousemove', handleMouseMove);
+-        return () => window.removeEventListener('mousemove', handleMouseMove);
+-    }, []);
+-
+     return (
+         <div
+-            className="container-fluid text-white d-flex flex-column justify-content-center align-items-center "
++            className="container-fluid text-white d-flex flex-column justify-content-start align-items-center"
+             style={{
+                 backgroundColor: '#0A060D',
+-                backgroundImage: `radial-gradient(circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(196, 169, 106, 0.2), transparent)`,
++                // A soft gold light from above (used to follow the mouse,
++                // which re-drew the whole page on every movement).
++                backgroundImage: 'radial-gradient(ellipse at 50% 0%, rgba(196, 169, 106, 0.14), transparent 60%)',
+                 minHeight: '100vh',
+-                paddingTop: '120px',
+                 paddingBottom: '50px',
+-                transition: 'background 0.1s',
+             }}
+         >
+             <div
+diff --git a/src/pages/Shows.js b/src/pages/Shows.js
+index 258d7f0..fa1e20e 100644
+--- a/src/pages/Shows.js
++++ b/src/pages/Shows.js
+@@ -23,11 +23,10 @@ export const ShowsView = ({ upcoming, past, loading }) => {
+ 
+   return (
+     <div
+-      className="container-fluid text-white"
++      className="container-fluid page-shell text-white"
+       style={{
+         backgroundColor: "#0A060D",
+         minHeight: "100vh",
+-        paddingTop: "120px",
+         paddingBottom: "60px",
+       }}
+     >
+diff --git a/src/styles/adminStyles.js b/src/styles/adminStyles.js
+index 7c208b2..625b01f 100644
+--- a/src/styles/adminStyles.js
++++ b/src/styles/adminStyles.js
+@@ -39,7 +39,9 @@ export const adminCardStyle = {
+ export const adminSaveButtonStyle = (saving) => ({
+   backgroundColor: "transparent",
+   border: "1px solid white",
++  fontFamily: "var(--font-display)",
+   fontWeight: "bold",
++  letterSpacing: "0.1em",
+   color: "#c4a96a",
+   padding: "12px 20px",
+   textTransform: "uppercase",
+@@ -56,7 +58,10 @@ export const adminSmallButtonStyle = (variant = "default", disabled = false) =>
+   return {
+     backgroundColor: "transparent",
+     padding: "4px 10px",
+-    fontSize: "0.75rem",
++    fontFamily: "var(--font-display)",
++    fontWeight: 700,
++    fontSize: "0.72rem",
++    letterSpacing: "0.06em",
+     textTransform: "uppercase",
+     whiteSpace: "nowrap",
+     cursor: disabled ? "not-allowed" : "pointer",
+diff --git a/src/styles/constants.js b/src/styles/constants.js
+index 7288140..28775f0 100644
+--- a/src/styles/constants.js
++++ b/src/styles/constants.js
+@@ -1,10 +1,21 @@
+-// constants.js
++// Page titles ("SHOWS", "MERCH", ...): same font, size and distance from
++// the menu on every page.
+ export const commonTitleStyle = {
+-    fontWeight: "bold",
+-    fontSize: "2.5rem",
++    fontFamily: "var(--font-display)",
++    fontWeight: 700,
++    fontSize: "clamp(1.9rem, 5vw, 2.6rem)",
++    letterSpacing: "0.08em",
+     color: "#c4a96a",
+     textTransform: "uppercase",
+     textAlign: "center",
+-    marginBottom: "40px", // Consistent bottom spacing
+-    paddingTop: "120px",  // Uniform distance from navbar
++    marginBottom: "40px",
++    paddingTop: "clamp(130px, 10vw, 150px)", // clears the fixed menu
++};
++
++// Section titles inside a page (e.g. "THE BAND", "UPCOMING SHOWS" on Home):
++// same look, without the space reserved for the menu.
++export const sectionTitleStyle = {
++    ...commonTitleStyle,
++    paddingTop: 0,
++    marginBottom: "32px",
+ };
+diff --git a/src/styles/features.css b/src/styles/features.css
+index def2556..ab03dc9 100644
+--- a/src/styles/features.css
++++ b/src/styles/features.css
+@@ -1,13 +1,131 @@
+-/* Styles for the footer booking line, contact email, shows toggle,
+-   Spotify releases, Socials page and Press kit page. */
++/* Site-wide look (fonts, colours, buttons, focus) plus the styles for the
++   footer, contact email, shows toggle, Spotify players, Socials, Merch and
++   Press kit pages. */
+ 
+ :root {
+   --gold: #c4a96a;
+   --gold-soft: rgba(196, 169, 106, 0.15);
+   --ink: #0a060d;
+   --text: #e0e0e0;
+-  --muted: #999;
++  --muted: #a3a3a3;
+   --line: rgba(255, 255, 255, 0.12);
++  /* Cinzel echoes the logo's lettering: headings, menu, buttons.
++     Source Sans 3 for everything you read. */
++  --font-display: "Cinzel Variable", "Cinzel", Georgia, "Times New Roman", serif;
++  --font-text: "Source Sans 3 Variable", "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
++  color-scheme: dark; /* dark scrollbars, date pickers and dropdowns */
++}
++
++/* ── Type ───────────────────────────────────────────────── */
++body {
++  font-family: var(--font-text);
++  -webkit-font-smoothing: antialiased;
++  -moz-osx-font-smoothing: grayscale;
++}
++h1,
++h2,
++h3 {
++  font-family: var(--font-display);
++  letter-spacing: 0.06em;
++}
++::selection {
++  background: var(--gold);
++  color: var(--ink);
++}
++
++/* ── Focus and form controls ────────────────────────────── */
++:focus-visible {
++  outline: 2px solid var(--gold);
++  outline-offset: 2px;
++}
++input[type="checkbox"],
++input[type="radio"] {
++  accent-color: var(--gold);
++}
++/* Bootstrap's default blue focus glow didn't belong on this site */
++.form-control:focus,
++.form-select:focus {
++  border-color: var(--gold) !important;
++  box-shadow: 0 0 0 0.2rem rgba(196, 169, 106, 0.25);
++  background-color: transparent;
++  color: #fff;
++}
++
++/* ── Buttons: one style everywhere on the public site ───── */
++.site-btn,
++.btn-outline-light {
++  display: inline-flex;
++  align-items: center;
++  justify-content: center;
++  gap: 8px;
++  background: transparent;
++  border: 1px solid #fff;
++  border-radius: 0;
++  color: var(--gold);
++  font-family: var(--font-display);
++  font-weight: 700;
++  font-size: 0.9rem;
++  letter-spacing: 0.1em;
++  text-transform: uppercase;
++  text-decoration: none;
++  padding: 11px 24px;
++  cursor: pointer;
++  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
++}
++.site-btn:hover,
++.site-btn:focus-visible,
++.btn-outline-light:hover,
++.btn-outline-light:focus-visible,
++.btn-outline-light:active {
++  background: var(--gold);
++  border-color: var(--gold);
++  color: var(--ink);
++}
++.site-btn:disabled {
++  opacity: 0.6;
++  cursor: not-allowed;
++}
++.site-btn-sm {
++  font-size: 0.8rem;
++  padding: 8px 16px;
++}
++.site-btn-block {
++  width: 100%;
++  padding: 14px 20px;
++}
++
++/* ── Navbar ─────────────────────────────────────────────── */
++.custom-navbar-links .custom-nav-link {
++  font-family: var(--font-display);
++  font-weight: 600;
++  letter-spacing: 0.05em;
++}
++/* Bootstrap's .text-white is !important, which also blocked the old gold hover */
++.custom-navbar-links .custom-nav-link.text-white:hover,
++.custom-navbar-links .custom-nav-link.text-white.active {
++  color: var(--gold) !important;
++}
++.custom-navbar-links .custom-nav-link.active::after {
++  width: 100%;
++  opacity: 1;
++}
++/* Menu button: square like the other buttons, no Bootstrap glow after a tap */
++.custom-navbar .navbar-toggler {
++  border: 1px solid rgba(255, 255, 255, 0.35);
++  border-radius: 0;
++}
++.custom-navbar .navbar-toggler:focus {
++  box-shadow: none;
++}
++.custom-navbar .navbar-toggler:focus-visible {
++  outline: 2px solid var(--gold);
++  outline-offset: 2px;
++}
++
++/* Pages whose content sits in a .container-fluid: responsive.css turns those
++   into a flex row on phones, which floated short pages to mid-screen. */
++.page-shell {
++  display: block !important;
+ }
+ 
+ /* ── Navbar (desktop) ───────────────────────────────────── */
+@@ -19,12 +137,12 @@
+     white-space: nowrap;
+   }
+ }
+-@media (min-width: 1500px) {
++@media (min-width: 1600px) {
+   .custom-navbar-links {
+     width: max-content;
+   }
+ }
+-@media (min-width: 992px) and (max-width: 1499.98px) {
++@media (min-width: 992px) and (max-width: 1599.98px) {
+   .custom-navbar-links {
+     position: static !important;
+     transform: none !important;
+@@ -116,7 +234,7 @@
+   background: transparent;
+   border: 1px solid rgba(255, 255, 255, 0.4);
+   color: #fff;
+-  border-radius: 4px;
++  border-radius: 0;
+   width: 32px;
+   height: 32px;
+   display: inline-flex;
+@@ -292,7 +410,7 @@
+   min-height: 240px;
+   padding: 26px;
+   border: 1px solid var(--line);
+-  border-radius: 14px;
++  border-radius: 12px;
+   background:
+     radial-gradient(circle at 85% 15%, var(--brand-glow), transparent 60%),
+     linear-gradient(160deg, #1a1320 0%, #0a060d 70%);
+@@ -552,22 +670,8 @@
+   max-width: 520px;
+   margin: 0 auto;
+ }
+-.merch-empty-button {
+-  display: inline-flex;
+-  align-items: center;
+-  gap: 10px;
++.merch-empty .site-btn {
+   margin-top: 12px;
+-  border: 1px solid #fff;
+-  color: var(--gold);
+-  padding: 12px 22px;
+-  text-transform: uppercase;
+-  font-weight: bold;
+-  text-decoration: none;
+-}
+-.merch-empty-button:hover,
+-.merch-empty-button:focus-visible {
+-  color: var(--gold);
+-  border-color: var(--gold);
+ }
+ @media (max-width: 575.98px) {
+   /* Two small cards per row on phones */
+@@ -919,3 +1023,283 @@
+   letter-spacing: 1px;
+   white-space: nowrap;
+ }
++
++/* ── Display font for titles, labels and calls to action ── */
++.spotify-release-label,
++.social-card-title,
++.shows-toggle-btn,
++.social-card-cta,
++.merch-card-cta,
++.press-card-cta,
++.press-kicker,
++.merch-card-price {
++  font-family: var(--font-display);
++}
++
++/* ── Admin ──────────────────────────────────────────────── */
++/* Dashboard and the editors' top bar share these, so the admin looks like
++   the same site: Cinzel headings, gold accents, square outline buttons. */
++.admin-page {
++  background-color: var(--ink);
++  min-height: 100vh;
++  color: var(--text);
++}
++.admin-topbar {
++  position: sticky;
++  top: 0;
++  z-index: 100;
++  height: 64px;
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  gap: 16px;
++  padding: 0 40px;
++  background-color: rgba(10, 6, 13, 0.95);
++  backdrop-filter: blur(8px);
++  border-bottom: 1px solid var(--line);
++}
++.admin-topbar-brand {
++  display: flex;
++  align-items: center;
++  gap: 12px;
++  min-width: 0;
++  font-family: var(--font-display);
++  font-weight: 700;
++  font-size: 0.85rem;
++  letter-spacing: 0.18em;
++  text-transform: uppercase;
++  color: #fff;
++  white-space: nowrap;
++}
++.admin-topbar-divider {
++  flex-shrink: 0;
++  width: 1px;
++  height: 18px;
++  background: rgba(255, 255, 255, 0.2);
++}
++.admin-topbar-section {
++  color: var(--gold);
++  overflow: hidden;
++  text-overflow: ellipsis;
++}
++.admin-topbar-back {
++  background: none;
++  border: 0;
++  padding: 4px;
++  margin-left: -4px;
++  color: var(--muted);
++  font-size: 1.2rem;
++  line-height: 1;
++  display: inline-flex;
++  align-items: center;
++  cursor: pointer;
++  transition: color 0.15s ease;
++}
++.admin-topbar-back:hover,
++.admin-topbar-back:focus-visible {
++  color: var(--gold);
++}
++.admin-topbar-actions {
++  display: flex;
++  align-items: center;
++  gap: 12px;
++}
++.admin-topbar-email {
++  color: var(--muted);
++  font-size: 0.85rem;
++}
++.admin-btn {
++  display: inline-flex;
++  align-items: center;
++  justify-content: center;
++  gap: 6px;
++  background: transparent;
++  border: 1px solid rgba(255, 255, 255, 0.3);
++  border-radius: 0;
++  color: var(--text);
++  font-family: var(--font-display);
++  font-weight: 700;
++  font-size: 0.75rem;
++  letter-spacing: 0.1em;
++  text-transform: uppercase;
++  line-height: 1;
++  padding: 9px 14px;
++  white-space: nowrap;
++  cursor: pointer;
++  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
++}
++.admin-btn:hover,
++.admin-btn:focus-visible {
++  border-color: var(--gold);
++  color: var(--gold);
++}
++.admin-btn.is-primary {
++  border-color: #fff;
++  color: var(--gold);
++}
++.admin-btn.is-primary:hover,
++.admin-btn.is-primary:focus-visible {
++  background: var(--gold);
++  border-color: var(--gold);
++  color: var(--ink);
++}
++.admin-btn.is-icon {
++  font-family: var(--font-text);
++  font-size: 1.1rem;
++  padding: 6px 10px;
++}
++/* Phone menu under the editors' top bar */
++.admin-topbar-menu {
++  position: absolute;
++  top: 64px;
++  left: 0;
++  right: 0;
++  display: flex;
++  flex-direction: column;
++  gap: 4px;
++  padding: 12px 20px 20px;
++  background-color: var(--ink);
++  border-bottom: 1px solid var(--line);
++}
++.admin-topbar-menu-link {
++  background: none;
++  border: 0;
++  padding: 10px 0;
++  text-align: left;
++  color: var(--text);
++  font-family: var(--font-display);
++  font-weight: 600;
++  font-size: 0.9rem;
++  letter-spacing: 0.06em;
++  cursor: pointer;
++}
++.admin-topbar-menu-link:hover,
++.admin-topbar-menu-link:focus-visible {
++  color: var(--gold);
++}
++.admin-topbar-menu-footer {
++  display: flex;
++  flex-direction: column;
++  gap: 10px;
++  margin-top: 8px;
++  padding-top: 14px;
++  border-top: 1px solid var(--line);
++}
++.admin-topbar-menu-footer .admin-btn {
++  width: 100%;
++  padding: 12px 14px;
++}
++
++.admin-main {
++  max-width: 900px;
++  margin: 0 auto;
++  padding: 48px 40px;
++}
++.admin-heading {
++  font-family: var(--font-display);
++  font-weight: 700;
++  font-size: 2rem;
++  letter-spacing: 0.08em;
++  text-transform: uppercase;
++  color: var(--gold);
++  margin: 0 0 8px;
++}
++.admin-subheading {
++  color: var(--muted);
++  font-size: 0.95rem;
++  margin: 0 0 36px;
++}
++.admin-grid {
++  display: grid;
++  grid-template-columns: repeat(2, minmax(0, 1fr));
++  gap: 16px;
++}
++.admin-card {
++  display: flex;
++  flex-direction: column;
++  align-items: flex-start;
++  gap: 6px;
++  width: 100%;
++  text-align: left;
++  background: rgba(255, 255, 255, 0.03);
++  border: 1px solid var(--line);
++  border-radius: 12px;
++  padding: 28px;
++  color: #fff;
++  font: inherit;
++  cursor: pointer;
++  transition: border-color 0.15s ease, background-color 0.15s ease;
++}
++.admin-card:hover,
++.admin-card:focus-visible {
++  border-color: var(--gold);
++  background: rgba(196, 169, 106, 0.05);
++}
++.admin-card-icon {
++  color: var(--gold);
++  font-size: 1.6rem;
++  margin-bottom: 10px;
++}
++.admin-card-title {
++  font-family: var(--font-display);
++  font-weight: 700;
++  font-size: 1.15rem;
++  letter-spacing: 0.05em;
++  line-height: 1.2;
++}
++.admin-card-desc {
++  color: var(--muted);
++  font-size: 0.92rem;
++  line-height: 1.5;
++  margin-bottom: 10px;
++}
++/* What's on the site right now; sits at the bottom so a row lines up */
++.admin-card-status {
++  margin-top: auto;
++  width: 100%;
++  padding-top: 12px;
++  border-top: 1px solid var(--line);
++  color: #d6d6d6;
++  font-size: 0.85rem;
++  line-height: 1.4;
++}
++.admin-card-status.is-warn {
++  color: #f2b46d;
++}
++.admin-card-status.is-error {
++  color: #ff9b9b;
++}
++.admin-signed-in {
++  color: var(--muted);
++  font-size: 0.85rem;
++  margin: 32px 0 0;
++}
++@media (max-width: 640px) {
++  .admin-topbar {
++    padding: 0 16px;
++    gap: 10px;
++  }
++  .admin-topbar-actions {
++    gap: 8px;
++  }
++  .admin-main {
++    padding: 32px 16px 48px;
++  }
++  .admin-heading {
++    font-size: 1.6rem;
++  }
++  .admin-grid {
++    grid-template-columns: 1fr;
++    gap: 12px;
++  }
++  .admin-card {
++    padding: 22px;
++  }
++}
++@media (max-width: 400px) {
++  /* "Admin" is enough next to the two buttons on small phones */
++  .admin-topbar-brand .admin-topbar-name,
++  .admin-topbar-brand .admin-topbar-name + .admin-topbar-divider {
++    display: none;
++  }
++}
+diff --git a/src/styles/global.css b/src/styles/global.css
+index 3f4a7cb..e114094 100644
+--- a/src/styles/global.css
++++ b/src/styles/global.css
+@@ -249,7 +249,7 @@ html, body {
+     padding: 0;
+     width: 100%; /* Prevent overflow */
+     overflow-x: hidden; /* Disable horizontal scrolling */
+-    background-color: #0D0A07;
++    background-color: #0A060D; /* same near-black as every page and the footer */
+ }
+ 
+ .discounted-price {
+@@ -257,5 +257,7 @@ html, body {
+     font-weight: bold;
+ }
+ body {
+-    font-family: 'Roboto ', monospace;
++    /* Was 'Roboto ' (with a stray space), which never matched, so the whole
++       site fell back to the browser's monospace font. */
++    font-family: "Source Sans 3 Variable", "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+ }
+\ No newline at end of file
+-- 
+2.43.0
+
